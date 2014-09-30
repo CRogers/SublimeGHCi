@@ -15,7 +15,7 @@ def read_until_prompt():
 			break
 		data += read
 	string = data.decode('utf-8')
-	return re.sub(r'^\]*([^\]]+)\]*$', r'\1', string)
+	return re.sub(r'^\]*((.|\n)+)\n\]*$', r'\1', string)
 
 def message_gchi(msg):
 	sp.stdin.write(msg + b'\n')
@@ -33,14 +33,29 @@ def plugin_unloaded():
 	print("terminating ghci")
 	sp.terminate()
 
+def get_completions(prefix = ''):
+	msg = ':complete repl 1000000 "{}"'.format(prefix)
+	lines = message_gchi(msg.encode('utf-8')).split('\n')[1:]
+	completions = [re.sub(r'"(.*)"', r'\1', line) for line in lines if line != '']
+	return completions
+
+def get_type(expr):
+	response = message_gchi(b':t (' + expr.encode('utf-8') + b')')
+	return re.sub(r'^.* :: (.*?)$', r'\1', response)
+
 class ExampleCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
 		self.view.insert(edit, 0, "Hello, World!")
 
 class HooksListener(sublime_plugin.EventListener):
 	def on_post_save(self, view):
-		completions = message_gchi(b':complete repl 10 ""')
-		print(completions)
+		completions = get_completions()
+		for completion in completions:
+			print((completion, get_type(completion)))
+		#print(completions)
+		#print(get_type(completions[0]))
 
 	def on_query_completions(self, view, prefix, locations):
-		pass
+		cs = [ (x + '\t' + get_type(x), x) for x in get_completions(prefix) ]
+		print(cs)
+		return cs
