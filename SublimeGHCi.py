@@ -5,7 +5,7 @@ sp = subprocess.Popen("/usr/local/bin/ghci", stdout=subprocess.PIPE, stdin=subpr
 autocompletions = []
 
 prompt_repeating_part = b']]]]]]]]]]]]]]]]'
-prompt = prompt_repeating_part + prompt_repeating_part[:-1]
+prompt = (prompt_repeating_part + prompt_repeating_part[:-1]).decode('utf-8')
 
 def read_until_prompt():
 	data = b''
@@ -18,16 +18,19 @@ def read_until_prompt():
 	return re.sub(r'^\]*((.|\n)+)\n\]*$', r'\1', string)
 
 def message_gchi(msg):
-	sp.stdin.write(msg + b'\n')
+	sp.stdin.write(msg.encode('utf-8') + b'\n')
 	sp.stdin.flush()
 	return read_until_prompt()
 
 def clearBeginning():
-	print(sp.stdout.read1(100000))
-	print(message_gchi(b':set prompt ' + prompt))
+	print(sp.stdout.read1(1000000))
+	print(message_gchi(':set prompt ' + prompt))
+
+def is_haskell_source_file(file_name):
+	return re.search(r'\.l?hs$', file_name) != None
 
 def plugin_loaded():
-	sublime.set_timeout(clearBeginning, 2000)
+	return sublime.set_timeout(clearBeginning, 2000)
 
 def plugin_unloaded():
 	print("terminating ghci")
@@ -38,7 +41,7 @@ def get_last_part(sig):
 
 def get_completions(prefix = ''):
 	msg = ':complete repl 1000000 "{}"'.format(prefix)
-	lines = message_gchi(msg.encode('utf-8')).split('\n')[1:]
+	lines = message_gchi(msg).split('\n')[1:]
 	completions = [re.sub(r'"(.*)"', r'\1', line) for line in lines if line != '']
 	return completions
 
@@ -49,14 +52,15 @@ def is_not_defined(str):
 	return re.search(r'Not in scope', str) != None
 
 def get_type(expr):
-	response = message_gchi(b':t (' + expr.encode('utf-8') + b')')
+	msg = ':t ({})'.format(expr)
+	response = message_gchi(msg)
 	if is_not_defined(response):
 		return ''
 	return get_info_part(response)
 
 def get_kind(expr):
 	msg = ':k ({})'.format(expr)
-	response = message_gchi(msg.encode('utf-8'))
+	response = message_gchi(msg)
 	if is_not_defined(response):
 		return ''
 	return get_info_part(response)
@@ -68,17 +72,16 @@ def get_type_or_kind(sig):
 		return get_kind(sig)
 	return type_
 
-class ExampleCommand(sublime_plugin.TextCommand):
-	def run(self, edit):
-		self.view.insert(edit, 0, "Hello, World!")
+def load_haskell_file(file_name):
+	msg = ':load "{}"'.format(file_name)
+	response = message_gchi(msg)
+	print(response)
 
 class HooksListener(sublime_plugin.EventListener):
 	def on_post_save(self, view):
-		completions = get_completions()
-		for completion in completions:
-			print((completion, get_type_or_kind(completion)))
-		print(get_type_or_kind('Either'))
-		#print(get_type(completions[0]))
+		if not is_haskell_source_file(view.file_name()):
+			return
+		load_haskell_file(view.file_name())
 
 	def on_query_completions(self, view, prefix, locations):
 		cs = [ (x + '\t' + get_type_or_kind(x), x) for x in get_completions(prefix) ]
