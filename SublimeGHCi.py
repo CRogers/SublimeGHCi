@@ -1,4 +1,5 @@
 import sublime, sublime_plugin, subprocess, re
+from SublimeGHCi.OutputPanel import OutputPanel
 
 sp = subprocess.Popen("/usr/local/bin/ghci", stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
 
@@ -7,33 +8,7 @@ autocompletions = []
 prompt_repeating_part = b']]]]]]]]]]]]]]]]'
 prompt = (prompt_repeating_part + prompt_repeating_part[:-1]).decode('utf-8')
 
-output_panel_name = 'sublime_ghci'
-output_panel = False
-
-def get_output_panel():
-	return output_panel
-
-def show_output_panel():
-	sublime.active_window().run_command('show_panel', {'panel': 'output.' + output_panel_name})
-
-def hide_output_panel():
-	sublime.active_window().run_command('hide_panel', {'panel': 'output.' + output_panel_name})
-
-class SublimeGhciOutputText(sublime_plugin.TextCommand):
-	def run(self, edit, text = None):
-		if text == None:
-			return
-		print('edit ' + text)
-		self.view.erase(edit, sublime.Region(0, self.view.size()))
-		self.view.insert(edit, 0, text)
-
-def output_text(text):
-	output_panel = get_output_panel()
-	print(output_panel)
-	output_panel.set_read_only(False)
-	output_panel.run_command('sublime_ghci_output_text', {'text': text})
-	output_panel.set_read_only(True)
-	show_output_panel()
+output_panel = OutputPanel('sublime_ghci')
 
 def read_until_prompt():
 	data = b''
@@ -58,8 +33,6 @@ def is_haskell_source_file(file_name):
 	return re.search(r'\.l?hs$', file_name) != None
 
 def plugin_loaded():
-	global output_panel
-	output_panel = sublime.active_window().create_output_panel(output_panel_name)
 	return sublime.set_timeout(clearBeginning, 2000)
 
 def plugin_unloaded():
@@ -109,9 +82,9 @@ def load_haskell_file(file_name):
 	msg = ':load "{}"'.format(file_name)
 	response = message_gchi(msg)
 	if has_failed(response):
-		output_text(response)
+		output_panel.display_text(response)
 	else:
-		hide_output_panel()
+		output_panel.hide()
 
 class HooksListener(sublime_plugin.EventListener):
 	def on_post_save(self, view):
