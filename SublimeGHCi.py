@@ -7,6 +7,34 @@ autocompletions = []
 prompt_repeating_part = b']]]]]]]]]]]]]]]]'
 prompt = (prompt_repeating_part + prompt_repeating_part[:-1]).decode('utf-8')
 
+output_panel_name = 'sublime_ghci'
+output_panel = False
+
+def get_output_panel():
+	return output_panel
+
+def show_output_panel():
+	sublime.active_window().run_command('show_panel', {'panel': 'output.' + output_panel_name})
+
+def hide_output_panel():
+	sublime.active_window().run_command('hide_panel', {'panel': 'output.' + output_panel_name})
+
+class SublimeGhciOutputText(sublime_plugin.TextCommand):
+	def run(self, edit, text = None):
+		if text == None:
+			return
+		print('edit ' + text)
+		self.view.erase(edit, sublime.Region(0, self.view.size()))
+		self.view.insert(edit, 0, text)
+
+def output_text(text):
+	output_panel = get_output_panel()
+	print(output_panel)
+	output_panel.set_read_only(False)
+	output_panel.run_command('sublime_ghci_output_text', {'text': text})
+	output_panel.set_read_only(True)
+	show_output_panel()
+
 def read_until_prompt():
 	data = b''
 	while True:
@@ -30,6 +58,8 @@ def is_haskell_source_file(file_name):
 	return re.search(r'\.l?hs$', file_name) != None
 
 def plugin_loaded():
+	global output_panel
+	output_panel = sublime.active_window().create_output_panel(output_panel_name)
 	return sublime.set_timeout(clearBeginning, 2000)
 
 def plugin_unloaded():
@@ -72,10 +102,16 @@ def get_type_or_kind(sig):
 		return get_kind(sig)
 	return type_
 
+def has_failed(response):
+	return re.search(r'Failed, modules loaded:', response) != None
+
 def load_haskell_file(file_name):
 	msg = ':load "{}"'.format(file_name)
 	response = message_gchi(msg)
-	print(response)
+	if has_failed(response):
+		output_text(response)
+	else:
+		hide_output_panel()
 
 class HooksListener(sublime_plugin.EventListener):
 	def on_post_save(self, view):
@@ -83,7 +119,12 @@ class HooksListener(sublime_plugin.EventListener):
 			return
 		load_haskell_file(view.file_name())
 
+	def on_setting_changed(self):
+		print('setting changed')
+
 	def on_query_completions(self, view, prefix, locations):
+		if not is_haskell_source_file(view.file_name()):
+			return []
 		cs = [ (x + '\t' + get_type_or_kind(x), x) for x in get_completions(prefix) ]
 		print(cs)
 		return cs
