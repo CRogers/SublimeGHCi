@@ -61,7 +61,7 @@ def get_kind(expr):
 		return ''
 	return get_info_part(response)
 
-def get_info(sig):
+def get_type_or_kind(sig):
 	last_part = get_last_part(sig)
 	type_ = get_type(sig)
 	if type_ == '':
@@ -76,11 +76,11 @@ class HooksListener(sublime_plugin.EventListener):
 	def on_post_save(self, view):
 		completions = get_completions()
 		for completion in completions:
-			print((completion, get_info(completion)))
-		print(get_info('Either'))
+			print((completion, get_type_or_kind(completion)))
+		print(get_type_or_kind('Either'))
 		#print(get_type(completions[0]))
 
 	def on_query_completions(self, view, prefix, locations):
-		cs = [ (x + '\t' + get_info(x), x) for x in get_completions(prefix) ]
+		cs = [ (x + '\t' + get_type_or_kind(x), x) for x in get_completions(prefix) ]
 		print(cs)
 		return cs
