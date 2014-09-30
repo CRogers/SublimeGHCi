@@ -33,15 +33,40 @@ def plugin_unloaded():
 	print("terminating ghci")
 	sp.terminate()
 
+def get_last_part(sig):
+	return re.match(r'([A-Z].*?\.)*(.*)$', sig).group(2)
+
 def get_completions(prefix = ''):
 	msg = ':complete repl 1000000 "{}"'.format(prefix)
 	lines = message_gchi(msg.encode('utf-8')).split('\n')[1:]
 	completions = [re.sub(r'"(.*)"', r'\1', line) for line in lines if line != '']
 	return completions
 
+def get_info_part(str):
+	return re.sub(r'^.* :: (.*?)$', r'\1', str)
+
+def is_not_defined(str):
+	return re.search(r'Not in scope', str) != None
+
 def get_type(expr):
 	response = message_gchi(b':t (' + expr.encode('utf-8') + b')')
-	return re.sub(r'^.* :: (.*?)$', r'\1', response)
+	if is_not_defined(response):
+		return ''
+	return get_info_part(response)
+
+def get_kind(expr):
+	msg = ':k ({})'.format(expr)
+	response = message_gchi(msg.encode('utf-8'))
+	if is_not_defined(response):
+		return ''
+	return get_info_part(response)
+
+def get_info(sig):
+	last_part = get_last_part(sig)
+	type_ = get_type(sig)
+	if type_ == '':
+		return get_kind(sig)
+	return type_
 
 class ExampleCommand(sublime_plugin.TextCommand):
 	def run(self, edit):
@@ -51,11 +76,11 @@ class HooksListener(sublime_plugin.EventListener):
 	def on_post_save(self, view):
 		completions = get_completions()
 		for completion in completions:
-			print((completion, get_type(completion)))
-		#print(completions)
+			print((completion, get_info(completion)))
+		print(get_info('Either'))
 		#print(get_type(completions[0]))
 
 	def on_query_completions(self, view, prefix, locations):
-		cs = [ (x + '\t' + get_type(x), x) for x in get_completions(prefix) ]
+		cs = [ (x + '\t' + get_info(x), x) for x in get_completions(prefix) ]
 		print(cs)
 		return cs
