@@ -1,4 +1,5 @@
 import re
+from SublimeGHCi.Common import *
 
 def get_last_part(sig):
 	return re.match(r'([A-Z].*?\.)*(.*)$', sig).group(2)
@@ -23,8 +24,8 @@ class GHCiCommands(object):
 		msg = ':{} ({})'.format(command, expr)
 		response = self.__ghci.message(msg)
 		if is_not_defined(response):
-			return ''
-		return get_info_part(response)
+			return Maybe.nothing()
+		return Maybe.just(get_info_part(response))
 
 	def get_type(self, expr):
 		return self.__expr_command('t', expr)
@@ -35,9 +36,10 @@ class GHCiCommands(object):
 	def get_type_or_kind(self, sig):
 		last_part = get_last_part(sig)
 		type_ = self.get_type(sig)
-		if type_ == '':
+		if type_.hasValue():
+			return type_
+		else:
 			return self.get_kind(sig)
-		return type_
 
 	def load_haskell_file(self, file_name):
 		msg = ':load "{}"'.format(file_name)

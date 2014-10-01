@@ -36,6 +36,6 @@ class HooksListener(sublime_plugin.EventListener):
 	def on_query_completions(self, view, prefix, locations):
 		if not is_haskell_source_file(view.file_name()):
 			return []
-		cs = [ (x + '\t' + ghci.get_type_or_kind(x), x) for x in ghci.completions(prefix) ]
+		cs = [ (x + '\t' + ghci.get_type_or_kind(x).value(), x) for x in ghci.completions(prefix) ]
 		print(cs)
 		return cs
