@@ -1,23 +1,40 @@
-class Maybe(object):
-	def __init__(self, obj):
-		self.__obj = obj
+class Fallible(object):
+	def __init__(self, succeeded, value):
+		self.__succeeded = succeeded
+		self.__value = value
 
 	@staticmethod
-	def just(value):
-		return Maybe(value)
+	def fail(value):
+		return Fallible(False, value)
 
 	@staticmethod
-	def nothing():
-		return Maybe(None)
+	def succeed(value):
+		return Fallible(True, value)
 
-	def hasValue(self):
-		return self.__obj != None
+	@staticmethod
+	def from_bool(bool_func, value):
+		return Fallible(bool_func(value), value)
+
+	def successful(self):
+		return self.__succeeded
+
+	def failed(self):
+		return not self.successful()
 
 	def value(self):
-		return self.__obj
+		return self.__value
+
+	def switch(self, succeed, fail):
+		if self.successful():
+			return succeed(self.value())
+		else:
+			return fail(self.value())
 
 	def bind(self, func):
-		if self.hasValue():
-			return func(self.value())
-		else:
-			return Maybe.nothing()
+		return self.switch(func, Fallible.fail)
+
+	def map(self, func):
+		return self.bind(lambda x: Fallible.succeed(func(x)))
+
+	def or_else(self, func):
+		return self.switch(Fallible.succeed, func)

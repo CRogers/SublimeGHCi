@@ -7,8 +7,11 @@ def get_last_part(sig):
 def get_info_part(str):
 	return re.sub(r'^.* :: (.*?)$', r'\1', str)
 
-def is_not_defined(str):
-	return re.search(r'Not in scope', str) != None
+def is_defined(str):
+	return re.search(r'Not in scope', str) == None
+
+def load_succeeded(response):
+	return re.search(r'Failed, modules loaded:', response) == None
 
 class GHCiCommands(object):
 	def __init__(self, ghci_connection):
@@ -23,9 +26,9 @@ class GHCiCommands(object):
 	def __expr_command(self, command, expr):
 		msg = ':{} ({})'.format(command, expr)
 		response = self.__ghci.message(msg)
-		if is_not_defined(response):
-			return Maybe.nothing()
-		return Maybe.just(get_info_part(response))
+		return (Fallible
+			.from_bool(is_defined, response)
+			.map(get_info_part))
 
 	def get_type(self, expr):
 		return self.__expr_command('t', expr)
@@ -34,13 +37,12 @@ class GHCiCommands(object):
 		return self.__expr_command('k', expr)
 
 	def get_type_or_kind(self, sig):
-		last_part = get_last_part(sig)
-		type_ = self.get_type(sig)
-		if type_.hasValue():
-			return type_
-		else:
-			return self.get_kind(sig)
+		last_part = get_last_part(sig) 
+		return (self
+			.get_type(sig)
+			.or_else(lambda: self.get_kind(sig)))
 
 	def load_haskell_file(self, file_name):
 		msg = ':load "{}"'.format(file_name)
-		return self.__ghci.message(msg)
+		response = self.__ghci.message(msg)
+		return Fallible.from_bool(load_succeeded, response)

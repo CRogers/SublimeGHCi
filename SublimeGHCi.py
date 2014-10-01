@@ -17,18 +17,16 @@ def plugin_unloaded():
 	print("terminating ghci")
 	sp.terminate()
 
-def has_failed(response):
-	return re.search(r'Failed, modules loaded:', response) != None
-
 class HooksListener(sublime_plugin.EventListener):
 	def on_post_save(self, view):
 		if not is_haskell_source_file(view.file_name()):
 			return
-		response = ghci.load_haskell_file(view.file_name())
-		if has_failed(response):
-			output_panel.display_text(response)
-		else:
-			output_panel.hide()
+		
+		ghci.load_haskell_file(view.file_name()) \
+			.switch(
+				lambda _: output_panel.hide(),
+				output_panel.display_text
+			)
 
 	def on_setting_changed(self):
 		print('setting changed')
