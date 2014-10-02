@@ -2,20 +2,21 @@ import sublime, sublime_plugin, subprocess, re
 from SublimeGHCi.OutputPanel import OutputPanel
 from SublimeGHCi.GHCiConnection import *
 from SublimeGHCi.GHCiCommands import *
+from SublimeGHCi.LoadedGHCiCommands import *
 
 ghci_connection = GHCiConnection()
-ghci = GHCiCommands(ghci_connection)
+ghci = LoadedGHCiCommands(ghci_connection, GHCiCommands(ghci_connection))
 output_panel = OutputPanel('sublime_ghci')
 
 def is_haskell_source_file(file_name):
 	return re.search(r'\.l?hs$', file_name) != None
 
 def plugin_loaded():
-	return sublime.set_timeout(ghci_connection.consume_beginning, 2000)
+	return sublime.set_timeout(ghci_connection.consume_beginning, 10000)
 
 def plugin_unloaded():
 	print("terminating ghci")
-	sp.terminate()
+	ghci_connection.terminate()
 
 class HooksListener(sublime_plugin.EventListener):
 	def on_post_save(self, view):

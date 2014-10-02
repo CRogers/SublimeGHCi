@@ -40,7 +40,7 @@ class GHCiCommands(object):
 		last_part = get_last_part(sig) 
 		return (self
 			.type_of(sig)
-			.or_else(lambda: self.kind_of(sig)))
+			.or_else(lambda _: self.kind_of(sig)))
 
 	def load_haskell_file(self, file_name):
 		msg = ':load "{}"'.format(file_name)
