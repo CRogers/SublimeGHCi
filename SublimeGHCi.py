@@ -12,7 +12,7 @@ def is_haskell_source_file(file_name):
 	return re.search(r'\.l?hs$', file_name) != None
 
 def plugin_loaded():
-	return sublime.set_timeout(ghci_connection.consume_beginning, 10000)
+	pass
 
 def plugin_unloaded():
 	print("terminating ghci")
