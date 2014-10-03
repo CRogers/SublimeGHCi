@@ -17,6 +17,9 @@ class GHCiCommands(object):
 	def __init__(self, ghci_connection):
 		self.__ghci = ghci_connection
 
+	def connection(self):
+		return self.__ghci
+
 	def completions(self, prefix = ''):
 		msg = ':complete repl 1000000 "{}"'.format(prefix)
 		lines = self.__ghci.message(msg).split('\n')[1:]

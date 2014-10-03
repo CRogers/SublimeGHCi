@@ -1,18 +1,20 @@
 from SublimeGHCi.Common import *
 
 class LoadedGHCiCommands(object):
-	def __init__(self, ghci_connection, ghci_commands):
-		self.__connection = ghci_connection
+	def __init__(self, ghci_commands):
 		self.__commands = ghci_commands
 
+	def connection(self):
+		return self.__commands.connection()
+
 	def completions(self, prefix):
-		if self.__connection.loaded():
+		if self.connection().loaded():
 			return self.__commands.completions(prefix)
 		else:
 			return []
 
 	def __try_or_fail(self, funcName, arg):
-		if self.__connection.loaded():
+		if self.connection().loaded():
 			return getattr(self.__commands, funcName)(arg)
 		else:
 			return Fallible.fail('GHCi has not yet loaded')
