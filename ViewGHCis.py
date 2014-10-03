@@ -5,29 +5,32 @@ from SublimeGHCi.LoadedGHCiCommands import LoadedGHCiCommands
 def new_ghci():
 	return LoadedGHCiCommands(GHCiCommands(GHCiConnection()))
 
+def key(view):
+	return view.id()
+
 class ViewGHCis(object):
 	def __init__(self):
 		self.__views = dict()
 
 	def add(self, view):
-		if view.file_name() in self.__views:
+		if key(view) in self.__views:
 			return
 
-		self.__views[view.file_name()] = new_ghci()
+		self.__views[key(view)] = new_ghci()
 
-	def __remove(self, file_name):
-		self.__views[file_name].connection().terminate()
-		del self.__views[file_name]
+	def __remove(self, k):
+		self.__views[k].connection().terminate()
+		del self.__views[k]
 
 	def remove(self, view):
-		if view.file_name() not in self.__views:
+		if key(view) not in self.__views:
 			return
 
-		self.__remove(view.file_name())
+		self.__remove(key(view))
 
 	def remove_all(self):
-		for file_name in list(self.__views):
-			self.__remove(file_name)
+		for k in list(self.__views):
+			self.__remove(k)
 
 	def ghci_for(self, view):
-		return self.__views[view.file_name()]
+		return self.__views[key(view)]
