@@ -11,9 +11,15 @@ class HaskellView(object):
 		self.__view = view
 		self.__output_panel = output_panel
 
+		print(self.__ghci.connection().loaded())
+		self.__compile()
+
+	def __compile(self):
+		print('compiling {}'.format(self.__view.file_name()))
+		return self.__ghci.load_haskell_file(self.__view.file_name())
+
 	def saved(self):
-		(self.__ghci
-			.load_haskell_file(self.__view.file_name())
+		(self.__compile()
 			.map(lambda _: self.__output_panel.hide())
 			.mapFail(self.__output_panel.display_text))
 
