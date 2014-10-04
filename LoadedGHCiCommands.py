@@ -11,7 +11,7 @@ class LoadedGHCiCommands(object):
 		if self.connection().loaded():
 			return self.__commands.completions(prefix)
 		else:
-			return []
+			return Fallible.fail([])
 
 	def __try_or_fail(self, funcName, arg):
 		if self.connection().loaded():

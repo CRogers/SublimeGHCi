@@ -24,7 +24,7 @@ class GHCiCommands(object):
 		msg = ':complete repl 1000000 "{}"'.format(prefix)
 		lines = self.__ghci.message(msg).split('\n')[1:]
 		completions = [re.sub(r'"(.*)"', r'\1', line) for line in lines if line != '']
-		return completions
+		return Fallible.succeed(completions)
 
 	def __expr_command(self, command, expr):
 		msg = ':{} ({})'.format(command, expr)

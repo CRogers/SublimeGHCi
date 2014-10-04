@@ -1,3 +1,6 @@
+import re
+
+from SublimeGHCi.Common import *
 from SublimeGHCi.GHCiConnection import GHCiConnection
 from SublimeGHCi.GHCiCommands import GHCiCommands
 from SublimeGHCi.LoadedGHCiCommands import LoadedGHCiCommands
@@ -8,12 +11,22 @@ def new_ghci():
 def key(view):
 	return view.id()
 
+def is_haskell_source_file(file_name):
+	if file_name == None:
+		return False
+	
+	return re.search(r'\.l?hs$', file_name) != None
+
 class ViewGHCis(object):
 	def __init__(self):
 		self.__views = dict()
 
+	def exists(self, view):
+		return key(view) in self.__views
+
 	def add(self, view):
-		if key(view) in self.__views:
+		already_added = self.exists(view)
+		if already_added or not is_haskell_source_file(view.file_name()):
 			return
 
 		self.__views[key(view)] = new_ghci()
@@ -23,7 +36,7 @@ class ViewGHCis(object):
 		del self.__views[k]
 
 	def remove(self, view):
-		if key(view) not in self.__views:
+		if not self.exists(view):
 			return
 
 		self.__remove(key(view))
@@ -33,4 +46,7 @@ class ViewGHCis(object):
 			self.__remove(k)
 
 	def ghci_for(self, view):
-		return self.__views[key(view)]
+		if not self.exists(view):
+			return Fallible.fail(None)
+		else:
+			return Fallible.succeed(self.__views[key(view)])

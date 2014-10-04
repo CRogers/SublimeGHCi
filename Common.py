@@ -38,3 +38,6 @@ class Fallible(object):
 
 	def or_else(self, func):
 		return self.switch(Fallible.succeed, func)
+
+	def mapFail(self, func):
+		return self.or_else(lambda x: Fallible.fail(func(x)))
