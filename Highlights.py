@@ -1,7 +1,7 @@
 import sublime, uuid
 
 class ErrorHighlights(object):
-	def __init__(self, view, regions):
+	def __init__(self, view):
 		self.__view = view
 		self.__key = str(uuid.uuid4())
 		self.__add(regions)

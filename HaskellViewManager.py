@@ -1,7 +1,7 @@
 import re
 
 from SublimeGHCi.Common import *
-from SublimeGHCi.OutputPanel import OutputPanel
+from SublimeGHCi.ErrorReporter import ErrorReporter
 from SublimeGHCi.HaskellView import HaskellView
 
 def key(view):
@@ -16,7 +16,7 @@ def is_haskell_source_file(file_name):
 class HaskellViewManager(object):
 	def __init__(self):
 		self.__views = dict()
-		self.__output_panel = OutputPanel('sublime_ghci')
+		self.__error_reporter = ErrorReporter()
 
 	def exists(self, view):
 		return key(view) in self.__views
@@ -27,7 +27,7 @@ class HaskellViewManager(object):
 			return
 
 		print('creating new ghci for {}'.format(view.file_name()))
-		self.__views[key(view)] = HaskellView(view, self.__output_panel)
+		self.__views[key(view)] = HaskellView(view, self.__error_reporter)
 
 	def __remove(self, k):
 		self.__views[k].close()

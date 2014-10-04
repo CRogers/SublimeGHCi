@@ -6,10 +6,10 @@ def new_ghci():
 	return LoadedGHCiCommands(GHCiCommands(GHCiConnection()))
 
 class HaskellView(object):
-	def __init__(self, view, output_panel):
+	def __init__(self, view, error_reporter):
 		self.__ghci = new_ghci()
 		self.__view = view
-		self.__output_panel = output_panel
+		self.__error_reporter = error_reporter
 
 		print(self.__ghci.connection().loaded())
 		self.__compile()
@@ -20,8 +20,8 @@ class HaskellView(object):
 
 	def saved(self):
 		(self.__compile()
-			.map(lambda _: self.__output_panel.hide())
-			.mapFail(self.__output_panel.display_text))
+			.map(lambda _: self.__error_reporter.clear_errors())
+			.mapFail(self.__error_reporter.report_errors))
 
 	def __autocomplete_entry(self, expr):
 		return (expr + '\t' + self.__ghci.type_or_kind_of(expr).value(), expr)
