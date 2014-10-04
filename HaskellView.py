@@ -5,7 +5,7 @@ from SublimeGHCi.LoadedGHCiCommands import LoadedGHCiCommands
 def new_ghci():
 	return LoadedGHCiCommands(GHCiCommands(GHCiConnection()))
 
-class HaskellFile(object):
+class HaskellView(object):
 	def __init__(self, view, output_panel):
 		self.__ghci = new_ghci()
 		self.__view = view

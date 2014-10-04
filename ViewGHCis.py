@@ -2,7 +2,7 @@ import re
 
 from SublimeGHCi.Common import *
 from SublimeGHCi.OutputPanel import OutputPanel
-from SublimeGHCi.HaskellFile import HaskellFile
+from SublimeGHCi.HaskellView import HaskellView
 
 def key(view):
 	return view.id()
@@ -27,7 +27,7 @@ class ViewGHCis(object):
 			return
 
 		print('creating new ghci for {}'.format(view.file_name()))
-		self.__views[key(view)] = HaskellFile(view, self.__output_panel)
+		self.__views[key(view)] = HaskellView(view, self.__output_panel)
 
 	def __remove(self, k):
 		self.__views[k].close()
@@ -50,9 +50,9 @@ class ViewGHCis(object):
 			return Fallible.succeed(self.__views[key(view)])
 
 	def saved(self, view):
-		self.__ghci_for(view).map(lambda haskell_file: haskell_file.saved())
+		self.__ghci_for(view).map(lambda haskell_view: haskell_view.saved())
 
 	def completions(self, view, prefix):
 		return (self.__ghci_for(view)
-			.bind(lambda haskell_file: haskell_file.completions(prefix))
+			.bind(lambda haskell_view: haskell_view.completions(prefix))
 			.mapFail(lambda _: []))
