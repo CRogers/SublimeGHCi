@@ -29,7 +29,10 @@ class ViewGHCis(object):
 		if already_added or not is_haskell_source_file(view.file_name()):
 			return
 
-		self.__views[key(view)] = new_ghci()
+		print('creating new ghci for {}'.format(view.file_name()))
+		ghci = new_ghci()
+		self.__views[key(view)] = ghci
+		ghci.load_haskell_file(view.file_name())
 
 	def __remove(self, k):
 		self.__views[k].connection().terminate()
