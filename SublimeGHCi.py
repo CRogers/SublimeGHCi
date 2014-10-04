@@ -17,13 +17,14 @@ def autocomplete_entry(ghci, expr):
 
 class HooksListener(sublime_plugin.EventListener):
 	def on_post_save(self, view):
-		return (view_ghcis
-			.ghci_for(view)
+		ghci = view_ghcis.ghci_for(view)
+		if ghci.failed():
+			return
+
+		(ghci
 			.bind(lambda ghci: ghci.load_haskell_file(view.file_name()))
-			.switch(
-				lambda _: output_panel.hide(),
-				output_panel.display_text
-			))
+			.map(lambda _: output_panel.hide())
+			.mapFail(output_panel.display_text))
 
 	def on_setting_changed(self):
 		print('setting changed')
