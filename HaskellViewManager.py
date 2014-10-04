@@ -13,7 +13,7 @@ def is_haskell_source_file(file_name):
 	
 	return re.search(r'\.l?hs$', file_name) != None
 
-class ViewGHCis(object):
+class HaskellViewManager(object):
 	def __init__(self):
 		self.__views = dict()
 		self.__output_panel = OutputPanel('sublime_ghci')
