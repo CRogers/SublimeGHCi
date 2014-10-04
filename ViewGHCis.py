@@ -1,12 +1,8 @@
 import re
 
 from SublimeGHCi.Common import *
-from SublimeGHCi.GHCiConnection import GHCiConnection
-from SublimeGHCi.GHCiCommands import GHCiCommands
-from SublimeGHCi.LoadedGHCiCommands import LoadedGHCiCommands
-
-def new_ghci():
-	return LoadedGHCiCommands(GHCiCommands(GHCiConnection()))
+from SublimeGHCi.OutputPanel import OutputPanel
+from SublimeGHCi.HaskellFile import HaskellFile
 
 def key(view):
 	return view.id()
@@ -20,6 +16,7 @@ def is_haskell_source_file(file_name):
 class ViewGHCis(object):
 	def __init__(self):
 		self.__views = dict()
+		self.__output_panel = OutputPanel('sublime_ghci')
 
 	def exists(self, view):
 		return key(view) in self.__views
@@ -30,12 +27,10 @@ class ViewGHCis(object):
 			return
 
 		print('creating new ghci for {}'.format(view.file_name()))
-		ghci = new_ghci()
-		self.__views[key(view)] = ghci
-		ghci.load_haskell_file(view.file_name())
+		self.__views[key(view)] = HaskellFile(view, self.__output_panel)
 
 	def __remove(self, k):
-		self.__views[k].connection().terminate()
+		self.__views[k].close()
 		del self.__views[k]
 
 	def remove(self, view):
@@ -48,8 +43,16 @@ class ViewGHCis(object):
 		for k in list(self.__views):
 			self.__remove(k)
 
-	def ghci_for(self, view):
+	def __ghci_for(self, view):
 		if not self.exists(view):
 			return Fallible.fail(None)
 		else:
 			return Fallible.succeed(self.__views[key(view)])
+
+	def saved(self, view):
+		self.__ghci_for(view).map(lambda haskell_file: haskell_file.saved())
+
+	def completions(self, view, prefix):
+		return (self.__ghci_for(view)
+			.bind(lambda haskell_file: haskell_file.completions(prefix))
+			.mapFail(lambda _: []))
