@@ -1,18 +1,20 @@
 from SublimeGHCi.GHCiConnection import GHCiConnection
 from SublimeGHCi.GHCiCommands import GHCiCommands
 from SublimeGHCi.LoadedGHCiCommands import LoadedGHCiCommands
-
-def new_ghci():
-	return LoadedGHCiCommands(GHCiCommands(GHCiConnection()))
+from SublimeGHCi.ExecutableProvider import ExecutableProvider
 
 class HaskellView(object):
 	def __init__(self, view, error_reporter):
-		self.__ghci = new_ghci()
 		self.__view = view
+		self.__executable_provider = ExecutableProvider(view)
 		self.__error_reporter = error_reporter
+		self.__ghci = self.__new_ghci()
 
 		print(self.__ghci.connection().loaded())
 		self.__compile()
+
+	def __new_ghci(self):
+		return LoadedGHCiCommands(GHCiCommands(GHCiConnection(self.__executable_provider)))
 
 	def __compile(self):
 		print('compiling {}'.format(self.__view.file_name()))

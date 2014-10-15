@@ -5,9 +5,9 @@ prompt_repeating_part = b']]]]]]]]]]]]]]]]'
 prompt = (prompt_repeating_part + prompt_repeating_part[:-1]).decode('utf-8')
 
 class GHCiConnection(object):
-	def __init__(self):
+	def __init__(self, executable_provider):
 		self.__loaded = False
-		self.__sp = subprocess.Popen("/usr/local/bin/ghci", stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
+		self.__sp = subprocess.Popen(executable_provider.ghci_command(), stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
 		self.__consume_beginning()
 
 	def __read_until_prompt(self):
