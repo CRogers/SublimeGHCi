@@ -1,5 +1,6 @@
 import subprocess
 import re
+import os
 
 prompt_repeating_part = b']]]]]]]]]]]]]]]]'
 prompt = (prompt_repeating_part + prompt_repeating_part[:-1]).decode('utf-8')
@@ -7,8 +8,18 @@ prompt = (prompt_repeating_part + prompt_repeating_part[:-1]).decode('utf-8')
 class GHCiConnection(object):
 	def __init__(self, executable_provider):
 		self.__loaded = False
-		self.__sp = subprocess.Popen(executable_provider.ghci_command(), stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
+		self.__sp = self.__open(executable_provider)
 		self.__consume_beginning()
+
+	def __open(self, executable_provider):
+		project_directory = executable_provider.project_directory()
+		oldcwd = os.getcwd()
+		if project_directory != None:
+			os.chdir(project_directory)
+		cat = subprocess.Popen(executable_provider.ghci_command(), stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
+		if project_directory != None:
+			os.chdir(oldcwd)
+		return cat
 
 	def __read_until_prompt(self):
 		data = b''
