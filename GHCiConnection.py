@@ -7,8 +7,9 @@ prompt_repeating_part = b']]]]]]]]]]]]]]]]'
 prompt = (prompt_repeating_part + prompt_repeating_part[:-1]).decode('utf-8')
 
 class GHCiConnection(object):
-	def __init__(self, executable_provider):
+	def __init__(self, executable_provider, on_loaded):
 		self.__loaded = False
+		self.__on_loaded = on_loaded
 		self.__sp = self.__open(executable_provider)
 		t = Thread(target=self.__consume_beginning)
 		t.daemon = True
@@ -45,20 +46,19 @@ class GHCiConnection(object):
 		ghci_start = b'GHCi, version'
 		full_message = b''
 		last_n_chars = b''
-		print('start')
 		while last_n_chars != ghci_start:
 			c = self.__sp.stdout.read(1)
 			if len(c) == 0:
-				print('failed to load ghci: ' + full_message.decode('utf-8'))
+				print('Failed to load ghci: ' + full_message.decode('utf-8'))
 				return
-			print(c)
 			full_message += c
 			last_n_chars += c
 			if len(last_n_chars) > len(ghci_start):
 				last_n_chars = last_n_chars[1:]
 		self.message(':set prompt ' + prompt)
-		print('loaded')
+		print('Loaded ghci')
 		self.__loaded = True
+		self.__on_loaded()
 
 	def loaded(self):
 		return self.__loaded

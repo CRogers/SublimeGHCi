@@ -10,11 +10,8 @@ class HaskellView(object):
 		self.__error_reporter = error_reporter
 		self.__ghci = self.__new_ghci()
 
-		print(self.__ghci.connection().loaded())
-		self.__compile()
-
 	def __new_ghci(self):
-		return LoadedGHCiCommands(GHCiCommands(GHCiConnection(self.__executable_provider)))
+		return LoadedGHCiCommands(GHCiCommands(GHCiConnection(self.__executable_provider, self.__compile)))
 
 	def __compile(self):
 		print('compiling {}'.format(self.__view.file_name()))
