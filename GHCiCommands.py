@@ -12,7 +12,6 @@ ambiguous_regex = r'Ambiguous occurrence ‘.*?’(?:\n|.)*?either ‘.*?’(?:\
 
 def is_ambiguous(str):
 	match = re.search(ambiguous_regex, str)
-	print('{} -> {}'.format(str, match))
 	if match == None:
 		return Fallible.succeed(str)
 	else:
