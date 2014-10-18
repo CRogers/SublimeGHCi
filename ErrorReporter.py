@@ -16,6 +16,18 @@ class ErrorPos(object):
 	def region(self):
 		return self.__region
 
+def absolute_path(path, root_directory):
+	if path.startswith('/'):
+		return path
+	else:
+		return '{}/{}'.format(root_directory, path)
+
+def files_compiled(str, project_directory):
+	matches = re.finditer(r'\] Compiling .*?\( (.*?),', str)
+	possibly_relative_paths = map(lambda match: match.group(1), matches)
+	paths = map(lambda path: absolute_path(path, project_directory), possibly_relative_paths)
+	return list(paths)
+
 def match_to_error_pos(match):
 	file_name = match.group(1)
 	row = int(match.group(2)) - 1
@@ -31,9 +43,10 @@ class ErrorReporter(object):
 		self.__output_panel = OutputPanel('sublime_ghci')
 		self.__error_highlights = ErrorHighlights()
 
-	def report_errors(self, error_message):
+	def report_errors(self, error_message, project_directory):
 		self.__output_panel.display_text(error_message)
 		error_positions = parse_errors(error_message)
+		print(files_compiled(error_message, project_directory))
 		self.__error_highlights.highlight(error_positions)
 
 	def clear_errors(self):

@@ -20,7 +20,7 @@ class HaskellView(object):
 	def saved(self):
 		(self.__compile()
 			.map(lambda _: self.__error_reporter.clear_errors())
-			.mapFail(self.__error_reporter.report_errors))
+			.mapFail(lambda err: self.__error_reporter.report_errors(err, self.__executable_provider.project_directory())))
 
 	def __autocomplete_entry(self, expr):
 		return (expr + '\t' + self.__ghci.type_or_kind_of(expr).value(), expr)
