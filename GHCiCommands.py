@@ -5,7 +5,8 @@ def get_last_part(sig):
 	return re.match(r'([A-Z].*?\.)*(.*)$', sig).group(2)
 
 def get_info_part(str):
-	return re.sub(r'^.* :: (.*?)$', r'\1', str)
+	type_with_breaks = re.sub(r'^(\n|.)*:: ((.|\n)*?)$', r'\2', str)
+	return re.sub(r'\n\s*', r' ', type_with_breaks)
 
 def is_defined(str):
 	return re.search(r'Not in scope', str) == None
