@@ -5,8 +5,18 @@ def get_last_part(sig):
 	return re.match(r'([A-Z].*?\.)*(.*)$', sig).group(2)
 
 def get_info_part(str):
-	type_with_breaks = re.sub(r'^(\n|.)*:: ((.|\n)*?)$', r'\2', str)
+	type_with_breaks = re.sub(r'^(?:\n|.)*:: ((?:.|\n)*?)$', r'\1', str)
 	return re.sub(r'\n\s*', r' ', type_with_breaks)
+
+ambiguous_regex = r'Ambiguous occurrence ‘.*?’(?:\n|.)*?either ‘.*?’(?:\n|.)*?imported from (‘.*?’)(?:\n|.)*?or ‘.*?’(?:\n|.)*?imported from (‘.*?’)'
+
+def is_ambiguous(str):
+	match = re.search(ambiguous_regex, str)
+	print('{} -> {}'.format(str, match))
+	if match == None:
+		return Fallible.succeed(str)
+	else:
+		return Fallible.fail('Ambiguous: from {} or {}'.format(match.group(1), match.group(2)))
 
 def is_defined(str):
 	return re.search(r'Not in scope', str) == None
@@ -44,7 +54,8 @@ class GHCiCommands(object):
 		last_part = get_last_part(sig) 
 		return (self
 			.type_of(sig)
-			.or_else(lambda _: self.kind_of(sig)))
+			.or_else(lambda _: self.kind_of(sig))
+			.bind(is_ambiguous))
 
 	def load_haskell_file(self, file_name):
 		msg = ':load "{}"'.format(file_name)
