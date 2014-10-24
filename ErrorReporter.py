@@ -1,11 +1,13 @@
 import sublime, re
 
+from SublimeGHCi.Common import find_open_file
 from SublimeGHCi.OutputPanel import OutputPanel
 from SublimeGHCi.Highlights import ErrorHighlights
 
 class ErrorPos(object):
 	def __init__(self, file_name, row, col):
-		self.__view = sublime.active_window().find_open_file(file_name)
+		print('{}:{}:{}'.format(file_name, row, col))
+		self.__view = find_open_file(file_name)
 		start = self.__view.text_point(row, col)
 		line = self.__view.line(start)
 		self.__region = sublime.Region(start, line.end())
@@ -26,17 +28,17 @@ def files_compiled(str, project_directory):
 	matches = re.finditer(r'\] Compiling .*?\( (.*?),', str)
 	possibly_relative_paths = map(lambda match: match.group(1), matches)
 	paths = map(lambda path: absolute_path(path, project_directory), possibly_relative_paths)
-	return list(paths)
+	return set(paths)
 
-def match_to_error_pos(match):
-	file_name = match.group(1)
+def match_to_error_pos(match, project_directory):
+	file_name = absolute_path(match.group(1), project_directory)
 	row = int(match.group(2)) - 1
 	col = int(match.group(3)) - 1
 	return ErrorPos(file_name, row, col)
 
-def parse_errors(error_message):
+def parse_errors(error_message, project_directory):
 	matches = re.finditer(r'(.*?):(\d+):(\d+):\n', error_message)
-	return map(match_to_error_pos, matches)
+	return list(map(lambda match: match_to_error_pos(match, project_directory), matches))
 
 class ErrorReporter(object):
 	def __init__(self):
@@ -45,8 +47,10 @@ class ErrorReporter(object):
 
 	def report_errors(self, error_message, project_directory):
 		self.__output_panel.display_text(error_message)
-		error_positions = parse_errors(error_message)
-		print(files_compiled(error_message, project_directory))
+		error_positions = parse_errors(error_message, project_directory)
+		compiled = files_compiled(error_message, project_directory)
+		successful = compiled.difference(map(lambda ep: ep.view().file_name(), error_positions))
+		print(successful)
 		self.__error_highlights.highlight(error_positions)
 
 	def clear_errors(self):
