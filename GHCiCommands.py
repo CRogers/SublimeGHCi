@@ -63,3 +63,7 @@ class GHCiCommands(object):
 		msg = ':load "{}"'.format(file_name)
 		response = self.__ghci.message(msg)
 		return Fallible.from_bool(load_succeeded, response)
+
+	def run_expr(self, expr):
+		response = self.__ghci.message(expr)
+		return Fall.from_bool(is_defined, response)

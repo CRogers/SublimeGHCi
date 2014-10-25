@@ -42,7 +42,7 @@ def parse_errors(error_message, project_directory):
 
 class ErrorReporter(object):
 	def __init__(self):
-		self.__output_panel = OutputPanel('sublime_ghci')
+		self.__output_panel = OutputPanel()
 		self.__error_highlights = ErrorHighlights()
 
 	def report_errors(self, error_message, project_directory):

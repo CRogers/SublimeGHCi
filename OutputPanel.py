@@ -1,4 +1,4 @@
-import sublime, sublime_plugin
+import sublime, sublime_plugin, uuid
 
 class SublimeGhciOutputText(sublime_plugin.TextCommand):
 	def run(self, edit, text = None):
@@ -9,8 +9,8 @@ class SublimeGhciOutputText(sublime_plugin.TextCommand):
 		self.view.insert(edit, 0, text)
 
 class OutputPanel(object):
-	def __init__(self, name):
-		self.__name = name
+	def __init__(self):
+		self.__name = str(uuid.uuid4())
 		self.__output_panel = None
 
 	def __create_output_panel(self):

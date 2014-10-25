@@ -33,3 +33,6 @@ class LoadedGHCiCommands(object):
 
 	def load_haskell_file(self, file_name):
 		return self.__try_or_fail('load_haskell_file', file_name)
+
+	def run_expr(self, expr):
+		return self.__try_or_fail('run_expr', expr)
