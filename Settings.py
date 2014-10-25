@@ -1,6 +1,6 @@
 import sublime, os
 
-class ExecutableProvider(object):
+class Settings(object):
 	def __init__(self, view):
 		self.__view = view
 		self.__settings = view.settings()

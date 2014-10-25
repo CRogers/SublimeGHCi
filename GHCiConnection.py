@@ -7,21 +7,21 @@ prompt_repeating_part = b']]]]]]]]]]]]]]]]'
 prompt = (prompt_repeating_part + prompt_repeating_part[:-1]).decode('utf-8')
 
 class GHCiConnection(object):
-	def __init__(self, executable_provider, on_loaded):
+	def __init__(self, settings, on_loaded):
 		self.__loaded = False
 		self.__on_loaded = on_loaded
-		self.__sp = self.__open(executable_provider)
+		self.__sp = self.__open(settings)
 		t = Thread(target=self.__consume_beginning)
 		t.daemon = True
 		t.start()
 
-	def __open(self, executable_provider):
-		project_directory = executable_provider.project_directory()
+	def __open(self, settings):
+		project_directory = settings.project_directory()
 		oldcwd = os.getcwd()
 		if project_directory != None:
 			os.chdir(project_directory)
-		print("Creating ghic connection using {}".format(executable_provider.ghci_command()))
-		cat = subprocess.Popen(executable_provider.ghci_command(), stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
+		print("Creating ghic connection using {}".format(settings.ghci_command()))
+		cat = subprocess.Popen(settings.ghci_command(), stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
 		if project_directory != None:
 			os.chdir(oldcwd)
 		return cat
