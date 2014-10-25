@@ -4,8 +4,8 @@ class LoadedGHCiCommands(object):
 	def __init__(self, ghci_commands):
 		self.__commands = ghci_commands
 
-	def connection(self):
-		return self.__commands.connection()
+	def close(self):
+		return self.__commands.close()
 
 	def completions(self, prefix):
 		if self.connection().loaded():
