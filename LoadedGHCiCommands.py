@@ -4,17 +4,20 @@ class LoadedGHCiCommands(object):
 	def __init__(self, ghci_commands):
 		self.__commands = ghci_commands
 
-	def connection(self):
-		return self.__commands.connection()
+	def close(self):
+		return self.__commands.close()
+
+	def loaded(self):
+		return self.__commands.loaded()
 
 	def completions(self, prefix):
-		if self.connection().loaded():
+		if self.loaded():
 			return self.__commands.completions(prefix)
 		else:
 			return Fallible.fail([])
 
 	def __try_or_fail(self, funcName, arg):
-		if self.connection().loaded():
+		if self.loaded():
 			return getattr(self.__commands, funcName)(arg)
 		else:
 			return Fallible.fail('GHCi has not yet loaded')

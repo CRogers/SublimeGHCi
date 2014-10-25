@@ -31,4 +31,4 @@ class HaskellView(object):
 			.map(lambda completions: [ self.__autocomplete_entry(x) for x in completions ]))
 
 	def close(self):
-		self.__ghci.connection().terminate()
+		self.__ghci.close()
