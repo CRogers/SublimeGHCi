@@ -4,7 +4,6 @@ class SublimeGhciOutputText(sublime_plugin.TextCommand):
 	def run(self, edit, text = None):
 		if text == None:
 			return
-		print('edit ' + text)
 		self.view.erase(edit, sublime.Region(0, self.view.size()))
 		self.view.insert(edit, 0, text)
 

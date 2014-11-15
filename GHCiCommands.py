@@ -66,4 +66,4 @@ class GHCiCommands(object):
 
 	def run_expr(self, expr):
 		response = self.__ghci.message(expr)
-		return Fall.from_bool(is_defined, response)
+		return Fallible.from_bool(is_defined, response)
