@@ -5,12 +5,17 @@ from SublimeGHCi.OutputPanel import OutputPanel
 from SublimeGHCi.Highlights import ErrorHighlights
 
 class ErrorPos(object):
-	def __init__(self, file_name, row, col):
-		print('{}:{}:{}'.format(file_name, row, col))
-		self.__view = find_open_file(file_name)
+	def __init__(self, view, region):
+		self.__view = view
+		self.__region = region
+
+	@staticmethod
+	def to_end_of_line(file_name, row, col):
+		view = find_open_file(file_name)
 		start = self.__view.text_point(row, col)
 		line = self.__view.line(start)
-		self.__region = sublime.Region(start, line.end())
+		region = sublime.Region(start, line.end())
+		return ErrorPos(view, region)
 
 	def view(self):
 		return self.__view
@@ -34,7 +39,7 @@ def match_to_error_pos(match, project_directory):
 	file_name = absolute_path(match.group(1), project_directory)
 	row = int(match.group(2)) - 1
 	col = int(match.group(3)) - 1
-	return ErrorPos(file_name, row, col)
+	return ErrorPos.to_end_of_line(file_name, row, col)
 
 def parse_errors(error_message, project_directory):
 	matches = re.finditer(r'(.*?):(\d+):(\d+):\n', error_message)

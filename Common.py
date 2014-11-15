@@ -1,4 +1,4 @@
-import sublime
+import sublime, re
 
 class Fallible(object):
 	def __init__(self, succeeded, value):
@@ -44,8 +44,18 @@ class Fallible(object):
 	def mapFail(self, func):
 		return self.or_else(lambda x: Fallible.fail(func(x)))
 
-def find_open_file(file_name):
+def all_views():
 	for window in sublime.windows():
 		for view in window.views():
-			if view.file_name() == file_name:
-				return view
+			yield view
+
+def find_open_file(file_name):
+	for view in all_views():
+		if view.file_name() == file_name:
+			return view
+
+def find_in_open_files(pattern):
+	for view in all_views():
+		region = view.find(pattern, 0)
+		if region.begin() != -1 and region.end() != -1:
+			return {"view": view, "region": region}

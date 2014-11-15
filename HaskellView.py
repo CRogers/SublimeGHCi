@@ -38,3 +38,4 @@ class HaskellView(object):
 
 	def close(self):
 		self.__ghci.close()
+		self.__test_runner.close()
