@@ -5,11 +5,11 @@ from SublimeGHCi.Settings import Settings
 from SublimeGHCi.TestRunner import TestRunner
 
 class HaskellView(object):
-	def __init__(self, view, error_reporter):
+	def __init__(self, view, error_reporter, test_highlights):
 		self.__view = view
 		self.__settings = Settings(view)
 		self.__error_reporter = error_reporter
-		self.__test_runner = TestRunner(self.__settings)
+		self.__test_runner = TestRunner(self.__settings, test_highlights)
 		self.__ghci = self.__new_ghci()
 
 	def __new_ghci(self):

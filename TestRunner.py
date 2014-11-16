@@ -20,11 +20,11 @@ def extract_error_positions(result):
 			yield ErrorPos(result["view"], result["region"])
 
 class TestRunner(object):
-	def __init__(self, settings):
+	def __init__(self, settings, highlights):
 		self.__settings = settings
 		self.__ghci = LoadedGHCiCommands(GHCiCommands(GHCiConnection(settings)))
 		self.__output_panel = OutputPanel()
-		self.__highlights = ErrorHighlights()
+		self.__highlights = highlights
 
 	def __tests_failed(self, message):
 		self.__output_panel.display_text(message)
