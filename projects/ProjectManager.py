@@ -28,7 +28,7 @@ class ProjectManager(object):
 		deepest_folder = self._get_deepest_folder(folders_view_is_in, directory_of_view)
 		
 		if deepest_folder.has_project_data():
-			return CustomProject(deepest_folder.project_data())
+			return CustomProject(deepest_folder.folder(), deepest_folder.project_data())
 
 		project = GhciProject(deepest_folder.folder())
 		if self._project_file_detector.has_cabal_file(deepest_folder.folder()):

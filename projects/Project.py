@@ -27,8 +27,12 @@ class NixProject(object):
 		return "nix-shell --pure --command '{}'".format(ghci)
 
 class CustomProject(object):
-	def __init__(self, project_data):
+	def __init__(self, base_path, project_data):
+		self._base_path = base_path
 		self._project_data = project_data
 
 	def ghci_command(self):
 		return self._project_data['ghci_command']
+
+	def base_path(self):
+		return self._base_path
