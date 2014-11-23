@@ -8,8 +8,10 @@ class ProjectManager(object):
 
 	def project_for_view(self, view):
 		folders = self._window_info.folders()
-		if len(folders) == 0:
-			return Project('ghci', os.path.dirname(view.file_name()))
+		directory_of_view = os.path.dirname(view.file_name())
+		folders_view_is_in = list(filter(lambda folder: directory_of_view.startswith(folder), folders))
+		if len(folders_view_is_in) == 0:
+			return Project('ghci', directory_of_view)
 		
 		if len(folders) == 2:
 			return Project('ghci', 'a/b')

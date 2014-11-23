@@ -30,6 +30,12 @@ class ProjectManager_projects_for_view_Spec(unittest.TestCase):
 		project = self.project_manager.project_for_view(view)
 		self.assertEqual(project.base_path(), 'a/b')
 
+	def test_the_base_path_for_a_file_not_in_any_folders_should_be_the_directory_of_the_file_when_there_is_a_folders_it_isnt_in(self):
+		view = ViewShim('a/b/c.hs')
+		self.window_info._folders = ['xyz']
+		project = self.project_manager.project_for_view(view)
+		self.assertEqual(project.base_path(), 'a/b')
+
 	def test_when_the_file_is_within_a_folder_the_base_path_should_be_that_folder(self):
 		view = ViewShim('a/b/c.hs')
 		self.window_info._folders = ['a']
