@@ -5,4 +5,4 @@ class ProjectManager(object):
 		pass
 
 	def project_for_view(self, view):
-		return Project('ghci')
+		return Project('ghci', 'a/b')
