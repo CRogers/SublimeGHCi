@@ -35,3 +35,9 @@ class ProjectManager_projects_for_view_Spec(unittest.TestCase):
 		self.window_info._folders = ['a']
 		project = self.project_manager.project_for_view(view)
 		self.assertEqual(project.base_path(), 'a')
+
+	def test_when_the_file_is_within_two_folders_the_base_path_should_be_the_deepest_folder(self):
+		view = ViewShim('a/b/c.hs')
+		self.window_info._folders = ['a', 'a/b']
+		project = self.project_manager.project_for_view(view)
+		self.assertEqual(project.base_path(), 'a/b')
