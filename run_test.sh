@@ -1,1 +1,1 @@
-PYTHONPATH="$(pwd)" python3 tests/tests.py
+python3 -m unittest discover -s tests -p *Spec.py
