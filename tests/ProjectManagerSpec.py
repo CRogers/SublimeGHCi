@@ -73,14 +73,20 @@ class ProjectManager_projects_for_view_Spec(unittest.TestCase):
 		project = self.project_manager.project_for_view(view)
 		self.assertEqual(project.ghci_command(), 'cabal repl')
 
-	def test_when_there_is_a_default_dot_nix_in_the_files_directory_use_nix_shell_pure(self):
+	def test_when_there_is_a_default_nix_in_the_files_directory_use_nix_shell_pure(self):
 		view = ViewShim('a/b.hs')
 		self.window_info._folders = ['a']
 		self.project_file_detector._has_default_nix_file = True
 		project = self.project_manager.project_for_view(view)
-		self.assertEqual(project.ghci_command(), 'nix-shell --pure ghci')
+		self.assertEqual(project.ghci_command(), "nix-shell --pure --command 'ghci'")
 
-
+	def test_when_there_is_a_default_nix_and_a_cabal_file_in_the_files_directory_use_nix_shell_pure_cabal_repl(self):
+		view = ViewShim('a/b.hs')
+		self.window_info._folders = ['a']
+		self.project_file_detector._has_cabal_file = True
+		self.project_file_detector._has_default_nix_file = True
+		project = self.project_manager.project_for_view(view)
+		self.assertEqual(project.ghci_command(), "nix-shell --pure --command 'cabal repl'")
 
 
 

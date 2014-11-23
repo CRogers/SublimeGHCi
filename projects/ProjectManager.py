@@ -26,10 +26,11 @@ class ProjectManager(object):
 			return Project('ghci', directory_of_view)
 		
 		deepest_folder = self._get_deepest_folder(folders_view_is_in, directory_of_view)
+		ghci_command = 'ghci'
 		if self._project_file_detector.has_cabal_file(deepest_folder):
-			return Project('cabal repl', deepest_folder)
+			ghci_command = 'cabal repl'
 
 		if self._project_file_detector.has_default_nix_file(deepest_folder):
-			return Project('nix-shell --pure ghci', deepest_folder)
+			ghci_command = "nix-shell --pure --command '{}'".format(ghci_command)
 
-		return Project('ghci', deepest_folder)
+		return Project(ghci_command, deepest_folder)
