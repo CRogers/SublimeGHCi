@@ -1,5 +1,5 @@
-from SublimeGHCi.ghci.GHCiConnection import *
-from SublimeGHCi.GHCiCommands import GHCiCommands
+from SublimeGHCi.ghci.GhciConnection import *
+from SublimeGHCi.ghci.GhciCommands import *
 from SublimeGHCi.LoadedGHCiCommands import LoadedGHCiCommands
 from SublimeGHCi.Settings import Settings
 from SublimeGHCi.TestRunner import TestRunner
@@ -13,7 +13,7 @@ class HaskellView(object):
 		self.__ghci = self.__new_ghci()
 
 	def __new_ghci(self):
-		return LoadedGHCiCommands(GHCiCommands(GHCiConnection(self.__settings, self.__compile)))
+		return LoadedGHCiCommands(GhciCommands(GhciConnection(self.__settings, self.__compile)))
 
 	def __compile(self):
 		print('compiling {}'.format(self.__view.file_name()))
