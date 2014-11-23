@@ -12,8 +12,8 @@ class ErrorPos(object):
 	@staticmethod
 	def to_end_of_line(file_name, row, col):
 		view = find_open_file(file_name)
-		start = self.__view.text_point(row, col)
-		line = self.__view.line(start)
+		start = view.text_point(row, col)
+		line = view.line(start)
 		region = sublime.Region(start, line.end())
 		return ErrorPos(view, region)
 
