@@ -17,7 +17,8 @@ class ViewShim(object):
 
 class ProjectManager_projects_for_view_Spec(unittest.TestCase):
 	def setUp(self):
-		self.project_manager = ProjectManager()
+		self.window_info = WindowInfoShim()
+		self.project_manager = ProjectManager(self.window_info)
 
 	def test_should_return_project_with_raw_ghci_for_file_when_there_are_no_folders(self):
 		view = ViewShim('foo.hs')
@@ -28,3 +29,9 @@ class ProjectManager_projects_for_view_Spec(unittest.TestCase):
 		view = ViewShim('a/b/c.hs')
 		project = self.project_manager.project_for_view(view)
 		self.assertEqual(project.base_path(), 'a/b')
+
+	def test_when_the_file_is_within_a_folder_the_base_path_should_be_that_folder(self):
+		view = ViewShim('a/b/c.hs')
+		self.window_info._folders = ['a']
+		project = self.project_manager.project_for_view(view)
+		self.assertEqual(project.base_path(), 'a')
