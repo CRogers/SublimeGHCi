@@ -4,7 +4,7 @@ from SublimeGHCi.Common import find_in_open_files
 from SublimeGHCi.common.Fallible import *
 from SublimeGHCi.ErrorReporter import ErrorPos
 from SublimeGHCi.Highlights import ErrorHighlights
-from SublimeGHCi.GHCiConnection import GHCiConnection
+from SublimeGHCi.ghci.GHCiConnection import *
 from SublimeGHCi.GHCiCommands import GHCiCommands
 from SublimeGHCi.LoadedGHCiCommands import LoadedGHCiCommands
 from SublimeGHCi.OutputPanel import OutputPanel

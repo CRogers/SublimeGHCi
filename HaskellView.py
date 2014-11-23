@@ -1,4 +1,4 @@
-from SublimeGHCi.GHCiConnection import GHCiConnection
+from SublimeGHCi.ghci.GHCiConnection import *
 from SublimeGHCi.GHCiCommands import GHCiCommands
 from SublimeGHCi.LoadedGHCiCommands import LoadedGHCiCommands
 from SublimeGHCi.Settings import Settings
