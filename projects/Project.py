@@ -25,3 +25,10 @@ class NixProject(object):
 	def ghci_command(self):
 		ghci = self._inner_project.ghci_command()
 		return "nix-shell --pure --command '{}'".format(ghci)
+
+class CustomProject(object):
+	def __init__(self, project_data):
+		self._project_data = project_data
+
+	def ghci_command(self):
+		return self._project_data['ghci_command']
