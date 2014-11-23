@@ -13,7 +13,12 @@ class ProjectManager(object):
 		if len(folders_view_is_in) == 0:
 			return Project('ghci', directory_of_view)
 		
-		if len(folders) == 2:
-			return Project('ghci', 'a/b')
+		deepest_folder_prefix_len = 0
+		deepest_folder = None
+		for folder in folders_view_is_in:
+			prefix = os.path.commonprefix([folder, directory_of_view])
+			if len(prefix) > deepest_folder_prefix_len:
+				deepest_folder_prefix_len = len(prefix)
+				deepest_folder = folder
 
-		return Project('ghci', 'a')
+		return Project('ghci', deepest_folder)
