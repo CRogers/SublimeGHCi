@@ -19,7 +19,7 @@ class ProjectManager(object):
 		return deepest_folder
 
 	def project_for_view(self, view):
-		folders = self._window_info.folders()
+		folders = map(lambda x: x.folder(), self._window_info.folders())
 		directory_of_view = os.path.dirname(view.file_name())
 		folders_view_is_in = list(filter(lambda folder: directory_of_view.startswith(folder), folders))
 		if len(folders_view_is_in) == 0:
