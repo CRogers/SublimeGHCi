@@ -24,7 +24,7 @@ class NixProject(object):
 
 	def ghci_command(self):
 		ghci = self._inner_project.ghci_command()
-		return ['nix-shell', '--pure', '--command', "'{}'".format(' '.join(ghci))]
+		return ['nix-shell', '--pure', '--command', "{}".format(' '.join(ghci))]
 
 	def base_path(self):
 		return self._inner_project.base_path()
