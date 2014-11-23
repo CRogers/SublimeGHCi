@@ -6,24 +6,21 @@ from threading import Thread
 prompt_repeating_part = b']]]]]]]]]]]]]]]]'
 prompt = (prompt_repeating_part + prompt_repeating_part[:-1]).decode('utf-8')
 
-class GHCiConnection(object):
-	def __init__(self, settings, on_loaded = lambda: None):
+class GhciConnection(object):
+	def __init__(self, project, on_loaded = lambda: None):
 		self.__loaded = False
 		self.__on_loaded = on_loaded
-		self.__sp = self.__open(settings)
+		self.__sp = self.__open(project)
 		t = Thread(target=self.__consume_beginning)
 		t.daemon = True
 		t.start()
 
-	def __open(self, settings):
-		project_directory = settings.project_directory()
+	def __open(self, project):
 		oldcwd = os.getcwd()
-		if project_directory != None:
-			os.chdir(project_directory)
-		print("Creating ghic connection using {}".format(settings.ghci_command()))
-		cat = subprocess.Popen(settings.ghci_command(), stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
-		if project_directory != None:
-			os.chdir(oldcwd)
+		os.chdir(project.base_path())
+		print("Creating ghci connection using {}".format(project.ghci_command()))
+		cat = subprocess.Popen(project.ghci_command(), stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
+		os.chdir(oldcwd)
 		return cat
 
 	def __read_until_prompt(self):

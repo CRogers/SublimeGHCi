@@ -1,6 +1,4 @@
-from SublimeGHCi.GHCiConnection import GHCiConnection
-from SublimeGHCi.GHCiCommands import GHCiCommands
-from SublimeGHCi.LoadedGHCiCommands import LoadedGHCiCommands
+from SublimeGHCi.ghci.defaults import *
 from SublimeGHCi.Settings import Settings
 from SublimeGHCi.TestRunner import TestRunner
 
@@ -9,11 +7,8 @@ class HaskellView(object):
 		self.__view = view
 		self.__settings = Settings(view)
 		self.__error_reporter = error_reporter
-		self.__test_runner = TestRunner(self.__settings, test_highlights)
-		self.__ghci = self.__new_ghci()
-
-	def __new_ghci(self):
-		return LoadedGHCiCommands(GHCiCommands(GHCiConnection(self.__settings, self.__compile)))
+		self.__test_runner = TestRunner(self.__settings, view, test_highlights)
+		self.__ghci = default_ghci_factory().new_ghci_for_view(view, self.__compile)
 
 	def __compile(self):
 		print('compiling {}'.format(self.__view.file_name()))

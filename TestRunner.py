@@ -1,11 +1,10 @@
 import re
 
-from SublimeGHCi.Common import *
+from SublimeGHCi.Common import find_in_open_files
+from SublimeGHCi.common.Fallible import *
 from SublimeGHCi.ErrorReporter import ErrorPos
 from SublimeGHCi.Highlights import ErrorHighlights
-from SublimeGHCi.GHCiConnection import GHCiConnection
-from SublimeGHCi.GHCiCommands import GHCiCommands
-from SublimeGHCi.LoadedGHCiCommands import LoadedGHCiCommands
+from SublimeGHCi.ghci.defaults import *
 from SublimeGHCi.OutputPanel import OutputPanel
 
 def has_failed(result):
@@ -20,9 +19,9 @@ def extract_error_positions(result):
 			yield ErrorPos(result["view"], result["region"])
 
 class TestRunner(object):
-	def __init__(self, settings, highlights):
+	def __init__(self, settings, view, highlights):
 		self.__settings = settings
-		self.__ghci = LoadedGHCiCommands(GHCiCommands(GHCiConnection(settings)))
+		self.__ghci = default_ghci_factory().new_ghci_for_view(view)
 		self.__output_panel = OutputPanel()
 		self.__highlights = highlights
 

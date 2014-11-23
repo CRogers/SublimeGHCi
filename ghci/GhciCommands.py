@@ -1,5 +1,5 @@
 import re
-from SublimeGHCi.Common import *
+from SublimeGHCi.common.Fallible import *
 
 def get_last_part(sig):
 	return re.match(r'([A-Z].*?\.)*(.*)$', sig).group(2)
@@ -23,7 +23,7 @@ def is_defined(str):
 def load_succeeded(response):
 	return re.search(r'Failed, modules loaded:', response) == None
 
-class GHCiCommands(object):
+class GhciCommands(object):
 	def __init__(self, ghci_connection):
 		self.__ghci = ghci_connection
 
