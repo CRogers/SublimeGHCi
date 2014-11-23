@@ -1,6 +1,7 @@
 import re
 
-from SublimeGHCi.Common import *
+from SublimeGHCi.Common import find_in_open_files
+from SublimeGHCi.common.Fallible import *
 from SublimeGHCi.ErrorReporter import ErrorPos
 from SublimeGHCi.Highlights import ErrorHighlights
 from SublimeGHCi.GHCiConnection import GHCiConnection

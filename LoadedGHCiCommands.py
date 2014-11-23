@@ -1,4 +1,4 @@
-from SublimeGHCi.Common import *
+from SublimeGHCi.common.Fallible import *
 
 class LoadedGHCiCommands(object):
 	def __init__(self, ghci_commands):

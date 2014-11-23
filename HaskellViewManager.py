@@ -1,6 +1,6 @@
 import re
 
-from SublimeGHCi.Common import *
+from SublimeGHCi.common.Fallible import *
 from SublimeGHCi.ErrorReporter import ErrorReporter, ErrorHighlights
 from SublimeGHCi.HaskellView import HaskellView
 

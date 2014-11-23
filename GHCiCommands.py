@@ -1,5 +1,5 @@
 import re
-from SublimeGHCi.Common import *
+from SublimeGHCi.common.Fallible import *
 
 def get_last_part(sig):
 	return re.match(r'([A-Z].*?\.)*(.*)$', sig).group(2)
