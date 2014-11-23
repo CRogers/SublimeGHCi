@@ -6,7 +6,7 @@ class GhciFactory(object):
 	def __init__(self, project_manager):
 		self._project_manager = project_manager
 
-	def new_ghci_for_view(self, view, on_loaded=None):
+	def new_ghci_for_view(self, view, on_loaded=lambda: None):
 		project = self._project_manager.project_for_view(view)
 		connection = GhciConnection(project, on_loaded)
 		return LoadedGhciCommands(GhciCommands(connection))
