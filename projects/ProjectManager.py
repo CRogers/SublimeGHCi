@@ -29,4 +29,7 @@ class ProjectManager(object):
 		if self._project_file_detector.has_cabal_file(deepest_folder):
 			return Project('cabal repl', deepest_folder)
 
+		if self._project_file_detector.has_default_nix_file(deepest_folder):
+			return Project('nix-shell --pure ghci', deepest_folder)
+
 		return Project('ghci', deepest_folder)

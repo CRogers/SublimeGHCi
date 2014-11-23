@@ -11,9 +11,13 @@ class WindowInfoShim(object):
 class ProjectFileDetectorShim(object):
 	def __init__(self):
 		self._has_cabal_file = False
+		self._has_default_nix_file = False
 
 	def has_cabal_file(self, path):
 		return self._has_cabal_file
+
+	def has_default_nix_file(self, path):
+		return self._has_default_nix_file
 
 class ViewShim(object):
 	def __init__(self, file_name):
@@ -68,5 +72,24 @@ class ProjectManager_projects_for_view_Spec(unittest.TestCase):
 		self.project_file_detector._has_cabal_file = True
 		project = self.project_manager.project_for_view(view)
 		self.assertEqual(project.ghci_command(), 'cabal repl')
+
+	def test_when_there_is_a_default_dot_nix_in_the_files_directory_use_nix_shell_pure(self):
+		view = ViewShim('a/b.hs')
+		self.window_info._folders = ['a']
+		self.project_file_detector._has_default_nix_file = True
+		project = self.project_manager.project_for_view(view)
+		self.assertEqual(project.ghci_command(), 'nix-shell --pure ghci')
+
+
+
+
+
+
+
+
+
+
+
+
 
 
