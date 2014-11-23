@@ -1,10 +1,27 @@
-class Project(object):
-	def __init__(self, ghci_command, base_path):
-		self._ghci_command = ghci_command
+class GhciProject(object):
+	def __init__(self, base_path):
 		self._base_path = base_path
 
 	def ghci_command(self):
-		return self._ghci_command
+		return 'ghci'
 
 	def base_path(self):
 		return self._base_path
+
+class CabalProject(object):
+	def __init__(self, base_path):
+		self._base_path = base_path
+
+	def ghci_command(self):
+		return 'cabal repl'
+
+	def base_path(self):
+		return self._base_path
+
+class NixProject(object):
+	def __init__(self, inner_project):
+		self._inner_project = inner_project
+
+	def ghci_command(self):
+		ghci = self._inner_project.ghci_command()
+		return "nix-shell --pure --command '{}'".format(ghci)

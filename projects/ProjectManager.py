@@ -23,14 +23,14 @@ class ProjectManager(object):
 		directory_of_view = os.path.dirname(view.file_name())
 		folders_view_is_in = list(filter(lambda folder: directory_of_view.startswith(folder), folders))
 		if len(folders_view_is_in) == 0:
-			return Project('ghci', directory_of_view)
+			return GhciProject(directory_of_view)
 		
 		deepest_folder = self._get_deepest_folder(folders_view_is_in, directory_of_view)
-		ghci_command = 'ghci'
+		project = GhciProject(deepest_folder)
 		if self._project_file_detector.has_cabal_file(deepest_folder):
-			ghci_command = 'cabal repl'
+			project = CabalProject(deepest_folder)
 
 		if self._project_file_detector.has_default_nix_file(deepest_folder):
-			ghci_command = "nix-shell --pure --command '{}'".format(ghci_command)
+			project = NixProject(project)
 
-		return Project(ghci_command, deepest_folder)
+		return project
