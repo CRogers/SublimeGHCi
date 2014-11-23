@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import *
 
-from projects.ProjectManager import *
-from projects.FolderProjectData import *
+from SublimeGHCi.projects.ProjectManager import *
+from SublimeGHCi.projects.FolderProjectData import *
 
 class WindowInfoShim(object):
 	def __init__(self):

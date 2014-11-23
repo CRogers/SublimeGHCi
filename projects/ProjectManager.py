@@ -1,6 +1,6 @@
 import os
 
-from projects.Project import *
+from SublimeGHCi.projects.Project import *
 
 class ProjectManager(object):
 	def __init__(self, window_info, project_file_detector):
