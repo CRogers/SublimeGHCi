@@ -81,10 +81,11 @@ class ProjectManager_projects_for_view_Spec(unittest.TestCase):
 		project = self.project_manager.project_for_view(view)
 		self.assertEqual(project.ghci_command(), "nix-shell --pure --command 'cabal repl'")
 
-	#def test_correct_folder_is_passed_into_has_cabal_file(self):
-	#	view = ViewShim('a/b.hs')
-	#	self.window_info.folders.return_value = ['a', 'b']
-	#	self.
+	def test_correct_folder_is_passed_into_has_cabal_file(self):
+		view = ViewShim('a/b.hs')
+		self.window_info.folders.return_value = ['a', 'b']
+		project = self.project_manager.project_for_view(view)
+		self.project_file_detector.has_cabal_file.assert_called_with('a')
 
 
 
