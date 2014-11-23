@@ -106,6 +106,22 @@ class ProjectManager_projects_for_view_Spec(unittest.TestCase):
 		project = self.project_manager.project_for_view(view)
 		self.assertEqual(project.ghci_command(), 'ghci')
 
+	def test_when_there_is_project_data_for_the_files_directory_which_does_not_have_a_custom_ghci_command_but_a_cabal_file_it_should_be_cabal_repl(self):
+		view = ViewShim('a/b.hs')
+		project_data = {}
+		self.window_info.folders.return_value = [FolderProjectData('a', project_data)]
+		self.project_file_detector.has_cabal_file.return_value = True
+		project = self.project_manager.project_for_view(view)
+		self.assertEqual(project.ghci_command(), 'cabal repl')
+
+	def test_when_there_is_project_data_for_the_files_directory_which_does_not_have_a_custom_ghci_command_but_a_default_nix_file_it_should_be_nix_shell_pure_ghci(self):
+		view = ViewShim('a/b.hs')
+		project_data = {}
+		self.window_info.folders.return_value = [FolderProjectData('a', project_data)]
+		self.project_file_detector.has_default_nix_file.return_value = True
+		project = self.project_manager.project_for_view(view)
+		self.assertEqual(project.ghci_command(), "nix-shell --pure --command 'ghci'")
+
 	def test_correct_folder_is_passed_into_has_cabal_file(self):
 		view = ViewShim('a/b.hs')
 		self.simple_folders('a', 'b')
