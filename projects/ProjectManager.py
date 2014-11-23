@@ -3,8 +3,9 @@ import os
 from projects.Project import *
 
 class ProjectManager(object):
-	def __init__(self, window_info):
+	def __init__(self, window_info, project_file_detector):
 		self._window_info = window_info
+		self._project_file_detector = project_file_detector
 
 	def _get_deepest_folder(self, folders, directory_of_view):
 		deepest_folder_prefix_len = 0
@@ -25,4 +26,7 @@ class ProjectManager(object):
 			return Project('ghci', directory_of_view)
 		
 		deepest_folder = self._get_deepest_folder(folders_view_is_in, directory_of_view)
+		if self._project_file_detector.has_cabal_file(deepest_folder):
+			return Project('cabal repl', deepest_folder)
+
 		return Project('ghci', deepest_folder)

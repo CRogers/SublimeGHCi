@@ -6,7 +6,14 @@ class WindowInfoShim(object):
 		self._folders = []
 
 	def folders(self):
-		return self._folders;
+		return self._folders
+
+class ProjectFileDetectorShim(object):
+	def __init__(self):
+		self._has_cabal_file = False
+
+	def has_cabal_file(self, path):
+		return self._has_cabal_file
 
 class ViewShim(object):
 	def __init__(self, file_name):
@@ -18,7 +25,8 @@ class ViewShim(object):
 class ProjectManager_projects_for_view_Spec(unittest.TestCase):
 	def setUp(self):
 		self.window_info = WindowInfoShim()
-		self.project_manager = ProjectManager(self.window_info)
+		self.project_file_detector = ProjectFileDetectorShim()
+		self.project_manager = ProjectManager(self.window_info, self.project_file_detector)
 
 	def test_should_return_project_with_raw_ghci_for_file_when_there_are_no_folders(self):
 		view = ViewShim('foo.hs')
@@ -53,4 +61,12 @@ class ProjectManager_projects_for_view_Spec(unittest.TestCase):
 		self.window_info._folders = ['w', 'w/x', 'w/x/y']
 		project = self.project_manager.project_for_view(view)
 		self.assertEqual(project.base_path(), 'w/x/y')
+
+	def test_when_there_is_a_cabal_file_in_the_files_directory_use_cabal_repl(self):
+		view = ViewShim('a/b.hs')
+		self.window_info._folders = ['a']
+		self.project_file_detector._has_cabal_file = True
+		project = self.project_manager.project_for_view(view)
+		self.assertEqual(project.ghci_command(), 'cabal repl')
+
 
