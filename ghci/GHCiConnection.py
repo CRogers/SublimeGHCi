@@ -6,7 +6,7 @@ from threading import Thread
 prompt_repeating_part = b']]]]]]]]]]]]]]]]'
 prompt = (prompt_repeating_part + prompt_repeating_part[:-1]).decode('utf-8')
 
-class GHCiConnection(object):
+class GhciConnection(object):
 	def __init__(self, settings, on_loaded = lambda: None):
 		self.__loaded = False
 		self.__on_loaded = on_loaded
