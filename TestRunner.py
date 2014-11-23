@@ -6,7 +6,7 @@ from SublimeGHCi.ErrorReporter import ErrorPos
 from SublimeGHCi.Highlights import ErrorHighlights
 from SublimeGHCi.ghci.GhciConnection import *
 from SublimeGHCi.ghci.GhciCommands import *
-from SublimeGHCi.LoadedGHCiCommands import LoadedGHCiCommands
+from SublimeGHCi.ghci.LoadedGhciCommands import *
 from SublimeGHCi.OutputPanel import OutputPanel
 
 def has_failed(result):
@@ -23,7 +23,7 @@ def extract_error_positions(result):
 class TestRunner(object):
 	def __init__(self, settings, highlights):
 		self.__settings = settings
-		self.__ghci = LoadedGHCiCommands(GhciCommands(GhciConnection(settings)))
+		self.__ghci = LoadedGhciCommands(GhciCommands(GhciConnection(settings)))
 		self.__output_panel = OutputPanel()
 		self.__highlights = highlights
 
