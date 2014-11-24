@@ -20,3 +20,8 @@ class CompletorSpec(unittest.TestCase):
 	def test_when_completions_returns_nothing_complete_returns_nothing(self):
 		completed = self.completor.complete('abc', [123])
 		self.assertEqual(completed, [])
+
+	def test_when_completions_fails_complete_returns_nothing(self):
+		self.commands.completions.return_value = Fallible.fail('failed')
+		completed = self.completor.complete('abc', [123])
+		self.assertEqual(completed, [])
