@@ -5,8 +5,8 @@ def get_last_part(sig):
 	return re.match(r'([A-Z].*?\.)*(.*)$', sig).group(2)
 
 def get_info_part(str):
-	type_with_breaks = re.sub(r'^(?:\n|.)*:: ((?:.|\n)*?)$', r'\1', str)
-	return re.sub(r'\n\s*', r' ', type_with_breaks)
+	type_with_breaks = re.sub(r'^(?:\n|.)*::((?:.|\n)*?)$', r'\1', str)
+	return re.sub(r'\n\s*', r' ', type_with_breaks).strip()
 
 ambiguous_regex = r'Ambiguous occurrence ‘.*?’(?:\n|.)*?either ‘.*?’(?:\n|.)*?imported from (‘.*?’)(?:\n|.)*?or ‘.*?’(?:\n|.)*?imported from (‘.*?’)'
 

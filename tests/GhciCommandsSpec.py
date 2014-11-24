@@ -40,4 +40,25 @@ class LoadedGhciCommandsSpec(unittest.TestCase):
 		self.connection.message.return_value = '2 2 ""\n"abc"\n"abb"'
 		completions = self.commands.completions('a')
 		self.assertTrue(completions.successful())
-		self.assertEqual(completions.value(), ['abc', 'abb'])
+		self.assertEqual(set(completions.value()), set(['abc', 'abb']))
+
+	def test_when_calling_type_of_with_expression_should_send_appropriate_type_of_command(self):
+		self.commands.type_of('a')
+		self.connection.message.assert_called_once_with(':t (a)')
+
+	def test_when_the_type_command_returns_a_type_on_one_line_type_of_returns_that_type(self):
+		self.connection.message.return_value = 'undefined :: a'
+		type = self.commands.type_of('undefined')
+		self.assertTrue(type.successful())
+		self.assertEqual(type.value(), 'a')
+
+	def test_when_the_type_command_returns_a_type_on_two_lines_type_of_returns_that_type(self):
+		self.connection.message.return_value = 'foo\n ::\n    (a -> b)\n        -> c'
+		type = self.commands.type_of('foo')
+		self.assertTrue(type.successful())
+		self.assertEqual(type.value(), '(a -> b) -> c')
+
+	def test_when_the_type_command_returns_a_not_found_error_type_of_fails(self):
+		self.connection.message.return_value = '\n<interactive>:1:1: Not in scope: ‘cat’'
+		type = self.commands.type_of('foo')
+		self.assertTrue(type.failed())
