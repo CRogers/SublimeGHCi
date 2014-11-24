@@ -1,4 +1,4 @@
 language: python
 python:
   - "3.3"
-script: ./run_tests.sh
+script: SublimeGHCi/run_travis_ci.sh
