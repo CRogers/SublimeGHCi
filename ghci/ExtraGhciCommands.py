@@ -17,7 +17,7 @@ class ExtraGhciCommands(object):
 		self._commands.close()
 
 	def loaded(self):
-		self._commands.loaded()
+		return self._commands.loaded()
 
 	def completions(self, prefix):
 		return self._commands.completions(prefix)
