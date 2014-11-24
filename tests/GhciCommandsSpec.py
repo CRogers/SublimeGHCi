@@ -121,5 +121,31 @@ class LoadedGhciCommandsSpec(unittest.TestCase):
 		self.assertTrue(kind.failed())
 		self.assertEqual(kind.value(), 'Ambiguous: Hstml.Functor or Prelude.Functor')
 
+	def test_when_calling_load_haskell_file_with_a_filename_should_send_an_appropriate_load_command(self):
+		self.commands.load_haskell_file('a/b.hs')
+		self.connection.message.assert_called_once_with(':load "a/b.hs"')
+
+	def test_when_the_load_command_fails_to_load_modules_load_haskell_file_should_fail(self):
+		self.connection.message.return_value = '''
+[1 of 2] Compiling Hstml            ( src/Hstml.hs, interpreted )’
+Failed, modules loaded: Hstml.'''
+		load = self.commands.load_haskell_file('a/b.hs')
+		self.assertTrue(load.failed())
+
+	def test_when_the_load_command_succeeds_to_load_modules_load_haskell_file_should_succeed(self):
+		self.connection.message.return_value = '''
+[1 of 1] Compiling Hstml            ( src/Hstml.hs, interpreted )
+Ok, modules loaded: Hstml.'''
+		load = self.commands.load_haskell_file('a/b.hs')
+		self.assertTrue(load.successful())
+
+
+
+
+
+
+
+
+
 
 
