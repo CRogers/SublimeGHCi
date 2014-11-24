@@ -87,7 +87,6 @@ class LoadedGhciCommandsSpec(unittest.TestCase):
 		self.assertTrue(type.failed())
 		self.assertEqual(type.value(), 'Ambiguous: Prelude.foldr or Data.Foldable.foldr')
 
-
 	def test_when_calling_kind_of_with_expression_should_send_appropriate_kind_of_command(self):
 		self.commands.kind_of('A')
 		self.connection.message.assert_called_once_with(':k (A)') 
@@ -104,12 +103,23 @@ class LoadedGhciCommandsSpec(unittest.TestCase):
 		self.assertTrue(kind.successful())
 		self.assertEqual(kind.value(), '(k -> k) -> *')
 
+	def test_when_the_kind_command_returns_a_not_found_error_kind_of_fails(self):
+		self.connection.message.return_value = '\n<interactive>:1:1: Not in scope: type constructor or class ‘Foo’'
+		kind = self.commands.kind_of('Foo')
+		self.assertTrue(kind.failed())
 
+	def test_when_the_kind_command_returns_an_ambiguous_match_with_defined_at_and_imported_from_kind_of_fails(self):
+		self.connection.message.return_value = '''
+<interactive>:1:1:
+    Ambiguous occurrence ‘Functor’
+    It could refer to either ‘Hstml.Functor’,
+                             defined at src/Hstml.hs:19:1
+                          or ‘Prelude.Functor’,
+                             imported from ‘Prelude’ (and originally defined in ‘GHC.Base’)'''
 
-
-
-
-
+		kind = self.commands.kind_of('div')
+		self.assertTrue(kind.failed())
+		self.assertEqual(kind.value(), 'Ambiguous: Hstml.Functor or Prelude.Functor')
 
 
 
