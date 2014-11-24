@@ -11,4 +11,4 @@ class ExtraGhciCommands(object):
 		last_part = get_last_part(sig) 
 		return (self._commands
 			.type_of(sig)
-			.or_else(lambda _: self.commands.kind_of(sig)))
+			.or_else(lambda _: self._commands.kind_of(sig)))
