@@ -7,7 +7,7 @@ from SublimeGHCi.ghci.ExtraGhciCommands import *
 class GhciCommands(object):
 	pass
 
-class LoadedGhciCommandsSpec(unittest.TestCase):
+class ExtraGhciCommandsSpec(unittest.TestCase):
 	def setUp(self):
 		self.commands = GhciCommands()
 		self.commands.type_of = Mock(return_value=Fallible.succeed('t'))
