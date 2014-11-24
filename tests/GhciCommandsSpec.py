@@ -7,6 +7,12 @@ from SublimeGHCi.ghci.GhciCommands import *
 class GhciConnection(object):
 	pass
 
+ambiguous_div = """<interactive>:1:1:
+    Ambiguous occurrence ‘div’
+    It could refer to either ‘Hstml.div’, defined at src/Hstml.hs:19:1
+                          or ‘Prelude.div’,
+                             imported from ‘Prelude’ (and originally defined in ‘GHC.Real’)"""
+
 class LoadedGhciCommandsSpec(unittest.TestCase):
 	def setUp(self):
 		self.connection = GhciConnection()
@@ -61,4 +67,10 @@ class LoadedGhciCommandsSpec(unittest.TestCase):
 	def test_when_the_type_command_returns_a_not_found_error_type_of_fails(self):
 		self.connection.message.return_value = '\n<interactive>:1:1: Not in scope: ‘cat’'
 		type = self.commands.type_of('foo')
+		self.assertTrue(type.failed())
+
+	def test_when_the_type_command_returns_an_ambiguous_match_type_of_fails(self):
+		self.connection.message.return_value = ambiguous_div
+		type = self.commands.type_of('div')
+		print(type.value())
 		self.assertTrue(type.failed())

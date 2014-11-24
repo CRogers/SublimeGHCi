@@ -8,7 +8,7 @@ def get_info_part(str):
 	type_with_breaks = re.sub(r'^(?:\n|.)*::((?:.|\n)*?)$', r'\1', str)
 	return re.sub(r'\n\s*', r' ', type_with_breaks).strip()
 
-ambiguous_regex = r'Ambiguous occurrence ‘.*?’(?:\n|.)*?either ‘.*?’(?:\n|.)*?imported from (‘.*?’)(?:\n|.)*?or ‘.*?’(?:\n|.)*?imported from (‘.*?’)'
+ambiguous_regex = r'Ambiguous occurrence ‘.*?’(?:\n|.)*?either ‘(.*?)’(?:\n|.)*?defined at(?:\n|.)*?or ‘.*?’(?:\n|.)*?imported from (‘.*?’)'
 
 def is_ambiguous(str):
 	match = re.search(ambiguous_regex, str)
@@ -44,10 +44,11 @@ class GhciCommands(object):
 		response = self.__ghci.message(msg)
 		return (Fallible
 			.from_bool(is_defined, response)
+			.bind(is_ambiguous)
 			.map(get_info_part))
 
 	def type_of(self, expr):
-		return self.__expr_command('t', expr)
+		return (self.__expr_command('t', expr))
 
 	def kind_of(self, expr):
 		return self.__expr_command('k', expr)
@@ -56,8 +57,7 @@ class GhciCommands(object):
 		last_part = get_last_part(sig) 
 		return (self
 			.type_of(sig)
-			.or_else(lambda _: self.kind_of(sig))
-			.bind(is_ambiguous))
+			.or_else(lambda _: self.kind_of(sig)))
 
 	def load_haskell_file(self, file_name):
 		msg = ':load "{}"'.format(file_name)
