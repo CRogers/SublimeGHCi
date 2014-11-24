@@ -139,7 +139,16 @@ Ok, modules loaded: Hstml.'''
 		load = self.commands.load_haskell_file('a/b.hs')
 		self.assertTrue(load.successful())
 
+	def test_when_an_expression_is_not_defined_run_expr_fails(self):
+		self.connection.message.return_value = '\n<interactive>:114:1: Not in scope: ‘blah’'
+		run = self.commands.run_expr('blah')
+		self.assertTrue(run.failed())
 
+	def test_when_an_expression_is_defined_run_expr_succeeds_with_the_result(self):
+		self.connection.message.return_value = '2'
+		run = self.commands.run_expr('1 + 1')
+		self.assertTrue(run.successful())
+		self.assertEqual(run.value(), '2')	
 
 
 
