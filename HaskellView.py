@@ -1,4 +1,5 @@
 from SublimeGHCi.ghci.defaults import *
+from SublimeGHCi.logic.Completor import *
 from SublimeGHCi.Settings import Settings
 from SublimeGHCi.TestRunner import TestRunner
 
@@ -9,6 +10,7 @@ class HaskellView(object):
 		self.__error_reporter = error_reporter
 		self.__test_runner = TestRunner(self.__settings, view, test_highlights)
 		self.__ghci = default_ghci_factory().new_ghci_for_view(view, self.__compile)
+		self.__completor = Completor(self.__ghci, self.__view)
 
 	def __compile(self):
 		print('compiling {}'.format(self.__view.file_name()))
@@ -21,15 +23,14 @@ class HaskellView(object):
 	def saved(self):
 		(self.__compile()
 			.map(self.__successfully_saved)
-			.mapFail(lambda err: self.__error_reporter.report_errors(err, self.__settings.project_directory())))
+			.map_fail(lambda err: self.__error_reporter.report_errors(err, self.__settings.project_directory())))
 
 	def __autocomplete_entry(self, expr):
 		return (expr + '\t' + self.__ghci.type_or_kind_of(expr).value(), expr)
 
-	def completions(self, prefix):
-		return (self.__ghci
-			.completions(prefix)
-			.map(lambda completions: [ self.__autocomplete_entry(x) for x in completions ]))
+	def complete(self, prefix, location):
+		completions = self.__completor.complete(prefix, location)
+		return [ self.__autocomplete_entry(x) for x in completions ]
 
 	def close(self):
 		self.__ghci.close()
