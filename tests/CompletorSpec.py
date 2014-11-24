@@ -75,3 +75,8 @@ class CompletorSpec(unittest.TestCase):
 		self.view.text = 'm.'
 		self.completor.complete('abc', len(self.view.text))
 		self.commands.completions.assert_called_once_with('abc')
+
+	def test_when_preceeding_text_is_just_a_dot_just_use_the_prefix(self):
+		self.view.text = '.'
+		self.completor.complete('abc', len(self.view.text))
+		self.commands.completions.assert_called_once_with('abc')
