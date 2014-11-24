@@ -70,3 +70,8 @@ class CompletorSpec(unittest.TestCase):
 		self.view.text = ' m.'
 		self.completor.complete('abc', len(self.view.text))
 		self.commands.completions.assert_called_once_with('abc')
+
+	def test_when_the_preceeding_text_starts_with_a_dot_but_the_beginning_of_the_file_is_reached_before_a_captial_just_use_the_prefix(self):
+		self.view.text = 'm.'
+		self.completor.complete('abc', len(self.view.text))
+		self.commands.completions.assert_called_once_with('abc')

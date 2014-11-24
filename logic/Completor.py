@@ -20,7 +20,10 @@ class Completor(object):
 			last_was_capital = s.isupper()
 			total = s + total
 
-		return total
+		if last_was_capital:
+			return total
+		else:
+			return ''
 
 	def _scan_module(self, location):
 		i = location
