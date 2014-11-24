@@ -18,6 +18,7 @@ class HooksListener(sublime_plugin.EventListener):
 		print('setting changed')
 
 	def on_query_completions(self, view, prefix, locations):
+		print(locations)
 		return manager.completions(view, prefix).value()
 
 	def on_new(self, view):
