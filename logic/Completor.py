@@ -13,10 +13,7 @@ class Completor(object):
 		for i in range(location - 1, -1, -1):
 			s = self._view.substr(i)
 			if not s.isalpha():
-				if last_was_capital:
-					return total
-				else:
-					return ''
+				break
 			last_was_capital = s.isupper()
 			total = s + total
 
