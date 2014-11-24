@@ -1,1 +1,3 @@
-python3 -m unittest discover -s tests -p *Spec.py
+cd ..
+python3 -m unittest discover -s SublimeGHCi/tests -p *Spec.py
+cd SublimeGHCi
