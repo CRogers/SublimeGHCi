@@ -50,3 +50,18 @@ class CompletorSpec(unittest.TestCase):
 		self.view.text = 'Some.Module.'
 		self.completor.complete('abc', len(self.view.text))
 		self.commands.completions.assert_called_once_with('Some.Module.abc')
+
+	def test_when_the_preceeding_text_in_the_file_looks_like_a_triple_module_prepend_all_modules_to_the_prefix(self):
+		self.view.text = 'Hey.Some.Module.'
+		self.completor.complete('abc', len(self.view.text))
+		self.commands.completions.assert_called_once_with('Hey.Some.Module.abc')
+
+	def test_when_the_preceeding_text_looks_like_a_module_but_has_no_dot_just_use_the_prefix(self):
+		self.view.text = 'Module'
+		self.completor.complete('abc', len(self.view.text))
+		self.commands.completions.assert_called_once_with('abc')
+
+	def test_when_the_preceeding_text_looks_like_a_module_but_on_a_previous_line_just_use_the_prefix(self):
+		self.view.text = 'Module.\n'
+		self.completor.complete('abc', len(self.view.text))
+		self.commands.completions.assert_called_once_with('abc')
