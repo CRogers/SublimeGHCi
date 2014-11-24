@@ -11,6 +11,7 @@ class LoadedGhciCommandsSpec(unittest.TestCase):
 	def setUp(self):
 		self.commands = GhciCommands()
 		self.commands.loaded = Mock(return_value=False)
+		self.commands.close = Mock()
 		self.commands.completions = Mock(return_value=Fallible.succeed([]))
 		self.commands.type_of = Mock(return_value=Fallible.succeed('type'))
 		self.commands.kind_of = Mock(return_value=Fallible.succeed('kind'))
@@ -25,6 +26,10 @@ class LoadedGhciCommandsSpec(unittest.TestCase):
 	def test_when_inner_commands_loaded_returns_true_loaded_returns_true(self):
 		self.commands.loaded.return_value = True
 		self.assertTrue(self.loaded_commands.loaded())
+
+	def test_when_close_is_called_close_is_called_on_the_inner_commands(self):
+		self.loaded_commands.close()
+		self.commands.close.assert_called_once_with()
 
 	def test_when_commands_not_loaded_completions_is_failed_and_empty(self):
 		completions = self.loaded_commands.completions('a')
