@@ -1,9 +1,6 @@
 import re
 from SublimeGHCi.common.Fallible import *
 
-def get_last_part(sig):
-	return re.match(r'([A-Z].*?\.)*(.*)$', sig).group(2)
-
 def get_info_part(str):
 	type_with_breaks = re.sub(r'^(?:\n|.)*::((?:.|\n)*?)$', r'\1', str)
 	return re.sub(r'\n\s*', r' ', type_with_breaks).strip()
@@ -52,12 +49,6 @@ class GhciCommands(object):
 
 	def kind_of(self, expr):
 		return self.__expr_command('k', expr)
-
-	def type_or_kind_of(self, sig):
-		last_part = get_last_part(sig) 
-		return (self
-			.type_of(sig)
-			.or_else(lambda _: self.kind_of(sig)))
 
 	def load_haskell_file(self, file_name):
 		msg = ':load "{}"'.format(file_name)
