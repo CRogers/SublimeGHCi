@@ -4,4 +4,4 @@ class Completor(object):
 		self._view = view
 
 	def complete(self, prefix, locations):
-		return []
+		return self._commands.completions(prefix).map_fail(lambda _:[]).value()

@@ -25,3 +25,8 @@ class CompletorSpec(unittest.TestCase):
 		self.commands.completions.return_value = Fallible.fail('failed')
 		completed = self.completor.complete('abc', [123])
 		self.assertEqual(completed, [])
+
+	def test_when_completions_returns_a_value_complete_returns_it(self):
+		self.commands.completions.return_value = Fallible.succeed(['abc'])
+		completed = self.completor.complete('a', [123])
+		self.assertEqual(completed, ['abc'])
