@@ -8,14 +8,14 @@ def get_info_part(str):
 	type_with_breaks = re.sub(r'^(?:\n|.)*::((?:.|\n)*?)$', r'\1', str)
 	return re.sub(r'\n\s*', r' ', type_with_breaks).strip()
 
-ambiguous_regex = r'Ambiguous occurrence ‘.*?’(?:\n|.)*?either ‘(.*?)’(?:\n|.)*?defined at(?:\n|.)*?or ‘.*?’(?:\n|.)*?imported from (‘.*?’)'
+ambiguous_regex = r'Ambiguous occurrence(?:\n|.)*?either ‘(.*?)’(?:\n|.)*?or ‘(.*?)’'
 
 def is_ambiguous(str):
 	match = re.search(ambiguous_regex, str)
 	if match == None:
 		return Fallible.succeed(str)
 	else:
-		return Fallible.fail('Ambiguous: from {} or {}'.format(match.group(1), match.group(2)))
+		return Fallible.fail('Ambiguous: {} or {}'.format(match.group(1), match.group(2)))
 
 def is_defined(str):
 	return re.search(r'Not in scope', str) == None
