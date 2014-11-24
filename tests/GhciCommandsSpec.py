@@ -7,7 +7,7 @@ from SublimeGHCi.ghci.GhciCommands import *
 class GhciConnection(object):
 	pass
 
-class LoadedGhciCommandsSpec(unittest.TestCase):
+class GhciCommandsSpec(unittest.TestCase):
 	def setUp(self):
 		self.connection = GhciConnection()
 		self.connection.terminate = Mock()
