@@ -9,9 +9,11 @@ class GhciCommands(object):
 
 class View(object):
 	def __init__(self):
-		self.text = ''
+		self.text = 'test'
 
 	def substr(self, point):
+		if point < 0 or point > len(self.text):
+			return '\x00'
 		return self.text[point:(point+1)]
 	
 class CompletorSpec(unittest.TestCase):
@@ -22,20 +24,29 @@ class CompletorSpec(unittest.TestCase):
 		self.completor = Completor(self.commands, self.view)
 
 	def test_when_completions_returns_nothing_complete_returns_nothing(self):
-		completed = self.completor.complete('abc', 123)
+		completed = self.completor.complete('abc', 2)
 		self.assertEqual(completed, [])
 
 	def test_when_completions_fails_complete_returns_nothing(self):
 		self.commands.completions.return_value = Fallible.fail('failed')
-		completed = self.completor.complete('abc', 123)
+		completed = self.completor.complete('abc', 2)
 		self.assertEqual(completed, [])
 
 	def test_when_completions_returns_a_value_complete_returns_it(self):
 		self.commands.completions.return_value = Fallible.succeed(['abc'])
-		completed = self.completor.complete('a', 123)
+		completed = self.completor.complete('a', 2)
 		self.assertEqual(completed, ['abc'])
 
-	def test_when_the_preceeding_text_in_the_file_looks_like_a_module_prepend_the_module_to_the_prefix(self):
+	def test_when_the_location_is_the_beginning_of_the_file_it_works(self):
+		completed = self.completor.complete('abc', 0)
+		self.assertEqual(completed, [])
+
+	def test_when_the_preceeding_text_in_the_file_looks_like_a_single_module_prepend_the_module_to_the_prefix(self):
 		self.view.text = 'Module.'
 		self.completor.complete('abc', len(self.view.text))
 		self.commands.completions.assert_called_once_with('Module.abc')
+
+	def test_when_the_preceeding_text_in_the_file_looks_like_a_double_module_prepend_both_modules_to_the_prefix(self):
+		self.view.text = 'Some.Module.'
+		self.completor.complete('abc', len(self.view.text))
+		self.commands.completions.assert_called_once_with('Some.Module.abc')
