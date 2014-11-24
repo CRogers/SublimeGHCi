@@ -53,7 +53,6 @@ class HaskellViewManager(object):
 	def saved(self, view):
 		self.__ghci_for(view).map(lambda haskell_view: haskell_view.saved())
 
-	def completions(self, view, prefix):
+	def complete(self, view, prefix, location):
 		return (self.__ghci_for(view)
-			.bind(lambda haskell_view: haskell_view.completions(prefix))
-			.map_fail(lambda _: []))
+			.bind(lambda haskell_view: haskell_view.complete(prefix, location)))
