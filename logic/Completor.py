@@ -9,10 +9,15 @@ class Completor(object):
 		if self._view.substr(location) != '.':
 			return ''
 		total = '.'
+		last_was_capital = False
 		for i in range(location - 1, -1, -1):
 			s = self._view.substr(i)
 			if not s.isalpha():
-				return total
+				if last_was_capital:
+					return total
+				else:
+					return ''
+			last_was_capital = s.isupper()
 			total = s + total
 
 		return total
