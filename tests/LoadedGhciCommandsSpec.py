@@ -15,6 +15,7 @@ class LoadedGhciCommandsSpec(unittest.TestCase):
 		self.commands.type_of = Mock(return_value=Fallible.succeed('type'))
 		self.commands.kind_of = Mock(return_value=Fallible.succeed('kind'))
 		self.commands.type_or_kind_of = Mock(return_value=Fallible.succeed('type or kind'))
+		self.commands.load_haskell_file = Mock(return_value=Fallible.succeed('response'))
 		self.loaded_commands = LoadedGhciCommands(self.commands)
 
 	def test_when_inner_commands_loaded_returns_false_loaded_returns_false(self):
@@ -69,3 +70,16 @@ class LoadedGhciCommandsSpec(unittest.TestCase):
 		self.assertTrue(completions.successful())
 		self.assertEqual(completions.value(), 'cat')
 
+	def test_when_commands_are_not_loaded_load_haskell_file_is_failed(self):
+		completions = self.loaded_commands.load_haskell_file('a')
+		self.assertTrue(completions.failed())
+
+	def test_when_commands_are_loaded_load_haskell_file_is_successful_and_returns_the_inner_value(self):
+		self.commands.loaded.return_value = True
+		self.commands.load_haskell_file.return_value = Fallible.succeed('cat')
+		completions = self.loaded_commands.load_haskell_file('a')
+		self.assertTrue(completions.successful())
+		self.assertEqual(completions.value(), 'cat')
+
+
+	
