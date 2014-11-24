@@ -14,6 +14,7 @@ class LoadedGhciCommandsSpec(unittest.TestCase):
 		self.commands.completions = Mock(return_value=Fallible.succeed([]))
 		self.commands.type_of = Mock(return_value=Fallible.succeed('type'))
 		self.commands.kind_of = Mock(return_value=Fallible.succeed('kind'))
+		self.commands.type_or_kind_of = Mock(return_value=Fallible.succeed('type or kind'))
 		self.loaded_commands = LoadedGhciCommands(self.commands)
 
 	def test_when_inner_commands_loaded_returns_false_loaded_returns_false(self):
@@ -56,3 +57,15 @@ class LoadedGhciCommandsSpec(unittest.TestCase):
 		completions = self.loaded_commands.kind_of('a')
 		self.assertTrue(completions.successful())
 		self.assertEqual(completions.value(), 'cat')
+
+	def test_when_commands_are_not_loaded_type_or_kind_of_is_failed(self):
+		completions = self.loaded_commands.type_or_kind_of('a')
+		self.assertTrue(completions.failed())
+
+	def test_when_commands_are_loaded_type_or_kind_of_is_successful_and_returns_the_inner_value(self):
+		self.commands.loaded.return_value = True
+		self.commands.type_or_kind_of.return_value = Fallible.succeed('cat')
+		completions = self.loaded_commands.type_or_kind_of('a')
+		self.assertTrue(completions.successful())
+		self.assertEqual(completions.value(), 'cat')
+
