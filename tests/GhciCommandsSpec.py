@@ -63,8 +63,9 @@ class LoadedGhciCommandsSpec(unittest.TestCase):
 		type = self.commands.type_of('foo')
 		self.assertTrue(type.failed())
 
-	def test_when_the_type_command_returns_an_ambiguous_match_type_of_fails(self):
-		self.connection.message.return_value = '''<interactive>:1:1:
+	def test_when_the_type_command_returns_an_ambiguous_match_with_defined_at_and_imported_from_type_of_fails(self):
+		self.connection.message.return_value = '''
+<interactive>:1:1:
     Ambiguous occurrence ‘div’
     It could refer to either ‘Hstml.div’, defined at src/Hstml.hs:19:1
                           or ‘Prelude.div’,
@@ -74,6 +75,17 @@ class LoadedGhciCommandsSpec(unittest.TestCase):
 		self.assertTrue(type.failed())
 		self.assertEqual(type.value(), 'Ambiguous: Hstml.div or Prelude.div')
 
+	def test_when_the_type_command_returns_an_ambiguous_match_with_import_from_twice_type_of_fails(self):
+		self.connection.message.return_value = '''
+<interactive>:1:1:
+    Ambiguous occurrence ‘foldr’
+    It could refer to either ‘Prelude.foldr’,
+                             imported from ‘Prelude’ (and originally defined in ‘GHC.Base’)
+                          or ‘Data.Foldable.foldr’, imported from ‘Data.Foldable’'''
+
+		type = self.commands.type_of('foldr')
+		self.assertTrue(type.failed())
+		self.assertEqual(type.value(), 'Ambiguous: Prelude.foldr or Data.Foldable.foldr')
 
 
 
