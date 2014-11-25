@@ -1,5 +1,5 @@
 from SublimeGHCi.ghci.defaults import *
-from SublimeGHCi.completions.Completor import *
+from SublimeGHCi.completions.defaults import *
 from SublimeGHCi.Settings import Settings
 from SublimeGHCi.TestRunner import TestRunner
 
@@ -10,7 +10,7 @@ class HaskellView(object):
 		self.__error_reporter = error_reporter
 		self.__test_runner = TestRunner(self.__settings, view, test_highlights)
 		self.__ghci = default_ghci_factory().new_ghci_for_view(view, self.__compile)
-		self.__completor = Completor(self.__ghci, self.__view)
+		self.__completor = default_completor(self.__ghci, self.__view)
 
 	def __compile(self):
 		print('compiling {}'.format(self.__view.file_name()))
