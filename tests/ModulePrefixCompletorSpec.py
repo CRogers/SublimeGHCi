@@ -18,65 +18,52 @@ class View(object):
 	
 class ModulePrefixCompletorSpec(unittest.TestCase):
 	def setUp(self):
-		self.commands = GhciCommands()
-		self.commands.completions = Mock(return_value=Fallible.succeed([]))
+		self.completor = GhciCommands()
+		self.completor.complete = Mock(return_value=[])
 		self.view = View()
-		self.completor = ModulePrefixCompletor(self.commands, self.view)
+		self.module_completor = ModulePrefixCompletor(self.completor, self.view)
 
-	def test_when_completions_returns_nothing_complete_returns_nothing(self):
-		completed = self.completor.complete('abc', 2)
-		self.assertEqual(completed, [])
-
-	def test_when_completions_fails_complete_returns_nothing(self):
-		self.commands.completions.return_value = Fallible.fail('failed')
-		completed = self.completor.complete('abc', 2)
-		self.assertEqual(completed, [])
-
-	def test_when_completions_returns_a_value_complete_returns_it(self):
-		self.commands.completions.return_value = Fallible.succeed(['abc'])
-		completed = self.completor.complete('a', 2)
-		self.assertEqual(completed, ['abc'])
-
-	def test_when_the_location_is_the_beginning_of_the_file_it_works(self):
-		completed = self.completor.complete('abc', 0)
-		self.assertEqual(completed, [])
+	def _test_prepend(self, view_text):
+		self.view.text = view_text
+		location = len(view_text)
+		self.module_completor.complete('abc', location)
+		self.completor.complete.assert_called_once_with(view_text, location)
 
 	def test_when_the_preceeding_text_in_the_file_looks_like_a_single_module_prepend_the_module_to_the_prefix(self):
-		self.view.text = 'Module.abc'
-		self.completor.complete('abc', len(self.view.text))
-		self.commands.completions.assert_called_once_with('Module.abc')
+		self._test_prepend('Module.abc')
 
 	def test_when_the_preceeding_text_in_the_file_looks_like_a_double_module_prepend_both_modules_to_the_prefix(self):
-		self.view.text = 'Some.Module.abc'
-		self.completor.complete('abc', len(self.view.text))
-		self.commands.completions.assert_called_once_with('Some.Module.abc')
+		self._test_prepend('Some.Module.abc')
 
 	def test_when_the_preceeding_text_in_the_file_looks_like_a_triple_module_prepend_all_modules_to_the_prefix(self):
-		self.view.text = 'Hey.Some.Module.abc'
-		self.completor.complete('abc', len(self.view.text))
-		self.commands.completions.assert_called_once_with('Hey.Some.Module.abc')
+		self._test_prepend('Hey.Some.Module.abc')
 
 	def test_when_the_preceeding_text_looks_like_a_module_but_has_no_dot_just_use_the_prefix(self):
 		self.view.text = 'Module'
-		self.completor.complete('abc', len(self.view.text))
-		self.commands.completions.assert_called_once_with('abc')
+		location = len(self.view.text)
+		self.module_completor.complete('abc', location)
+		self.completor.complete.assert_called_once_with('abc', location)
 
 	def test_when_the_preceeding_text_looks_like_a_module_but_on_a_previous_line_just_use_the_prefix(self):
 		self.view.text = 'Module.abc\n'
-		self.completor.complete('abc', len(self.view.text))
-		self.commands.completions.assert_called_once_with('abc')
+		location = len(self.view.text)
+		self.module_completor.complete('abc', location)
+		self.completor.complete.assert_called_once_with('abc', location)
 
 	def test_when_the_preceeding_text_starts_with_a_dot_but_then_no_capital_just_use_the_prefix(self):
 		self.view.text = ' m.abc'
-		self.completor.complete('abc', len(self.view.text))
-		self.commands.completions.assert_called_once_with('abc')
+		location = len(self.view.text)
+		self.module_completor.complete('abc', location)
+		self.completor.complete.assert_called_once_with('abc', location)
 
 	def test_when_the_preceeding_text_starts_with_a_dot_but_the_beginning_of_the_file_is_reached_before_a_captial_just_use_the_prefix(self):
 		self.view.text = 'm.abc'
-		self.completor.complete('abc', len(self.view.text))
-		self.commands.completions.assert_called_once_with('abc')
+		location = len(self.view.text)
+		self.module_completor.complete('abc', location)
+		self.completor.complete.assert_called_once_with('abc', location)
 
 	def test_when_preceeding_text_is_just_a_dot_just_use_the_prefix(self):
 		self.view.text = '.abc'
-		self.completor.complete('abc', len(self.view.text))
-		self.commands.completions.assert_called_once_with('abc')
+		location = len(self.view.text)
+		self.module_completor.complete('abc', location)
+		self.completor.complete.assert_called_once_with('abc', location)

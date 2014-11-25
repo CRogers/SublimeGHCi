@@ -1,8 +1,8 @@
 import itertools
 
 class ModulePrefixCompletor(object):
-	def __init__(self, commands, view):
-		self._commands = commands
+	def __init__(self, completor, view):
+		self._completor = completor
 		self._view = view
 
 	def _scan_left(self, location):
@@ -36,4 +36,4 @@ class ModulePrefixCompletor(object):
 
 	def complete(self, prefix, location):
 		prefix = self._scan_module(location - len(prefix) - 1) + prefix
-		return self._commands.completions(prefix).map_fail(lambda _:[]).value()
+		return self._completor.complete(prefix, location)
