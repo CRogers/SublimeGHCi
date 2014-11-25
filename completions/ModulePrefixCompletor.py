@@ -1,6 +1,6 @@
 import itertools
 
-class Completor(object):
+class ModulePrefixCompletor(object):
 	def __init__(self, commands, view):
 		self._commands = commands
 		self._view = view

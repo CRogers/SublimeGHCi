@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import *
 
 from SublimeGHCi.common.Fallible import *
-from SublimeGHCi.completions.Completor import *
+from SublimeGHCi.completions.ModulePrefixCompletor import *
 
 class GhciCommands(object):
 	pass
@@ -16,12 +16,12 @@ class View(object):
 			return '\x00'
 		return self.text[point:(point+1)]
 	
-class CompletorSpec(unittest.TestCase):
+class ModulePrefixCompletorSpec(unittest.TestCase):
 	def setUp(self):
 		self.commands = GhciCommands()
 		self.commands.completions = Mock(return_value=Fallible.succeed([]))
 		self.view = View()
-		self.completor = Completor(self.commands, self.view)
+		self.completor = ModulePrefixCompletor(self.commands, self.view)
 
 	def test_when_completions_returns_nothing_complete_returns_nothing(self):
 		completed = self.completor.complete('abc', 2)
