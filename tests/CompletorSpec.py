@@ -42,17 +42,17 @@ class CompletorSpec(unittest.TestCase):
 		self.assertEqual(completed, [])
 
 	def test_when_the_preceeding_text_in_the_file_looks_like_a_single_module_prepend_the_module_to_the_prefix(self):
-		self.view.text = 'Module.'
+		self.view.text = 'Module.abc'
 		self.completor.complete('abc', len(self.view.text))
 		self.commands.completions.assert_called_once_with('Module.abc')
 
 	def test_when_the_preceeding_text_in_the_file_looks_like_a_double_module_prepend_both_modules_to_the_prefix(self):
-		self.view.text = 'Some.Module.'
+		self.view.text = 'Some.Module.abc'
 		self.completor.complete('abc', len(self.view.text))
 		self.commands.completions.assert_called_once_with('Some.Module.abc')
 
 	def test_when_the_preceeding_text_in_the_file_looks_like_a_triple_module_prepend_all_modules_to_the_prefix(self):
-		self.view.text = 'Hey.Some.Module.'
+		self.view.text = 'Hey.Some.Module.abc'
 		self.completor.complete('abc', len(self.view.text))
 		self.commands.completions.assert_called_once_with('Hey.Some.Module.abc')
 
@@ -62,21 +62,21 @@ class CompletorSpec(unittest.TestCase):
 		self.commands.completions.assert_called_once_with('abc')
 
 	def test_when_the_preceeding_text_looks_like_a_module_but_on_a_previous_line_just_use_the_prefix(self):
-		self.view.text = 'Module.\n'
+		self.view.text = 'Module.abc\n'
 		self.completor.complete('abc', len(self.view.text))
 		self.commands.completions.assert_called_once_with('abc')
 
 	def test_when_the_preceeding_text_starts_with_a_dot_but_then_no_capital_just_use_the_prefix(self):
-		self.view.text = ' m.'
+		self.view.text = ' m.abc'
 		self.completor.complete('abc', len(self.view.text))
 		self.commands.completions.assert_called_once_with('abc')
 
 	def test_when_the_preceeding_text_starts_with_a_dot_but_the_beginning_of_the_file_is_reached_before_a_captial_just_use_the_prefix(self):
-		self.view.text = 'm.'
+		self.view.text = 'm.abc'
 		self.completor.complete('abc', len(self.view.text))
 		self.commands.completions.assert_called_once_with('abc')
 
 	def test_when_preceeding_text_is_just_a_dot_just_use_the_prefix(self):
-		self.view.text = '.'
+		self.view.text = '.abc'
 		self.completor.complete('abc', len(self.view.text))
 		self.commands.completions.assert_called_once_with('abc')
