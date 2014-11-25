@@ -1,5 +1,5 @@
 from SublimeGHCi.ghci.defaults import *
-from SublimeGHCi.logic.Completor import *
+from SublimeGHCi.completions.Completor import *
 from SublimeGHCi.Settings import Settings
 from SublimeGHCi.TestRunner import TestRunner
 

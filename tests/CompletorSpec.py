@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import *
 
 from SublimeGHCi.common.Fallible import *
-from SublimeGHCi.logic.Completor import *
+from SublimeGHCi.completions.Completor import *
 
 class GhciCommands(object):
 	pass
