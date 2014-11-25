@@ -23,38 +23,38 @@ class ModulePrefixCompletorSpec(unittest.TestCase):
 		self.view = View()
 		self.module_completor = ModulePrefixCompletor(self.completor, self.view)
 
-	def _expect_prepend_to_succeed_with(self, view_text):
-		self.view.text = view_text
-		location = len(view_text)
+	def _expect_prepend_to_succeed_with_prefix(self, view_text):
+		self.view.text = view_text + 'abc'
+		location = len(self.view.text)
 		self.module_completor.complete('abc', location)
-		self.completor.complete.assert_called_once_with(view_text, location)
+		self.completor.complete.assert_called_once_with(self.view.text, location)
 
 	def test_when_the_preceeding_text_in_the_file_looks_like_a_single_module_prepend_the_module_to_the_prefix(self):
-		self._expect_prepend_to_succeed_with('Module.abc')
+		self._expect_prepend_to_succeed_with_prefix('Module.')
 
 	def test_when_the_preceeding_text_in_the_file_looks_like_a_double_module_prepend_both_modules_to_the_prefix(self):
-		self._expect_prepend_to_succeed_with('Some.Module.abc')
+		self._expect_prepend_to_succeed_with_prefix('Some.Module.')
 
 	def test_when_the_preceeding_text_in_the_file_looks_like_a_triple_module_prepend_all_modules_to_the_prefix(self):
-		self._expect_prepend_to_succeed_with('Hey.Some.Module.abc')
+		self._expect_prepend_to_succeed_with_prefix('Hey.Some.Module.')
 
-	def _expect_prepend_to_fail_with_abc(self, view_text):
-		self.view.text = view_text
-		location = len(view_text)
+	def _expect_prepend_to_fail_with_prefix(self, view_text):
+		self.view.text = view_text + 'abc'
+		location = len(self.view.text)
 		self.module_completor.complete('abc', location)
 		self.completor.complete.assert_called_once_with('abc', location)
 
 	def test_when_the_preceeding_text_looks_like_a_module_but_has_no_dot_just_use_the_prefix(self):
-		self._expect_prepend_to_fail_with_abc('Moduleabc')
+		self._expect_prepend_to_fail_with_prefix('Module')
 
 	def test_when_the_preceeding_text_looks_like_a_module_but_on_a_previous_line_just_use_the_prefix(self):
-		self._expect_prepend_to_fail_with_abc('Module.abc\n')
+		self._expect_prepend_to_fail_with_prefix('Module.\n')
 
 	def test_when_the_preceeding_text_starts_with_a_dot_but_then_no_capital_just_use_the_prefix(self):
-		self._expect_prepend_to_fail_with_abc(' m.abc')
+		self._expect_prepend_to_fail_with_prefix(' m.')
 
 	def test_when_the_preceeding_text_starts_with_a_dot_but_the_beginning_of_the_file_is_reached_before_a_captial_just_use_the_prefix(self):
-		self._expect_prepend_to_fail_with_abc('m.abc')
+		self._expect_prepend_to_fail_with_prefix('m.')
 
 	def test_when_preceeding_text_is_just_a_dot_just_use_the_prefix(self):
-		self._expect_prepend_to_fail_with_abc('.abc')
+		self._expect_prepend_to_fail_with_prefix('.')
