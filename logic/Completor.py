@@ -35,5 +35,5 @@ class Completor(object):
 		return total
 
 	def complete(self, prefix, location):
-		prefix = self._scan_module(location - 1) + prefix
+		prefix = self._scan_module(location - len(prefix) - 1) + prefix
 		return self._commands.completions(prefix).map_fail(lambda _:[]).value()
