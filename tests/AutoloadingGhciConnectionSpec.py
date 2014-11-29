@@ -24,6 +24,15 @@ class AutoloadingGhciConnectionSpec(unittest.TestCase):
 		self.connection.fire_loaded()
 		self.connection.message.assert_called_once_with(':l Woop.hs')
 
+	def test_when_message_is_called_it_passes_message_to_connection(self):
+		self.autoloading_connection.message('yo')
+		self.connection.message.assert_called_once_with('yo')
+
+	def test_when_message_is_called_it_returns_message_result_from_connection(self):
+		self.connection.message.return_value = 'noyo'
+		result = self.autoloading_connection.message('yo')
+		self.assertEqual(result, 'noyo')
+
 	def test_when_connections_loaded_is_true_loaded_is_also_true(self):
 		self.assertTrue(self.autoloading_connection.loaded())
 
