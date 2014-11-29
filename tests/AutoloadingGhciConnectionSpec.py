@@ -9,6 +9,7 @@ class GhciConnection(object):
 		self.on_loaded = EventHook()
 		self.message = Mock(return_value='')
 		self.loaded = Mock(return_value=True)
+		self.terminate = Mock(return_value=None)
 
 	def fire_loaded(self):
 		self.on_loaded.fire()
@@ -29,3 +30,7 @@ class AutoloadingGhciConnectionSpec(unittest.TestCase):
 	def test_when_connections_loaded_is_false_loaded_is_also_false(self):
 		self.connection.loaded.return_value = False
 		self.assertFalse(self.autoloading_connection.loaded())
+
+	def test_when_terminate_is_called_connections_terminate_is_also_called(self):
+		self.autoloading_connection.terminate()
+		self.connection.terminate.asssert_called_once_with()

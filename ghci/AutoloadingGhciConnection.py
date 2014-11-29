@@ -9,3 +9,6 @@ class AutoloadingGhciConnection(object):
 
 	def loaded(self):
 		return self._connection.loaded()
+
+	def terminate(self):
+		self._connection.terminate()
