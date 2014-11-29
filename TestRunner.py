@@ -34,10 +34,7 @@ class TestRunner(object):
 		self.__highlights.erase()
 
 	def run_tests(self):
-		self.__ghci.load_haskell_file(self.__settings.test_module())
-		(self.__ghci.run_expr(self.__settings.test_command())
-			.bind(has_failed)
-			.switch(self.__tests_failed, self.__tests_succeeded))
+		pass
 
 	def close(self):
 		self.__ghci.close()

@@ -9,19 +9,15 @@ class HaskellView(object):
 		self.__settings = Settings(view)
 		self.__error_reporter = error_reporter
 		self.__test_runner = TestRunner(self.__settings, view, test_highlights)
-		self.__ghci = default_ghci_factory().new_ghci_for_view(view, self.__compile)
+		self.__ghci = default_ghci_factory().new_ghci_for_view(view)
 		self.__completor = default_completor(self.__ghci, self.__view)
-
-	def __compile(self):
-		print('compiling {}'.format(self.__view.file_name()))
-		return self.__ghci.load_haskell_file(self.__view.file_name())
 
 	def __successfully_saved(self, blah):
 		self.__error_reporter.clear_errors()
 		self.__test_runner.run_tests()
 
 	def saved(self):
-		(self.__compile()
+		(self.__ghci.reload()
 			.map(self.__successfully_saved)
 			.map_fail(lambda err: self.__error_reporter.report_errors(err, self.__settings.project_directory())))
 

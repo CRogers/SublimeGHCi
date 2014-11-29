@@ -3,13 +3,15 @@ import re
 import os
 from threading import Thread
 
+from SublimeGHCi.common.EventHook import *
+
 prompt_repeating_part = b']]]]]]]]]]]]]]]]'
 prompt = (prompt_repeating_part + prompt_repeating_part[:-1]).decode('utf-8')
 
 class GhciConnection(object):
-	def __init__(self, project, on_loaded = lambda: None):
+	def __init__(self, project):
 		self.__loaded = False
-		self.__on_loaded = on_loaded
+		self.on_loaded = EventHook()
 		self.__sp = self.__open(project)
 		t = Thread(target=self.__consume_beginning)
 		t.daemon = True
@@ -55,7 +57,7 @@ class GhciConnection(object):
 		self.message(':set prompt ' + prompt)
 		print('Loaded ghci')
 		self.__loaded = True
-		self.__on_loaded()
+		self.on_loaded.fire()
 
 	def loaded(self):
 		return self.__loaded
