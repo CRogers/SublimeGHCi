@@ -55,6 +55,9 @@ class GhciCommands(object):
 		response = self.__ghci.message(msg)
 		return Fallible.from_bool(load_succeeded, response)
 
+	def reload(self):
+		self.__ghci.message(':r')
+
 	def run_expr(self, expr):
 		response = self.__ghci.message(expr)
 		return Fallible.from_bool(is_defined, response)

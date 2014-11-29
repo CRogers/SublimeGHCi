@@ -150,7 +150,9 @@ Ok, modules loaded: Hstml.'''
 		self.assertTrue(run.successful())
 		self.assertEqual(run.value(), '2')	
 
-
+	def test_when_reload_is_called_it_performs_the_appropriate_command(self):
+		self.commands.reload()
+		self.connection.message.assert_called_once_with(':r')
 
 
 
