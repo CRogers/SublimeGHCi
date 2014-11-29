@@ -6,3 +6,6 @@ class AutoloadingGhciConnection(object):
 
 	def _on_loaded(self):
 		self._connection.message(':l {}'.format(self._file_name))
+
+	def loaded(self):
+		return True
