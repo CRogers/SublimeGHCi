@@ -8,4 +8,4 @@ class AutoloadingGhciConnection(object):
 		self._connection.message(':l {}'.format(self._file_name))
 
 	def loaded(self):
-		return True
+		return self._connection.loaded()

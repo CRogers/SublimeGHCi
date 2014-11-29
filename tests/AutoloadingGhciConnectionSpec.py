@@ -25,3 +25,7 @@ class AutoloadingGhciConnectionSpec(unittest.TestCase):
 
 	def test_when_connections_loaded_is_true_loaded_is_also_true(self):
 		self.assertTrue(self.autoloading_connection.loaded())
+
+	def test_when_connections_loaded_is_false_loaded_is_also_false(self):
+		self.connection.loaded.return_value = False
+		self.assertFalse(self.autoloading_connection.loaded())
