@@ -57,6 +57,7 @@ class GhciConnection(object):
 		self.message(':set prompt ' + prompt)
 		print('Loaded ghci')
 		self.__loaded = True
+		self.on_loaded.fire()
 
 	def loaded(self):
 		return self.__loaded
