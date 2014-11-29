@@ -17,7 +17,7 @@ class HaskellView(object):
 		self.__test_runner.run_tests()
 
 	def saved(self):
-		(self.__ghci.load_haskell_file(self.__view.file_name())
+		(self.__ghci.reload()
 			.map(self.__successfully_saved)
 			.map_fail(lambda err: self.__error_reporter.report_errors(err, self.__settings.project_directory())))
 
