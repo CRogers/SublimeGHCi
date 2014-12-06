@@ -1,2 +1,3 @@
 class TypeMatchingCompletor(object):
-	pass
+	def complete(self, prefix, location):
+		return []
