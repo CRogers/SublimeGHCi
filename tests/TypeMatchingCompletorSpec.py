@@ -16,4 +16,7 @@ class TypeMatchingCompletorSpec(unittest.TestCase):
 		self.view.text = 'import Prelude (map) '
 		completions = self.type_matching_completor.complete('', len(self.view.text))
 		self.assertEqual(completions, [])
-		pass
+
+	def test_when_there_are_no_completions_then_no_completions_are_produced(self):
+		completions = self.type_matching_completor.complete('', 4)
+		self.assertEqual(completions, [])
