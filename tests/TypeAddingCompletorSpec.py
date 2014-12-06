@@ -10,7 +10,15 @@ class Completor(object):
 
 class ExtraGhciCommands(object):
 	def __init__(self):
-		self.type_or_kind_of = Mock(return_value=Fallible.fail('failed'))
+		self.name_to_type_or_kind = dict()
+	
+	def type_or_kind_of(self, expr):
+		if expr in self.name_to_type_or_kind:
+			return Fallible.succeed(self.name_to_type_or_kind[expr])
+		else:
+			return Fallible.fail('failed')
+
+s = Fallible.succeed
 
 class TypeAddingCompletorSpec(unittest.TestCase):
 	def setUp(self):
@@ -23,7 +31,13 @@ class TypeAddingCompletorSpec(unittest.TestCase):
 		self.assertEqual(completions, [])
 
 	def test_when_underlying_completor_returns_one_result_return_that_result_and_its_type(self):
-		self.ghci_commands.type_or_kind_of.return_value = Fallible.succeed('sometype')
+		self.ghci_commands.name_to_type_or_kind = {'yay': 'sometype'}
 		self.completor.complete.return_value = ['yay']
 		completions = self.type_adding_completor.complete_with_types('abc', 3)
-		self.assertEqual(completions, [('yay', 'sometype')])
+		self.assertEqual(completions, [('yay', s('sometype'))])
+
+	def test_when_underlying_completor_returns_two_results_it_returns_those_results_and_their_types(self):
+		self.ghci_commands.name_to_type_or_kind = {'yay': 'sometype', 'foo': 'bar'}
+		self.completor.complete.return_value = ['yay', 'foo']
+		completions = self.type_adding_completor.complete_with_types('abc', 3)
+		self.assertEqual(completions, [('yay', s('sometype')), ('foo', s('bar'))])

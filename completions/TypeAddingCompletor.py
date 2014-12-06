@@ -5,7 +5,4 @@ class TypeAddingCompletor(object):
 
 	def complete_with_types(self, prefix, location):
 		completions = self.completor.complete(prefix, location)
-		if len(completions) == 0:
-			return []
-		else:
-			return [('yay', 'sometype')]
+		return [(x, self.ghci_commands.type_or_kind_of(x)) for x in completions]

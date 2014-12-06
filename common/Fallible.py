@@ -41,3 +41,6 @@ class Fallible(object):
 
 	def map_fail(self, func):
 		return self.or_else(lambda x: Fallible.fail(func(x)))
+
+	def __eq__(self, other):
+		return self.successful() == other.successful() and self.value() == other.value()
