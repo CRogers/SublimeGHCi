@@ -1,0 +1,2 @@
+class TypeMatchingCompletor(object):
+	pass
