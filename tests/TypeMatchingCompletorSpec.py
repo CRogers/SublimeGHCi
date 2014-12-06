@@ -3,13 +3,17 @@ from unittest.mock import *
 
 from SublimeGHCi.completions.TypeMatchingCompletor import *
 
-class View(object):
-	def __init__(self):
-		self.text = 'test'
-
 class TypedCompletor(object):
 	def __init__(self):
 		self.complete_with_types = Mock(return_value = [])
+
+class ExtraGhciCommands(object):
+	def __init__(self):
+		pass
+
+class View(object):
+	def __init__(self):
+		self.text = 'test'
 
 class TypeMatchingCompletorSpec(unittest.TestCase):
 	def setUp(self):
