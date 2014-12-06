@@ -13,6 +13,10 @@ class ExtraGhciCommands(object):
 			.type_of(sig)
 			.or_else(lambda _: self.kind_of(sig)))
 
+	def is_supertype_of(self, subtype, supertype):
+		msg = '((let a = a in a) :: ({})) :: ({})'.format(supertype, subtype)
+		return self._commands.type_of(msg)
+
 	def close(self):
 		self._commands.close()
 
