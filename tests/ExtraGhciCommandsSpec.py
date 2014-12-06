@@ -34,3 +34,12 @@ class ExtraGhciCommandsSpec(unittest.TestCase):
 	def test_when_is_supertype_of_is_called_it_calls_type_of_correctly(self):
 		self.extra_commands.is_supertype_of('sub', 'sup')
 		self.commands.type_of.assert_called_once_with('((let a = a in a) :: (sup)) :: (sub)')
+
+	def test_when_type_of_returns_successfully_is_supertype_of_returns_true(self):
+		is_supertype = self.extra_commands.is_supertype_of('sub', 'sup')
+		self.assertTrue(is_supertype)
+
+	def test_when_type_of_returns_unsuccessfully_is_supertype_of_returns_false(self):
+		self.commands.type_of.return_value = Fallible.fail('failed')
+		is_supertype = self.extra_commands.is_supertype_of('sub', 'sup')
+		self.assertFalse(is_supertype)

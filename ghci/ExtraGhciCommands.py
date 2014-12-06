@@ -15,7 +15,7 @@ class ExtraGhciCommands(object):
 
 	def is_supertype_of(self, subtype, supertype):
 		msg = '((let a = a in a) :: ({})) :: ({})'.format(supertype, subtype)
-		return self._commands.type_of(msg)
+		return self._commands.type_of(msg).successful()
 
 	def close(self):
 		self._commands.close()
