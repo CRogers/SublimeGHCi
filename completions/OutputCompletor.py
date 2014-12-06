@@ -3,4 +3,8 @@ class OutputCompletor(object):
 		self.typed_completor = typed_completor
 
 	def complete(self, prefix, location):
-		return []
+		completions = self.typed_completor.complete_with_types(prefix, location)
+		if len(completions) == 0:
+			return []
+		else:
+			return [('foo\tbar', 'foo')]
