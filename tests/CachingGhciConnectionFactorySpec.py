@@ -11,7 +11,14 @@ class GhciFactory(object):
 		return GhciCommands()
 
 class View(object):
-	pass
+	buffer_count = 0
+
+	def __init__(self):
+		self._id = View.buffer_count
+		View.buffer_count += 1
+
+	def buffer_id(self):
+		return self._id
 
 class CachingGhciFactorySpec(unittest.TestCase):
 	def setUp(self):
