@@ -14,15 +14,19 @@ class View(object):
 		return self._id
 
 class Obj(object):
-	pass
-
-def new_obj(view):
-	return Obj()
+	def __init__(self, *args):
+		pass
 
 class ViewCacheSpec(unittest.TestCase):
 	def setUp(self):
-		self.view_cache = ViewCache(new_obj)
+		self.new_obj = Mock(side_effect=Obj)
+		self.view_cache = ViewCache(self.new_obj)
 
 	def test_when_asked_for_a_view_that_does_not_currently_exist_in_the_cache_it_should_make_a_new_one_and_return_it(self):
 		obj = self.view_cache.get_for_view(View())
 		self.assertTrue(type(obj) is Obj)
+
+	def test_when_creating_a_new_obj_that_it_should_pass_the_view_to_the_creation_function(self):
+		view = View()
+		self.view_cache.get_for_view(view)
+		self.new_obj.assert_called_once_with(view)

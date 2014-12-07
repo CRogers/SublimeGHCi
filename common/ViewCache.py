@@ -3,4 +3,4 @@ class ViewCache(object):
 		self._creation_func = creation_func
 
 	def get_for_view(self, view):
-		return self._creation_func(1)
+		return self._creation_func(view)
