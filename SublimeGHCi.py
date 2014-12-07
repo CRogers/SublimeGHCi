@@ -1,7 +1,5 @@
-import sublime, sublime_plugin, subprocess, re
+import sublime_plugin
 from SublimeGHCi.HaskellViewManager import HaskellViewManager
-
-manager = HaskellViewManager()
 
 def plugin_loaded():
 	pass
