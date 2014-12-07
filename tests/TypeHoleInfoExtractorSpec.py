@@ -6,18 +6,16 @@ from SublimeGHCi.ghci.TypeHoleInfoExtractor import *
 
 class GhciCommands(object):
 	def __init__(self):
-		self.load_haskell_file = Mock(return_value=Fallible.succeed('loaded'))
-	
+		self.load_from_string = Mock(return_value=Fallible.succeed('loaded'))
+
+type_hole_name = 'hole'
+type_hole = '_' + type_hole_name
+
 class TypeHoleInfoExtractorSpec(unittest.TestCase):
 	def setUp(self):
 		self.commands = GhciCommands()
-		self.info_extractor = TypeHoleInfoExtractor(self.commands)
+		self.info_extractor = TypeHoleInfoExtractor(self.commands, type_hole_name)
 
-	def test_when_called_it_should_call_load_haskell_file_once(self):
-		self.info_extractor.extract_info_from('foo ', 4)
-		call_count = self.commands.load_haskell_file.call_count
-		self.assertEqual(call_count, 1)
-
-	#def test_when_called_it_should_call_load_haskell_file_and_supply_a_file_which_exists(self):
-	#	self.info_extractor.extract_info_from('foo ', 4)
-	#	self.commands.load_haskell_file.call_args
+	def test_when_called_calls_inner_commands_load_from_string_with_type_hole_in_given_location(self):
+		self.info_extractor.extract_info_from('', 0)
+		self.commands.load_from_string.assert_called_once_with(type_hole)
