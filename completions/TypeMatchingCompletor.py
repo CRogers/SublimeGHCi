@@ -1,6 +1,7 @@
 class TypeMatchingCompletor(object):
-	def __init__(self, sublime, completor, type_hole_info_extractor, view):
+	def __init__(self, sublime, commands, completor, type_hole_info_extractor, view):
 		self._sublime = sublime
+		self._commands = commands
 		self._completor = completor
 		self._info_extractor = type_hole_info_extractor
 		self._view = view
@@ -12,7 +13,7 @@ class TypeMatchingCompletor(object):
 		matching = []
 		non_matching = []
 		for x, t in completions:
-			if t == type:
+			if self._commands.is_supertype_of(type, t):
 				matching.append((x, t))
 			else:
 				non_matching.append((x, t))

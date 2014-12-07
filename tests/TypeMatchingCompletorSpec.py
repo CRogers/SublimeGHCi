@@ -8,6 +8,13 @@ class Sublime(object):
 	def Region(self, start, end):
 		return (start, end)
 
+class ExtraGhciCommands(object):
+	def __init__(self):
+		self.supertypes = []
+
+	def is_supertype_of(self, subtype, supertype):
+		return (subtype == supertype) or (supertype in self.supertypes)
+
 class TypedCompletor(object):
 	def __init__(self):
 		self.complete_with_types = Mock(return_value = [])
@@ -29,9 +36,10 @@ class View(object):
 class TypeMatchingCompletorSpec(unittest.TestCase):
 	def setUp(self):
 		self.view = View()
+		self.commands = ExtraGhciCommands()
 		self.completor = TypedCompletor()
 		self.info_extractor = TypeHoleInfoExtractor()
-		self.type_matching_completor = TypeMatchingCompletor(Sublime(), self.completor, self.info_extractor, self.view)
+		self.type_matching_completor = TypeMatchingCompletor(Sublime(), self.commands, self.completor, self.info_extractor, self.view)
 
 	def test_when_there_are_no_completions_then_no_completions_are_produced(self):
 		result = self.type_matching_completor.complete_with_types('', 4)
@@ -65,3 +73,9 @@ class TypeMatchingCompletorSpec(unittest.TestCase):
 			'b',
 			[('g', 'b'), ('h', 'b'), ('f', 'a')])
 
+	def test_when_there_are_two_completions_and_the_last_is_a_supertype_of_the_type_at_the_cursor_put_that_one_on_top(self):
+		self.commands.supertypes = ['b']
+		self._with_completions_and_type_expect(
+			[('f', 'a'), ('g', 'b')],
+			'c',
+			[('g', 'b'), ('f', 'a')])
