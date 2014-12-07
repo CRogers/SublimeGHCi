@@ -53,3 +53,5 @@ Failed, modules loaded: none.''')
     In the expression: _
     In an equation for ‘proc1’: proc1 = _
 Failed, modules loaded: none.''')
+		type = self.info_extractor.extract_info_from('a .  . b', 4)
+		self.assertEqual(type, Fallible.succeed("HList '[Event t Int] -> Moment t (HList '[Event t [Char]])"))

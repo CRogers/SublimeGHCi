@@ -44,3 +44,7 @@ class Fallible(object):
 
 	def __eq__(self, other):
 		return self.successful() == other.successful() and self.value() == other.value()
+
+	def __repr__(self):
+		success_or_fail = 'Success' if self.__succeeded else 'Failed'
+		return '{}<{}>'.format(success_or_fail, self.__value)
