@@ -31,6 +31,9 @@ class LoadedGhciCommands(object):
 	def type_or_kind_of(self, expr):
 		return self.__try_or_fail('type_or_kind_of', expr)
 
+	def load_haskell_file(self, file_name):
+		return self.__try_or_fail('load_haskell_file', file_name)
+
 	def reload(self):
 		return self.__try_or_fail('reload')
 

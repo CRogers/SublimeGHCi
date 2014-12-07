@@ -50,6 +50,11 @@ class GhciCommands(object):
 	def kind_of(self, expr):
 		return self.__expr_command('k', expr)
 
+	def load_haskell_file(self, file_name):
+		msg = ':load "{}"'.format(file_name)
+		response = self.__ghci.message(msg)
+		return Fallible.from_bool(load_succeeded, response)
+
 	def reload(self):
 		response = self.__ghci.message(':r')
 		return Fallible.from_bool(load_succeeded, response)
