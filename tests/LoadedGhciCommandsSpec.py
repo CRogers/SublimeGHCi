@@ -5,20 +5,20 @@ from SublimeGHCi.common.Fallible import *
 from SublimeGHCi.ghci.LoadedGhciCommands import *
 
 class GhciCommands(object):
-	pass
+	def __init__(self):
+		self.loaded = Mock(return_value=False)
+		self.close = Mock()
+		self.completions = Mock(return_value=Fallible.succeed([]))
+		self.type_of = Mock(return_value=Fallible.succeed('type'))
+		self.kind_of = Mock(return_value=Fallible.succeed('kind'))
+		self.type_or_kind_of = Mock(return_value=Fallible.succeed('type or kind'))
+		self.load_haskell_file = Mock(return_value=Fallible.succeed('loaded'))
+		self.reload = Mock(return_value=Fallible.succeed('response'))
+		self.run_expr = Mock(return_value=Fallible.succeed('run expr'))
 
 class LoadedGhciCommandsSpec(unittest.TestCase):
 	def setUp(self):
 		self.commands = GhciCommands()
-		self.commands.loaded = Mock(return_value=False)
-		self.commands.close = Mock()
-		self.commands.completions = Mock(return_value=Fallible.succeed([]))
-		self.commands.type_of = Mock(return_value=Fallible.succeed('type'))
-		self.commands.kind_of = Mock(return_value=Fallible.succeed('kind'))
-		self.commands.type_or_kind_of = Mock(return_value=Fallible.succeed('type or kind'))
-		self.commands.load_haskell_file = Mock(return_value=Fallible.succeed('loaded'))
-		self.commands.reload = Mock(return_value=Fallible.succeed('response'))
-		self.commands.run_expr = Mock(return_value=Fallible.succeed('run expr'))
 		self.loaded_commands = LoadedGhciCommands(self.commands)
 
 	def test_when_inner_commands_loaded_returns_false_loaded_returns_false(self):
