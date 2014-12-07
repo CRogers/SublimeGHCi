@@ -19,6 +19,6 @@ class CompletorFactory(object):
 		info_extractor = self._ghci_factory.new_type_hole_info_extractor()
 		return TypeMatchingCompletor(self._sublime, ghci_commands, typed_completor, info_extractor, view)
 
-	def new_completor_for_view(self, view):
+	def completor_for_view(self, view):
 		ghci_commands = self._ghci_factory.ghci_for_view(view)
 		return OutputCompletor(self._typed_completor(ghci_commands, view))

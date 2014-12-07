@@ -5,7 +5,7 @@ from SublimeGHCi.ErrorReporter import ErrorReporter, ErrorHighlights
 from SublimeGHCi.HaskellView import HaskellView
 
 def key(view):
-	return view.id()
+	return view.buffer_id()
 
 def is_haskell_source_file(file_name):
 	if file_name == None:

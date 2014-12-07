@@ -29,5 +29,5 @@ class CompletorFactorySpec(unittest.TestCase):
 	def test_initialises_properly(self):
 		pass
 
-	def test_can_make_new_completor_for_view(self):
-		self.completor_factory.new_completor_for_view(View)
+	def test_can_make_completor_for_view(self):
+		self.completor_factory.completor_for_view(View)
