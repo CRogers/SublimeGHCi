@@ -10,7 +10,6 @@ class ControllerManager(object):
 		is_lhs = file_name[-4:] == '.lhs'
 		if is_hs or is_lhs:
 			controller = self._controller_factory.controller_for_view(view)
-			print(controller)
 			return func(controller)
 
 	def _call_attr_if_haskell_file(self, view, funcName, *args):
