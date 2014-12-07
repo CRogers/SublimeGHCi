@@ -25,8 +25,8 @@ class GhciFactorySpec(unittest.TestCase):
 	def test_initialises_properly(self):
 		pass
 
-	def test_can_create_a_new_ghci_for_view(self):
-		self.ghci_factory.new_ghci_for_view(View())
+	def test_can_create_a_ghci_for_view(self):
+		self.ghci_factory.ghci_for_view(View())
 
 	def test_can_create_a_new_type_hole_info_extractor(self):
 		self.ghci_factory.new_type_hole_info_extractor()

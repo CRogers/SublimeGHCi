@@ -21,7 +21,7 @@ def extract_error_positions(result):
 class TestRunner(object):
 	def __init__(self, settings, view, highlights):
 		self.__settings = settings
-		self.__ghci = default_ghci_factory().new_ghci_for_view(view)
+		self.__ghci = default_ghci_factory().ghci_for_view(view)
 		self.__output_panel = OutputPanel()
 		self.__highlights = highlights
 

@@ -13,7 +13,7 @@ class TypeHoleInfoExtractor(object):
 	pass
 
 class GhciFactory(object):
-	def new_ghci_for_view(self, view):
+	def ghci_for_view(self, view):
 		return GhciCommands()
 
 	def new_type_hole_info_extractor(self):

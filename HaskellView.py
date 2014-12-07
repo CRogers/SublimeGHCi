@@ -9,7 +9,7 @@ class HaskellView(object):
 		self.__settings = Settings(view)
 		self.__error_reporter = error_reporter
 		self.__test_runner = TestRunner(self.__settings, view, test_highlights)
-		self.__ghci = default_ghci_factory().new_ghci_for_view(view)
+		self.__ghci = default_ghci_factory().ghci_for_view(view)
 		self.__completor = default_completor(self.__ghci, self.__view)
 
 	def __successfully_saved(self, blah):

@@ -20,5 +20,5 @@ class CompletorFactory(object):
 		return TypeMatchingCompletor(self._sublime, ghci_commands, typed_completor, info_extractor, view)
 
 	def new_completor_for_view(self, view):
-		ghci_commands = self._ghci_factory.new_ghci_for_view(view)
+		ghci_commands = self._ghci_factory.ghci_for_view(view)
 		return OutputCompletor(self._typed_completor(ghci_commands, view))
