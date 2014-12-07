@@ -16,6 +16,7 @@ class LoadedGhciCommandsSpec(unittest.TestCase):
 		self.commands.type_of = Mock(return_value=Fallible.succeed('type'))
 		self.commands.kind_of = Mock(return_value=Fallible.succeed('kind'))
 		self.commands.type_or_kind_of = Mock(return_value=Fallible.succeed('type or kind'))
+		self.commands.load_haskell_file = Mock(return_value=Fallible.succeed('loaded'))
 		self.commands.reload = Mock(return_value=Fallible.succeed('response'))
 		self.commands.run_expr = Mock(return_value=Fallible.succeed('run expr'))
 		self.loaded_commands = LoadedGhciCommands(self.commands)
@@ -77,3 +78,9 @@ class LoadedGhciCommandsSpec(unittest.TestCase):
 
 	def test_when_commands_are_loaded_run_expr_is_successful_and_returns_the_inner_value(self):
 		self._when_commands_are_loaded_command_is_successful_and_returns_inner_value('run_expr', 'a')
+
+	def test_when_commands_are_not_loaded_load_haskell_file_is_failed(self):
+		self._when_commands_not_loaded_command_fails('load_haskell_file', 'a')
+
+	def test_when_commands_are_loaded_load_haskell_file_is_successful_and_returns_the_inner_value(self):
+		self._when_commands_are_loaded_command_is_successful_and_returns_inner_value('load_haskell_file', 'a')
