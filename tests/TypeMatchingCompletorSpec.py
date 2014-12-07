@@ -43,8 +43,22 @@ class TypeMatchingCompletorSpec(unittest.TestCase):
 		result = self.type_matching_completor.complete_with_types('', 4)
 		self.assertEqual(result, completions)
 
-	def test_when_there_are_two_completions_but_one_of_them_to_the_type_at_cursor_put_that_one_on_top(self):
+	def test_when_there_are_two_completions_and_the_first_is_equal_to_the_type_at_cursor_put_that_one_on_top(self):
+		completions = [('f', 'a'), ('g', 'b')]
+		self.completor.complete_with_types.return_value = completions
+		self.info_extractor.type_at_point.return_value = Fallible.succeed('a')
+		result = self.type_matching_completor.complete_with_types('', 4)
+		self.assertEqual(result, completions)
+
+	def test_when_there_are_two_completions_and_the_last_is_equal_to_the_type_at_cursor_put_that_one_on_top(self):
 		self.completor.complete_with_types.return_value = [('f', 'a'), ('g', 'b')]
 		self.info_extractor.type_at_point.return_value = Fallible.succeed('b')
 		result = self.type_matching_completor.complete_with_types('', 4)
 		self.assertEqual(result, [('g', 'b'), ('f', 'a')])
+
+	def test_when_there_are_three_completions_and_the_last_two_are_equal_to_the_type_at_cursor_put_those_two_on_top(self):
+		self.completor.complete_with_types.return_value = [('f', 'a'), ('g', 'b'), ('h', 'b')]
+		self.info_extractor.type_at_point.return_value = Fallible.succeed('b')
+		result = self.type_matching_completor.complete_with_types('', 4)
+		self.assertEqual(result, [('g', 'b'), ('h', 'b'), ('f', 'a')])
+
