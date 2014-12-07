@@ -12,7 +12,10 @@ class ControllerFactory(object):
 
 class View(object):
 	def __init__(self, file_name):
-		self.file_name = Mock(return_value=file_name)
+		self._file_name = file_name
+
+	def file_name(self):
+		return self._file_name
 
 class ControllerManagerSpec(unittest.TestCase):
 	def setUp(self):
@@ -32,3 +35,7 @@ class ControllerManagerSpec(unittest.TestCase):
 		view = View('kittens.lhs')
 		self.controller_manager.add(view)
 		self.factory.controller_for_view.assert_called_once_with(view)
+
+	def test_when_the_file_name_is_none_it_doesnt_call_the_factory(self):
+		self.controller_manager.add(View(None))
+		self.assertEqual(self.factory.controller_for_view.call_count, 0)

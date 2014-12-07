@@ -2,8 +2,27 @@ class ControllerManager(object):
 	def __init__(self, controller_factory):
 		self._controller_factory = controller_factory
 
-	def add(self, view):
-		is_hs = view.file_name()[-3:] == '.hs'
-		is_lhs = view.file_name()[-4:] == '.lhs'
+	def _call_if_haskell_file(self, view, func):
+		file_name = view.file_name()
+		if file_name == None:
+			return
+		is_hs = file_name[-3:] == '.hs'
+		is_lhs = file_name[-4:] == '.lhs'
 		if is_hs or is_lhs:
-			self._controller_factory.controller_for_view(view)
+			controller = self._controller_factory.controller_for_view(view)
+			func(controller)
+
+	def _call_attr_if_haskell_file(self, view, funcName, *args):
+		self._call_if_haskell_file(view, lambda controller: getattr(controller, funcName)(*args))
+
+	def add(self, view):
+		self._call_if_haskell_file(view, lambda _: None)
+
+	def saved(self, view):
+		self._call_attr_if_haskell_file(view, 'saved')
+
+	def complete(self, view, prefix, location):
+		self._call_attr_if_haskell_file(view, 'complete', prefix, location)
+
+	def close(self, view):
+		self._call_attr_if_haskell_file(view, 'close')
