@@ -29,4 +29,4 @@ class GhciFactorySpec(unittest.TestCase):
 		self.ghci_factory.ghci_for_view(View())
 
 	def test_can_create_a_new_type_hole_info_extractor(self):
-		self.ghci_factory.new_type_hole_info_extractor()
+		self.ghci_factory.new_type_hole_info_extractor(View())

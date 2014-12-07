@@ -1,5 +1,5 @@
 class Controller(object):
-	def _init_(self, project_manager, ghci, completor, error_reporter):
+	def __init__(self, project_manager, ghci, completor, error_reporter):
 		self._project_manager = project_manager
 		self._error_reporter = error_reporter
 		self._ghci = ghci

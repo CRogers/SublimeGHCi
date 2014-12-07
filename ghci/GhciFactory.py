@@ -15,8 +15,8 @@ class GhciFactory(object):
 	def _new_string_accepting_ghci(self, connection):
 		return StringAcceptingGhci(self._tempfile, self._new_ghci(connection))
 
-	def new_type_hole_info_extractor(self):
-		connection = self._connection_factory.new_connection()
+	def new_type_hole_info_extractor(self, view):
+		connection = self._connection_factory.new_connection(view)
 		ghci_commands = self._new_string_accepting_ghci(connection)
 		return TypeHoleInfoExtractor(ghci_commands)
 

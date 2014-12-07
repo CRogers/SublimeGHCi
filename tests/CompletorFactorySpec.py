@@ -16,7 +16,7 @@ class GhciFactory(object):
 	def ghci_for_view(self, view):
 		return GhciCommands()
 
-	def new_type_hole_info_extractor(self):
+	def new_type_hole_info_extractor(self, view):
 		return TypeHoleInfoExtractor()
 
 class View(object):

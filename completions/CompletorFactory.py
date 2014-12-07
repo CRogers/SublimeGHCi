@@ -16,7 +16,7 @@ class CompletorFactory(object):
 	def _typed_completor(self, ghci_commands, view):
 		untyped_completor = self._untyped_completor(ghci_commands, view)
 		typed_completor = TypeAddingCompletor(untyped_completor, ghci_commands)
-		info_extractor = self._ghci_factory.new_type_hole_info_extractor()
+		info_extractor = self._ghci_factory.new_type_hole_info_extractor(view)
 		return TypeMatchingCompletor(self._sublime, ghci_commands, typed_completor, info_extractor, view)
 
 	def completor_for_view(self, view):

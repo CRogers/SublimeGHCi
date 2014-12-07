@@ -1,12 +1,28 @@
 import sublime_plugin
-from SublimeGHCi.HaskellViewManager import HaskellViewManager
+
+from SublimeGHCi.ErrorReporter import *
+from SublimeGHCi.completions.defaults import *
+from SublimeGHCi.controllers.ControllerManager import *
+from SublimeGHCi.controllers.defaults import *
+from SublimeGHCi.ghci.defaults import *
+from SublimeGHCi.projects.defaults import *
+
+project_manager = default_project_manager()
+ghci_connection_factory = default_ghci_connection_factory(project_manager)
+ghci_factory = default_ghci_factory(ghci_connection_factory)
+completor_factory = default_completor_factory(ghci_factory)
+
+error_reporter = ErrorReporter()
+
+controller_factory = default_controller_factory(project_manager, ghci_factory, completor_factory, error_reporter)
+manager = ControllerManager(controller_factory)
 
 def plugin_loaded():
 	pass
 
 def plugin_unloaded():
 	print("terminating ghci")
-	manager.remove_all()
+	#manager.remove_all()
 
 class HooksListener(sublime_plugin.EventListener):
 	def on_post_save(self, view):
@@ -28,4 +44,4 @@ class HooksListener(sublime_plugin.EventListener):
 		manager.add(view)
 
 	def on_close(self, view):
-		manager.remove(view)
+		manager.close(view)

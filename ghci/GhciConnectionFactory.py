@@ -8,8 +8,9 @@ class GhciConnectionFactory(object):
 		self._threading = threading
 		self._project_manager = project_manager
 
-	def new_connection(self):
-		return GhciConnection(self._subprocess, self._os, self._threading, self._project_manager)
+	def new_connection(self, view):
+		project = self._project_manager.project_for_view(view)
+		return GhciConnection(self._subprocess, self._os, self._threading, project)
 
 	def new_connection_for_view(self, view):
-		return AutoloadingGhciConnection(self.new_connection(), view.file_name())
+		return AutoloadingGhciConnection(self.new_connection(view), view.file_name())
