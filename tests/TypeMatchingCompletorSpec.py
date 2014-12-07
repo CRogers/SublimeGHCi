@@ -77,5 +77,12 @@ class TypeMatchingCompletorSpec(unittest.TestCase):
 		self.commands.supertypes = ['b']
 		self._with_completions_and_type_expect(
 			[('f', 'a'), ('g', 'b')],
-			'c',
+			't',
 			[('g', 'b'), ('f', 'a')])
+
+	def test_when_there_are_three_completions_and_the_last_two_are_supertypes_of_the_type_at_the_cursor_put_those_two_on_top(self):
+		self.commands.supertypes = ['b', 'c']
+		self._with_completions_and_type_expect(
+			[('f', 'a'), ('g', 'b'), ('h', 'c')],
+			't',
+			[('g', 'b'), ('h', 'c'), ('f', 'a')])
