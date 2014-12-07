@@ -1,4 +1,5 @@
 import sublime
+import os, subprocess, threading
 
 from SublimeGHCi.completions.CompletorFactory import *
 

@@ -2,20 +2,22 @@ import unittest
 from unittest.mock import *
 
 from SublimeGHCi.ghci.GhciFactory import *
-from SublimeGHCi.projects.Project import GhciProject
 
-class ProjectManager(object):
+class GhciConnection(object):
+	pass
+
+class GhciConnectionFactory(object):
 	def __init__(self):
-		self.project_for_view = Mock(return_value=GhciProject('/tmp/'))
+		self.new_connection = Mock(return_value=GhciConnection())
+		self.new_connection_for_view = Mock(return_value=GhciConnection())
 
 class View(object):
-	def __init__(self):
-		self.file_name = Mock(return_value='blah.hs')
+	pass
 
 class GhciFactorySpec(unittest.TestCase):
 	def setUp(self):
-		self.project_manager = ProjectManager()
-		self.ghci_factory = GhciFactory(self.project_manager)
+		self.connection_factory = GhciConnectionFactory()
+		self.ghci_factory = GhciFactory(self.connection_factory)
 
 	def test_initialises_properly(self):
 		pass
