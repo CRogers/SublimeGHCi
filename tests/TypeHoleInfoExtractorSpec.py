@@ -21,6 +21,10 @@ class TypeHoleInfoExtractorSpec(unittest.TestCase):
 		self.info_extractor.extract_info_from('someFunc .  . anotherFunc', 11)
 		self.commands.load_from_string.assert_called_once_with('someFunc . _hole . anotherFunc')
 
+	def test_when_load_is_unsuccessful_but_has_no_type_hole_errors_it_should_return_fail(self):
+		type = self.info_extractor.extract_info_from('a .  . b', 4)
+		self.assertTrue(type.failed())
+
 	def test_when_load_is_unsuccessful_return_the_type_of_the_hole_simple(self):
 		self.commands.load_from_string.return_value = Fallible.fail('''[1 of 1] Compiling X          ( /Users/X.hs, interpreted )
 
