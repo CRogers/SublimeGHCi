@@ -3,4 +3,5 @@ class ControllerManager(object):
 		self._controller_factory = controller_factory
 
 	def add(self, view):
-		pass
+		if view.file_name()[-3:] == '.hs':
+			self._controller_factory.controller_for_view(view)
