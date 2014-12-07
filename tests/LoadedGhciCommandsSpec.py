@@ -31,10 +31,12 @@ class LoadedGhciCommandsSpec(unittest.TestCase):
 		self.loaded_commands.close()
 		self.commands.close.assert_called_once_with()
 
-	def test_when_commands_not_loaded_completions_is_failed_and_empty(self):
-		completions = self.loaded_commands.completions('a')
-		self.assertTrue(completions.failed())
-		self.assertEqual(completions.value(), [])
+	def _when_commands_not_loaded_command_fails(self, command, *args):
+		result = getattr(self.loaded_commands, command)(*args)
+		self.assertTrue(result.failed())		
+
+	def test_when_commands_not_loaded_completions_is_failed(self):
+		self._when_commands_not_loaded_command_fails('completions', 'a')
 
 	def test_when_commands_are_loaded_completions_is_successful_and_returns_the_inner_completions(self):
 		self.commands.loaded.return_value = True
@@ -44,8 +46,7 @@ class LoadedGhciCommandsSpec(unittest.TestCase):
 		self.assertEqual(completions.value(), ['ab'])
 
 	def test_when_commands_are_not_loaded_type_of_is_failed(self):
-		completions = self.loaded_commands.type_of('a')
-		self.assertTrue(completions.failed())
+		self._when_commands_not_loaded_command_fails('type_of', 'a')
 
 	def test_when_commands_are_loaded_type_of_is_successful_and_returns_the_inner_value(self):
 		self.commands.loaded.return_value = True
@@ -55,8 +56,7 @@ class LoadedGhciCommandsSpec(unittest.TestCase):
 		self.assertEqual(completions.value(), 'cat')
 
 	def test_when_commands_are_not_loaded_kind_of_is_failed(self):
-		completions = self.loaded_commands.kind_of('a')
-		self.assertTrue(completions.failed())
+		self._when_commands_not_loaded_command_fails('kind_of', 'a')
 
 	def test_when_commands_are_loaded_kind_of_is_successful_and_returns_the_inner_value(self):
 		self.commands.loaded.return_value = True
@@ -66,8 +66,7 @@ class LoadedGhciCommandsSpec(unittest.TestCase):
 		self.assertEqual(completions.value(), 'cat')
 
 	def test_when_commands_are_not_loaded_type_or_kind_of_is_failed(self):
-		completions = self.loaded_commands.type_or_kind_of('a')
-		self.assertTrue(completions.failed())
+		self._when_commands_not_loaded_command_fails('type_or_kind_of', 'a')
 
 	def test_when_commands_are_loaded_type_or_kind_of_is_successful_and_returns_the_inner_value(self):
 		self.commands.loaded.return_value = True
@@ -77,8 +76,7 @@ class LoadedGhciCommandsSpec(unittest.TestCase):
 		self.assertEqual(completions.value(), 'cat')
 
 	def test_when_commands_are_not_reload_file_is_failed(self):
-		completions = self.loaded_commands.reload()
-		self.assertTrue(completions.failed())
+		self._when_commands_not_loaded_command_fails('reload')
 
 	def test_when_commands_are_loaded_reload_is_successful_and_returns_the_inner_value(self):
 		self.commands.loaded.return_value = True
@@ -88,8 +86,7 @@ class LoadedGhciCommandsSpec(unittest.TestCase):
 		self.assertEqual(completions.value(), 'cat')
 
 	def test_when_commands_are_not_loaded_run_expr_is_failed(self):
-		completions = self.loaded_commands.run_expr('a')
-		self.assertTrue(completions.failed())
+		self._when_commands_not_loaded_command_fails('run_expr', 'a')
 
 	def test_when_commands_are_loaded_run_expr_is_successful_and_returns_the_inner_value(self):
 		self.commands.loaded.return_value = True
