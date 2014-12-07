@@ -14,15 +14,15 @@ class TypeHoleInfoExtractorSpec(unittest.TestCase):
 		self.info_extractor = TypeHoleInfoExtractor(self.commands, 'hole')
 
 	def test_when_called_calls_inner_commands_load_from_string_with_type_hole_at_beginning(self):
-		self.info_extractor.extract_info_from('', 0)
+		self.info_extractor.type_at_point('', 0)
 		self.commands.load_from_string.assert_called_once_with('_hole')
 
 	def test_when_called_calls_inner_commands_load_from_string_with_type_hole_inside_text(self):
-		self.info_extractor.extract_info_from('someFunc .  . anotherFunc', 11)
+		self.info_extractor.type_at_point('someFunc .  . anotherFunc', 11)
 		self.commands.load_from_string.assert_called_once_with('someFunc . _hole . anotherFunc')
 
 	def test_when_load_is_unsuccessful_but_has_no_type_hole_errors_it_should_return_fail(self):
-		type = self.info_extractor.extract_info_from('a .  . b', 4)
+		type = self.info_extractor.type_at_point('a .  . b', 4)
 		self.assertTrue(type.failed())
 
 	def test_when_load_is_unsuccessful_return_the_type_of_the_hole_simple(self):
@@ -37,7 +37,7 @@ class TypeHoleInfoExtractorSpec(unittest.TestCase):
     In an equation for ‘hlength’: hlength _ = _hole
     In the instance declaration for ‘HLength (HList '[])’
 Failed, modules loaded: none.''')
-		type = self.info_extractor.extract_info_from('a .  . b', 4)
+		type = self.info_extractor.type_at_point('a .  . b', 4)
 		self.assertEqual(type, Fallible.succeed('Int'))
 
 	def test_when_load_is_unsuccessful_return_the_type_of_the_hole_complex(self):
@@ -57,5 +57,5 @@ Failed, modules loaded: none.''')
     In the expression: _
     In an equation for ‘proc1’: proc1 = _
 Failed, modules loaded: none.''')
-		type = self.info_extractor.extract_info_from('a .  . b', 4)
+		type = self.info_extractor.type_at_point('a .  . b', 4)
 		self.assertEqual(type, Fallible.succeed("HList '[Event t Int] -> Moment t (HList '[Event t [Char]])"))
