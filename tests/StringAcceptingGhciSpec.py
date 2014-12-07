@@ -13,5 +13,5 @@ class StringAcceptingGhciSpec(unittest.TestCase):
 		self.commands = GhciCommands()
 		self.ghci = StringAcceptingGhci(self.commands, None, None)
 
-	def test_(self):
-		pass
+	#def test_when_load_from_string_is_called(self):
+	#	self.ghci.load_from_string('haskell file')
