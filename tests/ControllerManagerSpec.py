@@ -28,4 +28,7 @@ class ControllerManagerSpec(unittest.TestCase):
 		self.controller_manager.add(view)
 		self.factory.controller_for_view.assert_called_once_with(view)
 
-	
+	def test_when_add_is_called_with_an_lhs_extension_it_calls_the_factory(self):
+		view = View('kittens.lhs')
+		self.controller_manager.add(view)
+		self.factory.controller_for_view.assert_called_once_with(view)
