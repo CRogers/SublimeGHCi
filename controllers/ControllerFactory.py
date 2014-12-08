@@ -10,4 +10,5 @@ class ControllerFactory(object):
 	def controller_for_view(self, view):
 		ghci = self._ghci_factory.ghci_for_view(view)
 		completor = self._completor_factory.completor_for_view(view)
-		return Controller(self._project_manager, ghci, completor, self._error_reporter)
+		project = self._project_manager.project_for_view(view)
+		return Controller(project, ghci, completor, self._error_reporter)

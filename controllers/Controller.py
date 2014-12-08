@@ -1,6 +1,6 @@
 class Controller(object):
-	def __init__(self, project_manager, ghci, completor, error_reporter):
-		self._project_manager = project_manager
+	def __init__(self, project, ghci, completor, error_reporter):
+		self._project = project
 		self._error_reporter = error_reporter
 		self._ghci = ghci
 		self._completor = completor
@@ -14,7 +14,7 @@ class Controller(object):
 	def saved(self):
 		(self._ghci.reload()
 			.map(self._successfully_saved)
-			.map_fail(lambda err: self._error_reporter.report_errors(err, self._settings.project_directory())))
+			.map_fail(lambda err: self._error_reporter.report_errors(err, self._project.base_path())))
 
 	def complete(self, prefix, location):
 		return self._completor.complete(prefix, location)
