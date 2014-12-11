@@ -17,11 +17,18 @@ class TypeMatchingCompletor(object):
 				matching.append((x, t))
 			else:
 				non_matching.append((x, t))
+		print('m', matching, non_matching)
 		return matching + non_matching
 
 	def complete_with_types(self, prefix, location):
+		print('yay')
 		completions = self._completor.complete_with_types(prefix, location)
+		print('no yay', completions)
 		text = self._get_view_text()
-		return (self._info_extractor.type_at_point(text, location).switch(
+		tap = self._info_extractor.type_at_point(text, location)
+		print(tap)
+		bah = (tap.switch(
 			lambda type: self._sort_completions_by_type(type, completions),
 			lambda _: completions))
+		print('bah', bah)
+		return bah
