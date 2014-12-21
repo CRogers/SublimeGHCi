@@ -1,7 +1,9 @@
-import os, time
+import os, time, signal
 import sublime
 from threading import Thread
-from SublimeGHCi.integ_tests.utils import quit_sublime
+
+def quit_sublime():
+	os.kill(os.getppid(), signal.SIGTERM)
 
 def after_loaded():
 	while sublime.active_window().active_view() == None:
