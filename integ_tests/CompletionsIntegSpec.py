@@ -1,15 +1,24 @@
 import unittest
 import subprocess
-import os, sys, os.path
+import os, sys, os.path, time
 try:
 	import sublime
+	import SublimeGHCi.SublimeGHCi
 except ImportError:
 	pass
 
 path = '/Applications/Sublime Text.app/Contents/MacOS/Sublime Text'
 
+def wait_until_loaded(view):
+	while not SublimeGHCi.SublimeGHCi.manager.loaded(view).value():
+		print('wait laod')
+		time.sleep(1)
+
 def print_yay():
-	return sublime.active_window().active_view().file_name()
+	view = sublime.active_window().active_view()
+	wait_until_loaded(view)
+	cs = SublimeGHCi.SublimeGHCi.manager.complete(view, 'f', 64)
+	return cs
 
 def wait_until_sublime_closes(popen):
 	while not popen.poll():
@@ -19,6 +28,10 @@ def wait_until_sublime_closes(popen):
 		except subprocess.TimeoutExpired:
 			pass
 
+def run_sublime(env, path_to_open):
+	p = subprocess.Popen([path, path_to_open], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+	wait_until_sublime_closes(p)
+
 def run_integ_test(func):
 	env = os.environ.copy()
 	env['INTEG_TESTS'] = '1'
@@ -27,17 +40,11 @@ def run_integ_test(func):
 	env['INTEG_OUTPUT'] = os.path.abspath('integ_results')
 	with open('integ_results', 'w+') as f:
 		f.write('')
-	p = subprocess.Popen([path, 'integ_tests/Completions/Completions1.hs'], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
-	wait_until_sublime_closes(p)
+	run_sublime(env, 'integ_tests/Completions/Completions1.hs')
 	with open('integ_results', 'r') as f:
-		print(f.read())
+		return f.read()
 
 class CompletionsIntegSpec(unittest.TestCase):
-	def setUp(self):
-		run_integ_test(print_yay)
-
 	def test_(self):
-		pass
-
-	def test_2(self):
-		pass
+		cat = run_integ_test(print_yay)
+		self.assertEqual('cat', cat)

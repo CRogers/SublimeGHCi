@@ -9,7 +9,7 @@ def after_loaded():
 
 	output_file = os.environ.get('INTEG_OUTPUT')
 	with open(output_file, 'w+') as f:
-		f.write(getattr(module, func)())
+		f.write(str(getattr(module, func)()))
 	quit_sublime()
 
 if os.environ.get('INTEG_TESTS') == '1':
