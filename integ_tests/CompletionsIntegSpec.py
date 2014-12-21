@@ -9,6 +9,7 @@ except ImportError:
 try:
 	import sublime
 	import SublimeGHCi.SublimeGHCi
+	from SublimeGHCi.integ_tests.CompletionIntegTest import *
 except ImportError:
 	pass
 
@@ -19,9 +20,10 @@ def wait_until_loaded(view):
 def print_yay():
 	view = sublime.active_window().active_view()
 	wait_until_loaded(view)
-	view.run_command('insert_text', {'point': 63, 'string':'a = f'})
-	cs = SublimeGHCi.SublimeGHCi.manager.complete(view, 'f', 68)
-	view.run_command('undo')
+	test = CompletionIntegTest(view, SublimeGHCi.SublimeGHCi.manager)
+	test.append_text('a = ')
+	cs = test.complete('f')
+	test.undo()
 	view.window().run_command('close')
 	return cs
 
