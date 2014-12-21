@@ -14,7 +14,18 @@ class CompletionsIntegSpec(unittest.TestCase):
 		env['INTEG_TESTS'] = '1'
 		env['INTEG_NAME'] = __name__
 		env['INTEG_FUNC'] = 'print_yay'
-		p = subprocess.Popen([path], env=env)
+		with open('integ_results', 'w+') as f:
+			f.write('')
+		p = subprocess.Popen([path, 'integ_tests/Completions/Completions1.hs'], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+		while not p.poll():
+			try:
+				p.wait(0.1)
+				break
+			except subprocess.TimeoutExpired:
+				print('wait')
+		print('fin')
+		with open('integ_results', 'r') as f:
+			print(f.read())
 
 	def test_(self):
 		pass
