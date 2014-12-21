@@ -11,6 +11,14 @@ path = '/Applications/Sublime Text.app/Contents/MacOS/Sublime Text'
 def print_yay():
 	return sublime.active_window().active_view().file_name()
 
+def wait_until_sublime_closes(popen):
+	while not popen.poll():
+		try:
+			popen.wait(0.1)
+			break
+		except subprocess.TimeoutExpired:
+			pass
+
 def run_integ_test(func):
 	env = os.environ.copy()
 	env['INTEG_TESTS'] = '1'
@@ -20,12 +28,7 @@ def run_integ_test(func):
 	with open('integ_results', 'w+') as f:
 		f.write('')
 	p = subprocess.Popen([path, 'integ_tests/Completions/Completions1.hs'], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
-	while not p.poll():
-		try:
-			p.wait(0.1)
-			break
-		except subprocess.TimeoutExpired:
-			pass
+	wait_until_sublime_closes(p)
 	with open('integ_results', 'r') as f:
 		print(f.read())
 
