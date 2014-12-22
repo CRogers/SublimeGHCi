@@ -29,5 +29,9 @@ def print_yay():
 
 class CompletionsIntegSpec(unittest.TestCase):
 	def test_(self):
-		cat = integ_tests.utils.run_integ_test(print_yay)
+		cat = integ_tests.utils.run_integ_test(print_yay, 'integ_tests/Completions/NoCompletions.hs')
 		self.assertEqual(eval(cat), [])
+
+	def test_one_completion(self):
+		result = integ_tests.utils.run_integ_test(print_yay, 'integ_tests/Completions/OneCompletion.hs')
+		self.assertEqual(eval(result), [('foo\tFoo', 'foo')])

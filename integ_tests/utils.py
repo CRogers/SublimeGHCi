@@ -14,7 +14,7 @@ def run_sublime(env, path_to_open):
 	p = subprocess.Popen([path, path_to_open], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 	wait_until_sublime_closes(p)
 
-def run_integ_test(func):
+def run_integ_test(func, file):
 	env = os.environ.copy()
 	env['INTEG_TESTS'] = '1'
 	env['INTEG_NAME'] = func.__module__
@@ -22,6 +22,6 @@ def run_integ_test(func):
 	env['INTEG_OUTPUT'] = os.path.abspath('integ_results')
 	with open('integ_results', 'w+') as f:
 		f.write('')
-	run_sublime(env, 'integ_tests/Completions/NoCompletions.hs')
+	run_sublime(env, file)
 	with open('integ_results', 'r') as f:
 		return f.read()
