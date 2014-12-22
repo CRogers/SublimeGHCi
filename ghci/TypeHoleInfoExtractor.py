@@ -18,7 +18,5 @@ class TypeHoleInfoExtractor(object):
 
 	def type_at_point(self, text, point):
 		new_text = text[:point] + self._type_hole + text[point:]
-		print('nt', new_text)
 		error_output = self._commands.load_from_string(new_text).value()
-		print('boop', error_output)
 		return self._extract_hole_type(error_output)
