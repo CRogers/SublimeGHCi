@@ -20,8 +20,19 @@ def run_integ_test(func, *files):
 	env['INTEG_TESTS'] = '1'
 	env['INTEG_NAME'] = func.__module__
 	env['INTEG_FUNC'] = func.__name__
-	with tempfile.NamedTemporaryFile() as tf:
+	tfname = None
+	with tempfile.NamedTemporaryFile(delete=False) as tf:
+		tfname = tf.name
 		env['INTEG_OUTPUT'] = tf.name
-		tf.write(b'')
-		run_sublime(env, *files)
-		return tf.read()
+		tf.write(b'EXCEPTION\nINFRA ERROR')
+	
+	run_sublime(env, *files)
+
+	lines = None
+	with open(tfname, 'r') as tf:
+		lines = tf.readlines()
+	os.unlink(tfname)
+	bulk = '\n'.join(lines[1:])
+	if lines[0].startswith('EXCEPTION'):
+		raise Exception(bulk)
+	return bulk
