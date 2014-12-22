@@ -30,4 +30,4 @@ def print_yay():
 class CompletionsIntegSpec(unittest.TestCase):
 	def test_(self):
 		cat = integ_tests.utils.run_integ_test(print_yay)
-		self.assertEqual('[]', cat)
+		self.assertEqual(eval(cat), [])
