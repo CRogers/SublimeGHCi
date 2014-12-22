@@ -14,4 +14,4 @@ before_install:
 
 script:
   - bash run_tests.sh
-  - base run_integ_test.sh
+  - bash run_integ_test.sh
