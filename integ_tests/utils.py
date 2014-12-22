@@ -22,6 +22,6 @@ def run_integ_test(func):
 	env['INTEG_OUTPUT'] = os.path.abspath('integ_results')
 	with open('integ_results', 'w+') as f:
 		f.write('')
-	run_sublime(env, 'integ_tests/Completions/Completions1.hs')
+	run_sublime(env, 'integ_tests/Completions/NoCompletions.hs')
 	with open('integ_results', 'r') as f:
 		return f.read()
