@@ -13,5 +13,6 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
 
 script:
+  - ./sublime_text_3/sublime_text
   - bash run_tests.sh
   - bash run_integ_tests.sh
