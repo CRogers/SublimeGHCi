@@ -8,7 +8,7 @@ sudo: false
 before_install:
   - wget -O sublime_text.tar.bz2 http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_3065_x64.tar.bz2
   - tar -xvf sublime_text.tar.bz2
-  - "export SUBLIME_PATH=sublime_text/sublime_text_3"
+  - "export SUBLIME_PATH=sublime_text_3/sublime_text"
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
 
