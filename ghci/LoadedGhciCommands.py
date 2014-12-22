@@ -22,6 +22,9 @@ class LoadedGhciCommands(object):
 		else:
 			return Fallible.fail('GHCi has not yet loaded')
 
+	def is_supertype_of(self, subtype, supertype):
+		return self.__try_or_fail('is_supertype_of', subtype, supertype)
+
 	def type_of(self, expr):
 		return self.__try_or_fail('type_of', expr)
 

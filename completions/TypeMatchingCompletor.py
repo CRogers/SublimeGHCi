@@ -13,19 +13,25 @@ class TypeMatchingCompletor(object):
 		matching = []
 		non_matching = []
 		for x, t in completions:
-			if self._commands.is_supertype_of(type, t):
+			isstp = self._commands.is_supertype_of(t, type)
+			print('blah', t, x, isstp)
+			if isstp:
 				matching.append((x, t))
 			else:
 				non_matching.append((x, t))
+		print(type, matching, non_matching)
 		return matching + non_matching
 
 	def complete_with_types(self, prefix, location):
 		completions = self._completor.complete_with_types(prefix, location)
 		text = self._get_view_text()
-		tap = self._info_extractor.type_at_point(text, location)
+		start = location - len(prefix)
+		tap = self._info_extractor.type_at_range(text, start, len(prefix))
+		print(tap)
 		bah = (tap.switch(
 			lambda type: self._sort_completions_by_type(type, completions),
 			lambda _: completions))
+		print(bah)
 		return bah
 
 	def loaded(self):

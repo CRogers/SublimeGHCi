@@ -16,7 +16,8 @@ class TypeHoleInfoExtractor(object):
 		type_without_breaks = strip_whitespace_on_leading_lines(match.group(1))
 		return Fallible.succeed(type_without_breaks)
 
-	def type_at_point(self, text, point):
-		new_text = text[:point] + self._type_hole + text[point:]
+	def type_at_range(self, text, start, length):
+		end = start + length
+		new_text = text[:start] + self._type_hole + text[end:]
 		error_output = self._commands.load_from_string(new_text).value()
 		return self._extract_hole_type(error_output)

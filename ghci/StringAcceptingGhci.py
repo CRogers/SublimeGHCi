@@ -4,9 +4,11 @@ class StringAcceptingGhci(object):
 		self._commands = ghci_commands
 
 	def load_from_string(self, text):
-		with self._tempfile.NamedTemporaryFile(suffix='.hs') as tf:
+		tfname = None
+		with self._tempfile.NamedTemporaryFile(suffix='.hs', delete=False) as tf:
 			tf.file.write(text.encode('utf-8'))
-			return self._commands.load_haskell_file(tf.name)
+			tfname = tf.name
+		return self._commands.load_haskell_file(tfname)
 
 	def is_supertype_of(self, subtype, supertype):
 		return self._commands.is_supertype_of(subtype, supertype)

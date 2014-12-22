@@ -23,6 +23,14 @@ def top_level_F():
 def top_level_b():
 	return top_level_completion_with('b')
 
+def top_level_blah():
+	view = sublime.active_window().active_view()
+	manager = SublimeGHCi.SublimeGHCi.manager
+	with GhciIntegTest(view, manager):
+		with CompletionIntegTest(view, manager) as test:
+			test.append_text('a = takesFoo ')
+			return test.complete('f')
+
 def top_level_completion_with(prefix):
 	view = sublime.active_window().active_view()
 	manager = SublimeGHCi.SublimeGHCi.manager
@@ -47,3 +55,7 @@ class CompletionsIntegSpec(unittest.TestCase):
 	def test_mutliple_modules(self):
 		result = run_integ_test(top_level_b, 'integ_tests/Completions/MultipleModules', 'integ_tests/Completions/MultipleModules/SecondModule.hs')
 		self.assertEqual(eval(result), [('bar\tFirstModule.Bar', 'bar')])
+
+	def test_should_suggest_an_expression_which_fits_the_type_at_that_position_over_one_that_does_not(self):
+		result = run_integ_test(top_level_blah, 'integ_tests/Completions/TypeHole.hs')
+		self.assertEqual(eval(result), [('fooForReal\tFoo\t\u2713', 'fooForReal'), ('fooFake\tFooFake', 'fooFake')])

@@ -21,7 +21,7 @@ class TypedCompletor(object):
 
 class TypeHoleInfoExtractor(object):
 	def __init__(self):
-		self.type_at_point = Mock(return_value = Fallible.fail(None))
+		self.type_at_range = Mock(return_value = Fallible.fail(None))
 
 class View(object):
 	def __init__(self):
@@ -53,7 +53,7 @@ class TypeMatchingCompletorSpec(unittest.TestCase):
 
 	def _with_completions_and_type_expect(self, completions, type, output):
 		self.completor.complete_with_types.return_value = completions
-		self.info_extractor.type_at_point.return_value = Fallible.succeed(type)
+		self.info_extractor.type_at_range.return_value = Fallible.succeed(type)
 		result = self.type_matching_completor.complete_with_types('', 4)
 		self.assertEqual(result, output)
 

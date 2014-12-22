@@ -63,13 +63,21 @@ class GhciCommandsSpec(unittest.TestCase):
 		type = self.commands.type_of('foo')
 		self.assertTrue(type.failed())
 
+	def test_when_the_type_command_returns_a_couldnt_match_type_error_type_of_fails(self):
+		self.connection.message.return_value = '''
+<interactive>:1:3:
+	Couldn't match expected type ‘FooFake’ with actual type ‘Foo’
+	In the expression: (((let a = a in a) :: Foo) :: FooFake)'''
+		type = self.commands.type_of('div')
+		self.assertTrue(type.failed())
+
 	def test_when_the_type_command_returns_an_ambiguous_match_with_defined_at_and_imported_from_type_of_fails(self):
 		self.connection.message.return_value = '''
 <interactive>:1:1:
-    Ambiguous occurrence ‘div’
-    It could refer to either ‘Hstml.div’, defined at src/Hstml.hs:19:1
-                          or ‘Prelude.div’,
-                             imported from ‘Prelude’ (and originally defined in ‘GHC.Real’)'''
+	Ambiguous occurrence ‘div’
+	It could refer to either ‘Hstml.div’, defined at src/Hstml.hs:19:1
+						  or ‘Prelude.div’,
+							 imported from ‘Prelude’ (and originally defined in ‘GHC.Real’)'''
 
 		type = self.commands.type_of('div')
 		self.assertTrue(type.failed())
@@ -78,15 +86,14 @@ class GhciCommandsSpec(unittest.TestCase):
 	def test_when_the_type_command_returns_an_ambiguous_match_with_import_from_twice_type_of_fails(self):
 		self.connection.message.return_value = '''
 <interactive>:1:1:
-    Ambiguous occurrence ‘foldr’
-    It could refer to either ‘Prelude.foldr’,
-                             imported from ‘Prelude’ (and originally defined in ‘GHC.Base’)
-                          or ‘Data.Foldable.foldr’, imported from ‘Data.Foldable’'''
+	Ambiguous occurrence ‘foldr’
+	It could refer to either ‘Prelude.foldr’,
+							 imported from ‘Prelude’ (and originally defined in ‘GHC.Base’)
+						  or ‘Data.Foldable.foldr’, imported from ‘Data.Foldable’'''
 
 		type = self.commands.type_of('foldr')
 		self.assertTrue(type.failed())
 		self.assertEqual(type.value(), 'Ambiguous: Prelude.foldr or Data.Foldable.foldr')
-
 	def test_when_calling_kind_of_with_expression_should_send_appropriate_kind_of_command(self):
 		self.commands.kind_of('A')
 		self.connection.message.assert_called_once_with(':k (A)') 
@@ -111,11 +118,11 @@ class GhciCommandsSpec(unittest.TestCase):
 	def test_when_the_kind_command_returns_an_ambiguous_match_with_defined_at_and_imported_from_kind_of_fails(self):
 		self.connection.message.return_value = '''
 <interactive>:1:1:
-    Ambiguous occurrence ‘Functor’
-    It could refer to either ‘Hstml.Functor’,
-                             defined at src/Hstml.hs:19:1
-                          or ‘Prelude.Functor’,
-                             imported from ‘Prelude’ (and originally defined in ‘GHC.Base’)'''
+	Ambiguous occurrence ‘Functor’
+	It could refer to either ‘Hstml.Functor’,
+							 defined at src/Hstml.hs:19:1
+						  or ‘Prelude.Functor’,
+							 imported from ‘Prelude’ (and originally defined in ‘GHC.Base’)'''
 
 		kind = self.commands.kind_of('div')
 		self.assertTrue(kind.failed())
