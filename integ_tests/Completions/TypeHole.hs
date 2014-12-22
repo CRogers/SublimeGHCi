@@ -14,4 +14,3 @@ fooForReal = Foo
 takesFoo :: Foo -> Foo
 takesFoo f = f
 
-a = takesFoo 
