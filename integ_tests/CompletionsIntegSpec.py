@@ -24,11 +24,9 @@ def top_level_completion_with(prefix):
 	view = sublime.active_window().active_view()
 	manager = SublimeGHCi.SublimeGHCi.manager
 	with GhciIntegTest(view, manager):
-		test = CompletionIntegTest(view, SublimeGHCi.SublimeGHCi.manager)
-		test.append_text('a = ')
-		cs = test.complete(prefix)
-		test.undo()
-		return cs
+		with CompletionIntegTest(view, manager) as test:
+			test.append_text('a = ')
+			return test.complete(prefix)
 
 class CompletionsIntegSpec(unittest.TestCase):
 	def test_no_completions(self):
