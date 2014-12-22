@@ -32,3 +32,6 @@ class TypeMatchingCompletor(object):
 			lambda _: completions))
 		print('bah', bah)
 		return bah
+
+	def loaded(self):
+		return self._commands.loaded() and self._completor.loaded()

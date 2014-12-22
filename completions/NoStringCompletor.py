@@ -7,3 +7,6 @@ class NoStringCompletor(object):
 		if 'string' in self._view.scope_name(location):
 			return []
 		return self._completor.complete(prefix, location)
+
+	def loaded(self):
+		return self._completor.loaded()

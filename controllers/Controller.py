@@ -9,7 +9,7 @@ class Controller(object):
 		self._error_reporter.clear_errors()
 
 	def loaded(self):
-		return self._ghci.loaded()
+		return self._ghci.loaded() and self._completor.loaded()
 
 	def saved(self):
 		(self._ghci.reload()

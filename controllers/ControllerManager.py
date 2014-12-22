@@ -25,7 +25,7 @@ class ControllerManager(object):
 		self._call_attr_if_haskell_file(view, 'saved')
 
 	def complete(self, view, prefix, location):
-		self._call_attr_if_haskell_file(view, 'complete', prefix, location)
+		return self._call_attr_if_haskell_file(view, 'complete', prefix, location)
 
 	def close(self, view):
 		self._call_attr_if_haskell_file(view, 'close')
