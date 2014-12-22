@@ -9,6 +9,8 @@ before_install:
   - tar -xvf sublime_text.tar.bz2
   - "export SUBLIME_PATH=sublime_text_3/sublime_text"
 
+install: echo Do nothing
+
 script:
   - bash run_tests.sh
   - bash run_integ_tests.sh
