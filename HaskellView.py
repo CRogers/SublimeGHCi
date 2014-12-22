@@ -21,6 +21,9 @@ class HaskellView(object):
 			.map(self.__successfully_saved)
 			.map_fail(lambda err: self.__error_reporter.report_errors(err, self.__settings.project_directory())))
 
+	def loaded(self):
+		return self.__ghci.loaded()
+
 	def __autocomplete_entry(self, expr):
 		return (expr + '\t' + self.__ghci.type_or_kind_of(expr).value(), expr)
 

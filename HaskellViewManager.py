@@ -50,9 +50,14 @@ class HaskellViewManager(object):
 		else:
 			return Fallible.succeed(self.__views[key(view)])
 
+	def loaded(self, view):
+		return (self.__ghci_for(view)
+			.map(lambda haskell_view: haskell_view.loaded()))
+
 	def saved(self, view):
 		self.__ghci_for(view).map(lambda haskell_view: haskell_view.saved())
 
 	def complete(self, view, prefix, location):
+		print('complete', view.file_name(), prefix, location)
 		return (self.__ghci_for(view)
 			.bind(lambda haskell_view: haskell_view.complete(prefix, location)))
