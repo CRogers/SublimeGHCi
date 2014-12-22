@@ -10,7 +10,7 @@ before_install:
   - Xvfb -screen 0 1024x768x24 &
   - sudo apt-add-repository -y ppa:hvr/ghc
   - sudo apt-get update
-  - sudo apt-get install xlib1g-dev ghc-7.8.3
+  - sudo apt-get install zlib1g-dev ghc-7.8.3
   - export PATH="/opt/ghc/7.8.3/bin:$PATH"
   - wget -O cabal-install https://www.haskell.org/cabal/release/cabal-install-1.20.0.3/cabal-install-1.20.0.3.tar.gz
   - tar -xvf cabal-install
