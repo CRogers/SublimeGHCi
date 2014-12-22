@@ -13,7 +13,7 @@ class ExtraGhciCommands(object):
 		self.supertypes = []
 
 	def is_supertype_of(self, subtype, supertype):
-		return (subtype == supertype) or (supertype in self.supertypes)
+		return (subtype == supertype) or (subtype in self.supertypes)
 
 class TypedCompletor(object):
 	def __init__(self):
@@ -32,6 +32,8 @@ class View(object):
 
 	def size(self):
 		return 10
+
+s = Fallible.succeed
 
 class TypeMatchingCompletorSpec(unittest.TestCase):
 	def setUp(self):
@@ -58,31 +60,31 @@ class TypeMatchingCompletorSpec(unittest.TestCase):
 		self.assertEqual(result, output)
 
 	def test_when_there_are_two_completions_and_the_first_is_equal_to_the_type_at_cursor_put_that_one_on_top(self):
-		completions = [('f', 'a'), ('g', 'b')]
+		completions = [('f', s('a')), ('g', s('b'))]
 		self._with_completions_and_type_expect(completions, 'a', completions)
 
 	def test_when_there_are_two_completions_and_the_last_is_equal_to_the_type_at_cursor_put_that_one_on_top(self):
 		self._with_completions_and_type_expect(
-			[('f', 'a'), ('g', 'b')],
+			[('f', s('a')), ('g', s('b'))],
 			'b',
-			[('g', 'b'), ('f', 'a')])
+			[('g', s('b')), ('f', s('a'))])
 
 	def test_when_there_are_three_completions_and_the_last_two_are_equal_to_the_type_at_cursor_put_those_two_on_top(self):
 		self._with_completions_and_type_expect(
-			[('f', 'a'), ('g', 'b'), ('h', 'b')],
+			[('f', s('a')), ('g', s('b')), ('h', s('b'))],
 			'b',
-			[('g', 'b'), ('h', 'b'), ('f', 'a')])
+			[('g', s('b')), ('h', s('b')), ('f', s('a'))])
 
 	def test_when_there_are_two_completions_and_the_last_is_a_supertype_of_the_type_at_the_cursor_put_that_one_on_top(self):
 		self.commands.supertypes = ['b']
 		self._with_completions_and_type_expect(
-			[('f', 'a'), ('g', 'b')],
+			[('f', s('a')), ('g', s('b'))],
 			't',
-			[('g', 'b'), ('f', 'a')])
+			[('g', s('b')), ('f', s('a'))])
 
 	def test_when_there_are_three_completions_and_the_last_two_are_supertypes_of_the_type_at_the_cursor_put_those_two_on_top(self):
 		self.commands.supertypes = ['b', 'c']
 		self._with_completions_and_type_expect(
-			[('f', 'a'), ('g', 'b'), ('h', 'c')],
+			[('f', s('a')), ('g', s('b')), ('h', s('c'))],
 			't',
-			[('g', 'b'), ('h', 'c'), ('f', 'a')])
+			[('g', s('b')), ('h', s('c')), ('f', s('a'))])
