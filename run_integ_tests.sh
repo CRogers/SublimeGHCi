@@ -1,0 +1,1 @@
+python3 -m unittest discover -s integ_tests -p *IntegSpec.py

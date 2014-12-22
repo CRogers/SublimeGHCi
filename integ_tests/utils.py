@@ -1,6 +1,6 @@
 import os, os.path, subprocess, tempfile
 
-path = '/Applications/Sublime Text.app/Contents/MacOS/Sublime Text'
+default_path = '/Applications/Sublime Text.app/Contents/MacOS/Sublime Text'
 
 def wait_until_sublime_closes(popen):
 	while not popen.poll():
@@ -11,6 +11,7 @@ def wait_until_sublime_closes(popen):
 			pass
 
 def run_sublime(env, *paths_to_open):
+	path = os.environ.get('SUBLIME_PATH', default_path)
 	p = subprocess.Popen([path] + list(paths_to_open), env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 	wait_until_sublime_closes(p)
 
