@@ -16,7 +16,7 @@ class ControllerManager(object):
 		return self._call_if_haskell_file(view, lambda controller: getattr(controller, funcName)(*args))
 
 	def loaded(self, view):
-		return self._call_if_haskell_file(view, 'loaded')
+		return self._call_attr_if_haskell_file(view, 'loaded')
 
 	def add(self, view):
 		self._call_if_haskell_file(view, lambda _: None)
