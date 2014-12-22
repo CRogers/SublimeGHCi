@@ -16,6 +16,7 @@ before_install:
   - tar -xvf cabal-install
   - cd cabal-install-1.20.0.3
   - bash bootstrap.sh
+  - cd ..
   - export PATH="$HOME/.cabal/bin:$PATH"
 
 script:
