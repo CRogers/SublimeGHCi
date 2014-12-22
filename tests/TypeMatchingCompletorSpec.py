@@ -34,6 +34,7 @@ class View(object):
 		return 10
 
 s = Fallible.succeed
+f = Fallible.fail
 
 class TypeMatchingCompletorSpec(unittest.TestCase):
 	def setUp(self):
@@ -88,3 +89,17 @@ class TypeMatchingCompletorSpec(unittest.TestCase):
 			[('f', s('a')), ('g', s('b')), ('h', s('c'))],
 			't',
 			[('g', s('b')), ('h', s('c')), ('f', s('a'))])
+
+	def test_when_there_is_one_completion_with_a_failed_type_it_remains_failed(self):
+		self.commands.supertypes = ['a']
+		self._with_completions_and_type_expect(
+			[('f', f('a'))],
+			'a',
+			[('f', f('a'))])
+
+	def test_when_there_are_two_completions_with_one_failed_type_that_happens_to_be_a_super_type_it_shouldnt_go_on_top(self):
+		self.commands.supertypes = ['a']
+		self._with_completions_and_type_expect(
+			[('g', s('b')), ('f', f('a'))],
+			't',
+			[('g', s('b')), ('f', f('a'))])

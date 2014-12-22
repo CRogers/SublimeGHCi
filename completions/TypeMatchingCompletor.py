@@ -13,7 +13,7 @@ class TypeMatchingCompletor(object):
 		matching = []
 		non_matching = []
 		for x, t in completions:
-			if self._commands.is_supertype_of(t.value(), type):
+			if t.successful() and self._commands.is_supertype_of(t.value(), type):
 				matching.append((x, t))
 			else:
 				non_matching.append((x, t))
