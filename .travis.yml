@@ -12,5 +12,5 @@ before_install:
 
 script:
   - bash run_tests.sh
-  - xvfb -screen 0 1024x768x24
+  - Xvfb -screen 0 1024x768x24 &
   - bash run_integ_tests.sh
