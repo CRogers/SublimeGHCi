@@ -56,9 +56,7 @@ class GhciCommands(object):
 
 	def load_haskell_file(self, file_name):
 		msg = ':load "{}"'.format(file_name)
-		print('loadcat', msg)
 		response = self.__ghci.message(msg)
-		print('load', response)
 		return Fallible.from_bool(load_succeeded, response)
 
 	def reload(self):

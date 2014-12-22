@@ -38,12 +38,10 @@ class GhciConnection(object):
 		return re.sub(r'^\]*((.|\n)+)\n\]*$', r'\1', string)
 
 	def message(self, msg):
-		print('message', msg)
 		stdin = self.__sp.stdin
 		stdin.write(msg.encode('utf-8') + b'\n')
 		stdin.flush()
 		answer = self.__read_until_prompt()
-		print('answer', answer)
 		return answer
 
 	def __consume_beginning(self):
