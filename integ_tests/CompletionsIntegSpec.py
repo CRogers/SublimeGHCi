@@ -10,12 +10,9 @@ try:
 	import sublime
 	import SublimeGHCi.SublimeGHCi
 	from SublimeGHCi.integ_tests.CompletionIntegTest import *
+	from SublimeGHCi.integ_tests.GhciIntegTest import *
 except ImportError:
 	pass
-
-def wait_until_loaded(view):
-	while not SublimeGHCi.SublimeGHCi.manager.loaded(view):
-		time.sleep(0.1)
 
 def top_level_f():
 	return top_level_completion_with('f')
@@ -25,16 +22,16 @@ def top_level_b():
 
 def top_level_completion_with(prefix):
 	view = sublime.active_window().active_view()
-	wait_until_loaded(view)
-	test = CompletionIntegTest(view, SublimeGHCi.SublimeGHCi.manager)
-	test.append_text('a = ')
-	cs = test.complete(prefix)
-	test.undo()
-	view.window().run_command('close')
-	return cs
+	manager = SublimeGHCi.SublimeGHCi.manager
+	with GhciIntegTest(view, manager):
+		test = CompletionIntegTest(view, SublimeGHCi.SublimeGHCi.manager)
+		test.append_text('a = ')
+		cs = test.complete(prefix)
+		test.undo()
+		return cs
 
 class CompletionsIntegSpec(unittest.TestCase):
-	def test_(self):
+	def test_no_completions(self):
 		cat = integ_tests.utils.run_integ_test(top_level_f, 'integ_tests/Completions/NoCompletions.hs')
 		self.assertEqual(eval(cat), [])
 
