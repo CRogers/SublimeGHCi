@@ -1,3 +1,5 @@
+from SublimeGHCi.common.Fallible import *
+
 class TypeMatchingCompletor(object):
 	def __init__(self, sublime, commands, completor, type_hole_info_extractor, view):
 		self._sublime = sublime
@@ -14,7 +16,7 @@ class TypeMatchingCompletor(object):
 		non_matching = []
 		for x, t in completions:
 			if t.successful() and self._commands.is_supertype_of(t.value(), type):
-				matching.append((x, t))
+				matching.append((x, Fallible.succeed(t.value() + '\t\u2713')))
 			else:
 				non_matching.append((x, t))
 		return matching + non_matching

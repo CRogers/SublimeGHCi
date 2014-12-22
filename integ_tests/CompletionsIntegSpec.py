@@ -46,7 +46,7 @@ class CompletionsIntegSpec(unittest.TestCase):
 
 	def test_one_completion(self):
 		result = run_integ_test(top_level_f, 'integ_tests/Completions/OneCompletion.hs')
-		self.assertEqual(eval(result), [('foo\tFoo', 'foo')])
+		self.assertEqual(eval(result), [('foo\tFoo\t\u2713', 'foo')])
 
 	def test_should_suggest_only_module_prefixed_completions_after_dot(self):
 		result = run_integ_test(top_level_F, 'integ_tests/Completions/MultipleModules', 'integ_tests/Completions/MultipleModules/SecondModule.hs')

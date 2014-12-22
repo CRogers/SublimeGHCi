@@ -36,6 +36,9 @@ class View(object):
 s = Fallible.succeed
 f = Fallible.fail
 
+def tick(str):
+	return s(str + '\t\u2713')
+
 class TypeMatchingCompletorSpec(unittest.TestCase):
 	def setUp(self):
 		self.view = View()
@@ -61,34 +64,36 @@ class TypeMatchingCompletorSpec(unittest.TestCase):
 		self.assertEqual(result, output)
 
 	def test_when_there_are_two_completions_and_the_first_is_equal_to_the_type_at_cursor_put_that_one_on_top(self):
-		completions = [('f', s('a')), ('g', s('b'))]
-		self._with_completions_and_type_expect(completions, 'a', completions)
+		self._with_completions_and_type_expect(
+			[('f', s('a')), ('g', s('b'))],
+			'a',
+			[('f', tick('a')), ('g', s('b'))])
 
 	def test_when_there_are_two_completions_and_the_last_is_equal_to_the_type_at_cursor_put_that_one_on_top(self):
 		self._with_completions_and_type_expect(
 			[('f', s('a')), ('g', s('b'))],
 			'b',
-			[('g', s('b')), ('f', s('a'))])
+			[('g', tick('b')), ('f', s('a'))])
 
 	def test_when_there_are_three_completions_and_the_last_two_are_equal_to_the_type_at_cursor_put_those_two_on_top(self):
 		self._with_completions_and_type_expect(
 			[('f', s('a')), ('g', s('b')), ('h', s('b'))],
 			'b',
-			[('g', s('b')), ('h', s('b')), ('f', s('a'))])
+			[('g', tick('b')), ('h', tick('b')), ('f', s('a'))])
 
 	def test_when_there_are_two_completions_and_the_last_is_a_supertype_of_the_type_at_the_cursor_put_that_one_on_top(self):
 		self.commands.supertypes = ['b']
 		self._with_completions_and_type_expect(
 			[('f', s('a')), ('g', s('b'))],
 			't',
-			[('g', s('b')), ('f', s('a'))])
+			[('g', tick('b')), ('f', s('a'))])
 
 	def test_when_there_are_three_completions_and_the_last_two_are_supertypes_of_the_type_at_the_cursor_put_those_two_on_top(self):
 		self.commands.supertypes = ['b', 'c']
 		self._with_completions_and_type_expect(
 			[('f', s('a')), ('g', s('b')), ('h', s('c'))],
 			't',
-			[('g', s('b')), ('h', s('c')), ('f', s('a'))])
+			[('g', tick('b')), ('h', tick('c')), ('f', s('a'))])
 
 	def test_when_there_is_one_completion_with_a_failed_type_it_remains_failed(self):
 		self.commands.supertypes = ['a']
