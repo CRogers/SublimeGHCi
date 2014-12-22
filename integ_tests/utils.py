@@ -12,7 +12,7 @@ def wait_until_sublime_closes(popen):
 
 def run_sublime(env, *paths_to_open):
 	path = os.environ.get('SUBLIME_PATH', default_path)
-	p = subprocess.Popen([path] + list(paths_to_open), env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+	p = subprocess.Popen([path] + list(paths_to_open), env=env)
 	wait_until_sublime_closes(p)
 
 def run_integ_test(func, *files):
