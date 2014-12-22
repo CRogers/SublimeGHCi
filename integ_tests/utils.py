@@ -1,4 +1,4 @@
-import os, os.path, subprocess
+import os, os.path, subprocess, tempfile
 
 path = '/Applications/Sublime Text.app/Contents/MacOS/Sublime Text'
 
@@ -19,9 +19,8 @@ def run_integ_test(func, file):
 	env['INTEG_TESTS'] = '1'
 	env['INTEG_NAME'] = func.__module__
 	env['INTEG_FUNC'] = func.__name__
-	env['INTEG_OUTPUT'] = os.path.abspath('integ_results')
-	with open('integ_results', 'w+') as f:
-		f.write('')
-	run_sublime(env, file)
-	with open('integ_results', 'r') as f:
-		return f.read()
+	with tempfile.NamedTemporaryFile() as tf:
+		env['INTEG_OUTPUT'] = tf.name
+		tf.write(b'')
+		run_sublime(env, file)
+		return tf.read()
