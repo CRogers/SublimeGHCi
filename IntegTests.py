@@ -12,7 +12,7 @@ def write_to_output_file(data):
 
 def write_exception():
 	exc_strs = traceback.format_exception(*sys.exc_info())
-	result = "\n".join(['EXCEPTION'] + exc_strs)
+	result = ''.join(['EXCEPTION'] + exc_strs)
 	write_to_output_file(result)
 
 def after_loaded():

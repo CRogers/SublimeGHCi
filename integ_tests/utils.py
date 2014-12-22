@@ -1,19 +1,15 @@
-import os, os.path, subprocess, tempfile
+import os, os.path, time, subprocess, tempfile
 
 default_path = '/Applications/Sublime Text.app/Contents/MacOS/Sublime Text'
 
-def wait_until_sublime_closes(popen):
-	while not popen.poll():
-		try:
-			popen.wait(0.1)
-			break
-		except subprocess.TimeoutExpired:
-			pass
+def wait_until_complete(tfname):
+	while not os.path.exists(tfname):
+		time.sleep(0.1)
 
-def run_sublime(env, *paths_to_open):
+def run_sublime(env, tfname, *paths_to_open):
 	path = os.environ.get('SUBLIME_PATH', default_path)
-	p = subprocess.Popen([path] + list(paths_to_open), env=env, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
-	wait_until_sublime_closes(p)
+	p = subprocess.call([path] + list(paths_to_open), env=env, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+	wait_until_complete(tfname)
 
 def run_integ_test(func, *files):
 	env = os.environ.copy()
@@ -23,16 +19,19 @@ def run_integ_test(func, *files):
 	tfname = None
 	with tempfile.NamedTemporaryFile(delete=False) as tf:
 		tfname = tf.name
-		env['INTEG_OUTPUT'] = tf.name
-		tf.write(b'EXCEPTION\nINFRA ERROR')
+	os.unlink(tfname)
+	env['INTEG_OUTPUT'] = tfname
 	
-	run_sublime(env, *files)
+	run_sublime(env, tfname, *files)
+
+	if not os.path.exists(tfname):
+		raise Exception('Infra error')
 
 	lines = None
 	with open(tfname, 'r') as tf:
 		lines = tf.readlines()
 	os.unlink(tfname)
-	bulk = '\n'.join(lines[1:])
+	bulk = ''.join(lines[1:])
 	if lines[0].startswith('EXCEPTION'):
 		raise Exception(bulk)
 	return bulk
