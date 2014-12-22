@@ -14,6 +14,7 @@ class CompletionIntegTest(object):
 
 	def complete(self, string):
 		self.append_text(string)
+		print(string, self._get_end())
 		return self._manager.complete(self._view, string, self._get_end())
 
 	def undo(self):

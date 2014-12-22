@@ -15,7 +15,10 @@ except ImportError:
 
 def wait_until_loaded(view):
 	while not SublimeGHCi.SublimeGHCi.manager.loaded(view).value():
+		print('sleep')
 		time.sleep(0.1)
+
+	print ('boop', SublimeGHCi.SublimeGHCi.manager.loaded(view).value())
 
 def print_yay():
 	view = sublime.active_window().active_view()

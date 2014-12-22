@@ -52,7 +52,7 @@ class HaskellViewManager(object):
 
 	def loaded(self, view):
 		return (self.__ghci_for(view)
-			.map(lambda haskell_view: haskell_view))
+			.map(lambda haskell_view: haskell_view.loaded()))
 
 	def saved(self, view):
 		self.__ghci_for(view).map(lambda haskell_view: haskell_view.saved())
