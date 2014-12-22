@@ -10,11 +10,11 @@ def wait_until_sublime_closes(popen):
 		except subprocess.TimeoutExpired:
 			pass
 
-def run_sublime(env, path_to_open):
-	p = subprocess.Popen([path, path_to_open], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+def run_sublime(env, *paths_to_open):
+	p = subprocess.Popen([path] + list(paths_to_open), env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 	wait_until_sublime_closes(p)
 
-def run_integ_test(func, file):
+def run_integ_test(func, *files):
 	env = os.environ.copy()
 	env['INTEG_TESTS'] = '1'
 	env['INTEG_NAME'] = func.__module__
@@ -22,5 +22,5 @@ def run_integ_test(func, file):
 	with tempfile.NamedTemporaryFile() as tf:
 		env['INTEG_OUTPUT'] = tf.name
 		tf.write(b'')
-		run_sublime(env, file)
+		run_sublime(env, *files)
 		return tf.read()
