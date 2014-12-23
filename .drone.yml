@@ -1,5 +1,0 @@
-image: crogers/sublimeghci-docker
-script:
-  - bash /startXvfb.sh
-  - bash run_tests.sh
-  - bash run_integ_tests.sh
