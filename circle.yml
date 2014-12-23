@@ -4,4 +4,4 @@ machine:
 
 test:
   override:
-  	- bash circleci.sh
+    - bash circleci.sh
