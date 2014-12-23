@@ -4,4 +4,4 @@ machine:
 
 test:
   override:
-    - docker run -v $(pwd):/SublimeGHCi crogers/sublimeghci-docker:latest ./run.sh
+    - docker run -v "$(pwd):/SublimeGHCi" crogers/sublimeghci-docker:latest ./run.sh
