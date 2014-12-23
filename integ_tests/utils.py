@@ -4,14 +4,11 @@ default_path = '/Applications/Sublime Text.app/Contents/MacOS/Sublime Text'
 
 def wait_until_complete(tfname):
 	while not os.path.exists(tfname):
-		print('waiting')
-		time.sleep(0.5)
+		time.sleep(0.1)
 
 def run_sublime(env, tfname, *paths_to_open):
 	path = os.environ.get('SUBLIME_PATH', default_path)
-	print('call subprocess')
-	p = subprocess.Popen([path] + list(paths_to_open), env=env, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
-	print('pid', p.pid)
+	subprocess.call([path] + list(paths_to_open), env=env, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 	wait_until_complete(tfname)
 
 def run_integ_test(func, *files):
