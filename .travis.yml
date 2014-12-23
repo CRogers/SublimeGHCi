@@ -10,6 +10,7 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install python3.4
   - sudo ln /usr/bin/python3.4 /usr/bin/python3
+  - ln . "$HOME/.config/sublime-text-3/Packages/SublimeGHCi"
 
 install: echo Do nothing
 
