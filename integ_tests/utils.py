@@ -10,7 +10,8 @@ def wait_until_complete(tfname):
 def run_sublime(env, tfname, *paths_to_open):
 	path = os.environ.get('SUBLIME_PATH', default_path)
 	print('call subprocess')
-	p = subprocess.call([path] + list(paths_to_open), env=env, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+	p = subprocess.Popen([path] + list(paths_to_open), env=env, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+	print('pid', p.pid)
 	wait_until_complete(tfname)
 
 def run_integ_test(func, *files):

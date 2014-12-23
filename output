@@ -1,0 +1,265 @@
+call subprocess
+pid 6989
+waiting
+call subprocess
+pid 7036
+waiting
+call subprocess
+pid 7055
+waiting
+call subprocess
+pid 7074
+waiting
+call subprocess
+pid 7093
+waiting
+.EEE.
+======================================================================
+ERROR: test_no_completions (CompletionsIntegSpec.CompletionsIntegSpec)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/.config/sublime-text-3/Packages/SublimeGHCi/integ_tests/CompletionsIntegSpec.py", line 44, in test_no_completions
+    cat = run_integ_test(top_level_f, 'integ_tests/Completions/NoCompletions.hs')
+  File "/home/ubuntu/.config/sublime-text-3/Packages/SublimeGHCi/integ_tests/utils.py", line 39, in run_integ_test
+    raise Exception(bulk)
+Exception: Traceback (most recent call last):
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/IntegTests.py", line 23, in after_loaded
+    result = getattr(module, func)()
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/integ_tests/CompletionsIntegSpec.py", line 18, in top_level_f
+    return top_level_completion_with('f')
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/integ_tests/CompletionsIntegSpec.py", line 37, in top_level_completion_with
+    with GhciIntegTest(view, manager):
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/integ_tests/GhciIntegTest.py", line 9, in __enter__
+    while not self._manager.loaded(self._view):
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/controllers/ControllerManager.py", line 19, in loaded
+    return self._call_attr_if_haskell_file(view, 'loaded')
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/controllers/ControllerManager.py", line 16, in _call_attr_if_haskell_file
+    return self._call_if_haskell_file(view, lambda controller: getattr(controller, funcName)(*args))
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/controllers/ControllerManager.py", line 12, in _call_if_haskell_file
+    controller = self._controller_factory.controller_for_view(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/controllers/CachingControllerFactory.py", line 8, in controller_for_view
+    return self._controller_cache.get_for_view(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/common/ViewCache.py", line 9, in get_for_view
+    self._view_map[key] = self._creation_func(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/controllers/ControllerFactory.py", line 11, in controller_for_view
+    ghci = self._ghci_factory.ghci_for_view(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/ghci/CachingGhciFactory.py", line 12, in ghci_for_view
+    return self._ghci_cache.get_for_view(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/common/ViewCache.py", line 9, in get_for_view
+    self._view_map[key] = self._creation_func(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/ghci/GhciFactory.py", line 24, in ghci_for_view
+    connection = self._connection_factory.new_connection_for_view(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/ghci/GhciConnectionFactory.py", line 16, in new_connection_for_view
+    return AutoloadingGhciConnection(self.new_connection(view), view.file_name())
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/ghci/GhciConnectionFactory.py", line 12, in new_connection
+    project = self._project_manager.project_for_view(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/projects/ProjectManager.py", line 22, in project_for_view
+    folders = self._window_info.folders()
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/projects/WindowInfo.py", line 10, in folders
+    project_settings = window.project_data().get('settings')
+
+AttributeError: 'NoneType' object has no attribute 'get'
+
+
+======================================================================
+ERROR: test_one_completion (CompletionsIntegSpec.CompletionsIntegSpec)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/.config/sublime-text-3/Packages/SublimeGHCi/integ_tests/CompletionsIntegSpec.py", line 48, in test_one_completion
+    result = run_integ_test(top_level_f, 'integ_tests/Completions/OneCompletion.hs')
+  File "/home/ubuntu/.config/sublime-text-3/Packages/SublimeGHCi/integ_tests/utils.py", line 39, in run_integ_test
+    raise Exception(bulk)
+Exception: Traceback (most recent call last):
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/IntegTests.py", line 23, in after_loaded
+    result = getattr(module, func)()
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/integ_tests/CompletionsIntegSpec.py", line 18, in top_level_f
+    return top_level_completion_with('f')
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/integ_tests/CompletionsIntegSpec.py", line 37, in top_level_completion_with
+    with GhciIntegTest(view, manager):
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/integ_tests/GhciIntegTest.py", line 9, in __enter__
+    while not self._manager.loaded(self._view):
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/controllers/ControllerManager.py", line 19, in loaded
+    return self._call_attr_if_haskell_file(view, 'loaded')
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/controllers/ControllerManager.py", line 16, in _call_attr_if_haskell_file
+    return self._call_if_haskell_file(view, lambda controller: getattr(controller, funcName)(*args))
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/controllers/ControllerManager.py", line 12, in _call_if_haskell_file
+    controller = self._controller_factory.controller_for_view(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/controllers/CachingControllerFactory.py", line 8, in controller_for_view
+    return self._controller_cache.get_for_view(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/common/ViewCache.py", line 9, in get_for_view
+    self._view_map[key] = self._creation_func(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/controllers/ControllerFactory.py", line 11, in controller_for_view
+    ghci = self._ghci_factory.ghci_for_view(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/ghci/CachingGhciFactory.py", line 12, in ghci_for_view
+    return self._ghci_cache.get_for_view(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/common/ViewCache.py", line 9, in get_for_view
+    self._view_map[key] = self._creation_func(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/ghci/GhciFactory.py", line 24, in ghci_for_view
+    connection = self._connection_factory.new_connection_for_view(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/ghci/GhciConnectionFactory.py", line 16, in new_connection_for_view
+    return AutoloadingGhciConnection(self.new_connection(view), view.file_name())
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/ghci/GhciConnectionFactory.py", line 12, in new_connection
+    project = self._project_manager.project_for_view(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/projects/ProjectManager.py", line 22, in project_for_view
+    folders = self._window_info.folders()
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/projects/WindowInfo.py", line 10, in folders
+    project_settings = window.project_data().get('settings')
+
+AttributeError: 'NoneType' object has no attribute 'get'
+
+
+======================================================================
+ERROR: test_should_suggest_an_expression_which_fits_the_type_at_that_position_over_one_that_does_not (CompletionsIntegSpec.CompletionsIntegSpec)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/.config/sublime-text-3/Packages/SublimeGHCi/integ_tests/CompletionsIntegSpec.py", line 60, in test_should_suggest_an_expression_which_fits_the_type_at_that_position_over_one_that_does_not
+    result = run_integ_test(top_level_blah, 'integ_tests/Completions/TypeHole.hs')
+  File "/home/ubuntu/.config/sublime-text-3/Packages/SublimeGHCi/integ_tests/utils.py", line 39, in run_integ_test
+    raise Exception(bulk)
+Exception: Traceback (most recent call last):
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/IntegTests.py", line 23, in after_loaded
+    result = getattr(module, func)()
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/integ_tests/CompletionsIntegSpec.py", line 29, in top_level_blah
+    with GhciIntegTest(view, manager):
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/integ_tests/GhciIntegTest.py", line 9, in __enter__
+    while not self._manager.loaded(self._view):
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/controllers/ControllerManager.py", line 19, in loaded
+    return self._call_attr_if_haskell_file(view, 'loaded')
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/controllers/ControllerManager.py", line 16, in _call_attr_if_haskell_file
+    return self._call_if_haskell_file(view, lambda controller: getattr(controller, funcName)(*args))
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/controllers/ControllerManager.py", line 12, in _call_if_haskell_file
+    controller = self._controller_factory.controller_for_view(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/controllers/CachingControllerFactory.py", line 8, in controller_for_view
+    return self._controller_cache.get_for_view(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/common/ViewCache.py", line 9, in get_for_view
+    self._view_map[key] = self._creation_func(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/controllers/ControllerFactory.py", line 11, in controller_for_view
+    ghci = self._ghci_factory.ghci_for_view(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/ghci/CachingGhciFactory.py", line 12, in ghci_for_view
+    return self._ghci_cache.get_for_view(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/common/ViewCache.py", line 9, in get_for_view
+    self._view_map[key] = self._creation_func(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/ghci/GhciFactory.py", line 24, in ghci_for_view
+    connection = self._connection_factory.new_connection_for_view(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/ghci/GhciConnectionFactory.py", line 16, in new_connection_for_view
+    return AutoloadingGhciConnection(self.new_connection(view), view.file_name())
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/ghci/GhciConnectionFactory.py", line 12, in new_connection
+    project = self._project_manager.project_for_view(view)
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/projects/ProjectManager.py", line 22, in project_for_view
+    folders = self._window_info.folders()
+
+  File "/home/ubuntu/sublime_text_3/SublimeGHCi/projects/WindowInfo.py", line 10, in folders
+    project_settings = window.project_data().get('settings')
+
+AttributeError: 'NoneType' object has no attribute 'get'
+
+
+----------------------------------------------------------------------
+Ran 5 tests in 10.020s
+
+FAILED (errors=3)
+call subprocess
+pid 7152
+waiting
+call subprocess
+pid 7199
+waiting
+call subprocess
+pid 7218
+waiting
+call subprocess
+pid 7237
+waiting
+call subprocess
+pid 7256
+waiting
+Traceback (most recent call last):
+  File "/usr/lib/python3.4/runpy.py", line 170, in _run_module_as_main
+    "__main__", mod_spec)
+  File "/usr/lib/python3.4/runpy.py", line 85, in _run_code
+    exec(code, run_globals)
+  File "/usr/lib/python3.4/unittest/__main__.py", line 18, in <module>
+    main(module=None)
+  File "/usr/lib/python3.4/unittest/main.py", line 93, in __init__
+    self.runTests()
+  File "/usr/lib/python3.4/unittest/main.py", line 244, in runTests
+    self.result = testRunner.run(self.test)
+  File "/usr/lib/python3.4/unittest/runner.py", line 168, in run
+    test(result)
+  File "/usr/lib/python3.4/unittest/suite.py", line 87, in __call__
+    return self.run(*args, **kwds)
+  File "/usr/lib/python3.4/unittest/suite.py", line 125, in run
+    test(result)
+  File "/usr/lib/python3.4/unittest/suite.py", line 87, in __call__
+    return self.run(*args, **kwds)
+  File "/usr/lib/python3.4/unittest/suite.py", line 125, in run
+    test(result)
+  File "/usr/lib/python3.4/unittest/suite.py", line 87, in __call__
+    return self.run(*args, **kwds)
+  File "/usr/lib/python3.4/unittest/suite.py", line 125, in run
+    test(result)
+  File "/usr/lib/python3.4/unittest/case.py", line 622, in __call__
+    return self.run(*args, **kwds)
+  File "/usr/lib/python3.4/unittest/case.py", line 574, in run
+    testMethod()
+  File "/home/ubuntu/.config/sublime-text-3/Packages/SublimeGHCi/integ_tests/CompletionsIntegSpec.py", line 56, in test_mutliple_modules
+    result = run_integ_test(top_level_b, 'integ_tests/Completions/MultipleModules', 'integ_tests/Completions/MultipleModules/SecondModule.hs')
+  File "/home/ubuntu/.config/sublime-text-3/Packages/SublimeGHCi/integ_tests/utils.py", line 28, in run_integ_test
+    run_sublime(env, tfname, *files)
+  File "/home/ubuntu/.config/sublime-text-3/Packages/SublimeGHCi/integ_tests/utils.py", line 15, in run_sublime
+    wait_until_complete(tfname)
+  File "/home/ubuntu/.config/sublime-text-3/Packages/SublimeGHCi/integ_tests/utils.py", line 8, in wait_until_complete
+    time.sleep(2)
+KeyboardInterrupt
+call subprocess
+pid 7346
+waiting
