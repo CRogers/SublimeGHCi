@@ -3,4 +3,5 @@ machine:
     - docker
 
 test:
-  override: bash circleci.sh
+  override:
+  	- bash circleci.sh
