@@ -1,18 +1,22 @@
 import re
+
 from SublimeGHCi.common.Fallible import *
+from SublimeGHCi.common.Regexes import *
 
 def get_info_part(str):
 	type_with_breaks = re.sub(r'^(?:\n|.)*::((?:.|\n)*?)$', r'\1', str)
-	return re.sub(r'\n\s*', r' ', type_with_breaks).strip()
+	return strip_whitespace_on_leading_lines(type_with_breaks)
 
 ambiguous_regex = r'Ambiguous occurrence(?:\n|.)*?either ‘(.*?)’(?:\n|.)*?or ‘(.*?)’'
 
 def is_ambiguous(str):
 	match = re.search(ambiguous_regex, str)
-	if match == None:
-		return Fallible.succeed(str)
-	else:
-		return Fallible.fail('Ambiguous: {} or {}'.format(match.group(1), match.group(2)))
+	if match != None:
+		return 'Ambiguous: {} or {}'.format(match.group(1), match.group(2))
+	return str
+
+def no_error_occurred(str):
+	return re.match(r'\n?<interactive>', str) == None
 
 def is_defined(str):
 	return re.search(r'Not in scope', str) == None
@@ -40,8 +44,8 @@ class GhciCommands(object):
 		msg = ':{} ({})'.format(command, expr)
 		response = self.__ghci.message(msg)
 		return (Fallible
-			.from_bool(is_defined, response)
-			.bind(is_ambiguous)
+			.from_bool(no_error_occurred, response)
+			.map_fail(is_ambiguous)
 			.map(get_info_part))
 
 	def type_of(self, expr):
@@ -49,6 +53,11 @@ class GhciCommands(object):
 
 	def kind_of(self, expr):
 		return self.__expr_command('k', expr)
+
+	def load_haskell_file(self, file_name):
+		msg = ':load "{}"'.format(file_name)
+		response = self.__ghci.message(msg)
+		return Fallible.from_bool(load_succeeded, response)
 
 	def reload(self):
 		response = self.__ghci.message(':r')

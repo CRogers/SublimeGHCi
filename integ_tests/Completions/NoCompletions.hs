@@ -1,4 +1,4 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 
-module Completions1 where
+module NoCompletions where
 

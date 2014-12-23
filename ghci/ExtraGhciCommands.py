@@ -13,6 +13,10 @@ class ExtraGhciCommands(object):
 			.type_of(sig)
 			.or_else(lambda _: self.kind_of(sig)))
 
+	def is_supertype_of(self, subtype, supertype):
+		msg = '((let a = a in a) :: ({})) :: ({})'.format(supertype, subtype)
+		return self._commands.type_of(msg).successful()
+
 	def close(self):
 		self._commands.close()
 
@@ -27,6 +31,9 @@ class ExtraGhciCommands(object):
 
 	def kind_of(self, expr):
 		return self._commands.kind_of(expr)
+
+	def load_haskell_file(self, file_name):
+		return self._commands.load_haskell_file(file_name)
 
 	def reload(self):
 		return self._commands.reload()

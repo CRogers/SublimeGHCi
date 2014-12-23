@@ -37,3 +37,6 @@ class ModulePrefixCompletor(object):
 	def complete(self, prefix, location):
 		prefix = self._scan_module(location - len(prefix) - 1) + prefix
 		return self._completor.complete(prefix, location)
+
+	def loaded(self):
+		return self._completor.loaded()

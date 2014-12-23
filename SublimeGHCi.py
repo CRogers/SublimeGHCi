@@ -1,14 +1,28 @@
-import sublime, sublime_plugin, subprocess, re
-from SublimeGHCi.HaskellViewManager import HaskellViewManager
+import sublime_plugin
 
-manager = HaskellViewManager()
+from SublimeGHCi.ErrorReporter import *
+from SublimeGHCi.completions.defaults import *
+from SublimeGHCi.controllers.ControllerManager import *
+from SublimeGHCi.controllers.defaults import *
+from SublimeGHCi.ghci.defaults import *
+from SublimeGHCi.projects.defaults import *
+
+project_manager = default_project_manager()
+ghci_connection_factory = default_ghci_connection_factory(project_manager)
+ghci_factory = default_ghci_factory(ghci_connection_factory)
+completor_factory = default_completor_factory(ghci_factory)
+
+error_reporter = ErrorReporter()
+
+controller_factory = default_controller_factory(project_manager, ghci_factory, completor_factory, error_reporter)
+manager = ControllerManager(controller_factory)
 
 def plugin_loaded():
 	pass
 
 def plugin_unloaded():
 	print("terminating ghci")
-	manager.remove_all()
+	#manager.remove_all()
 
 class HooksListener(sublime_plugin.EventListener):
 	def on_post_save(self, view):
@@ -21,17 +35,13 @@ class HooksListener(sublime_plugin.EventListener):
 		return manager.complete(view, prefix, locations[0])
 
 	def on_new(self, view):
-		#print('new view {} created'.format(view.file_name()))
 		manager.add(view)
 
 	def on_activated(self, view):
-		#print('view {} activated'.format(view.file_name()))
 		manager.add(view)
 
 	def on_load(self, view):
-		#print('loaded view {}'.format(view.file_name()))
 		manager.add(view)
 
 	def on_close(self, view):
-		#print('view {} closed'.format(view.file_name()))
-		manager.remove(view)
+		manager.close(view)

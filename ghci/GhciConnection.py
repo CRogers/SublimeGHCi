@@ -1,7 +1,4 @@
-import subprocess
 import re
-import os
-from threading import Thread
 
 from SublimeGHCi.common.EventHook import *
 
@@ -9,20 +6,25 @@ prompt_repeating_part = b']]]]]]]]]]]]]]]]'
 prompt = (prompt_repeating_part + prompt_repeating_part[:-1]).decode('utf-8')
 
 class GhciConnection(object):
-	def __init__(self, project):
+	def __init__(self, subprocess, os, threading, project):
+		self._subprocess = subprocess
+		self._os = os
 		self.__loaded = False
 		self.on_loaded = EventHook()
 		self.__sp = self.__open(project)
-		t = Thread(target=self.__consume_beginning)
+		t = threading.Thread(target=self.__consume_beginning)
 		t.daemon = True
 		t.start()
 
 	def __open(self, project):
-		oldcwd = os.getcwd()
-		os.chdir(project.base_path())
+		oldcwd = self._os.getcwd()
+		self._os.chdir(project.base_path())
 		print("Creating ghci connection using {}".format(project.ghci_command()))
-		cat = subprocess.Popen(project.ghci_command(), stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT)
-		os.chdir(oldcwd)
+		cat = self._subprocess.Popen(project.ghci_command(),
+			stdout=self._subprocess.PIPE,
+			stdin=self._subprocess.PIPE,
+			stderr=self._subprocess.STDOUT)
+		self._os.chdir(oldcwd)
 		return cat
 
 	def __read_until_prompt(self):
@@ -39,7 +41,8 @@ class GhciConnection(object):
 		stdin = self.__sp.stdin
 		stdin.write(msg.encode('utf-8') + b'\n')
 		stdin.flush()
-		return self.__read_until_prompt()
+		answer = self.__read_until_prompt()
+		return answer
 
 	def __consume_beginning(self):
 		ghci_start = b'GHCi, version'

@@ -1,6 +1,7 @@
-from SublimeGHCi.completions.Completor import *
-from SublimeGHCi.completions.ModulePrefixCompletor import *
-from SublimeGHCi.completions.NoStringCompletor import *
+import sublime
+import os, subprocess, threading
 
-def default_completor(ghci, view):
-	return NoStringCompletor(ModulePrefixCompletor(Completor(ghci), view), view)
+from SublimeGHCi.completions.CompletorFactory import *
+
+def default_completor_factory(ghci_factory):
+	return CompletorFactory(sublime, ghci_factory)

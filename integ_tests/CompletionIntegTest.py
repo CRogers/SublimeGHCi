@@ -4,6 +4,9 @@ class CompletionIntegTest(object):
 		self._manager = manager
 		self._appends = 0
 
+	def __enter__(self):
+		return self
+
 	def _get_end(self):
 		return self._view.size()
 
@@ -17,6 +20,6 @@ class CompletionIntegTest(object):
 		print(string, self._get_end())
 		return self._manager.complete(self._view, string, self._get_end())
 
-	def undo(self):
+	def __exit__(self, type, value, traceback):
 		for x in range(0, self._appends):
 			self._view.run_command('undo')
