@@ -28,7 +28,7 @@ class TypeHoleInfoExtractor(object):
 	def _hole_with_dummies(self, num_dummies):
 		return self._type_hole + ' _dummyhole' * num_dummies
 
-	def type_at_range(self, text, start, length):
+	def _add_holes_until_it_typechecks(self, text, start, length):
 		error_output = None
 		i = 0
 		while True:
@@ -36,4 +36,8 @@ class TypeHoleInfoExtractor(object):
 			i += 1
 			if i == self._max_holes_to_add or not self._too_few(error_output):
 				break
+		return error_output
+
+	def type_at_range(self, text, start, length):
+		error_output = self._add_holes_until_it_typechecks(text, start, length)
 		return self._extract_hole_type(error_output)
