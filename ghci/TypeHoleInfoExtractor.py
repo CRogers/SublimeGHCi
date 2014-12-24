@@ -21,12 +21,18 @@ class TypeHoleInfoExtractor(object):
 		new_text = text[:start] + holes + text[end:]
 		return self._commands.load_from_string(new_text).value()
 
+	def _too_few(self, error_output):
+		return re.search(r'Probable cause: ‘.*?’ is applied to too few arguments', error_output) != None
+
+	def _hole_with_dummies(self, num_dummies):
+		return self._type_hole + ' _dummyhole' * num_dummies
+
 	def type_at_range(self, text, start, length):
-		error_output = self._blah(text, start, length, self._type_hole)
-		too_few = re.search(r'Probable cause: ‘.*?’ is applied to too few arguments', error_output)
-		if too_few != None:
-			error_output = self._blah(text, start, length, '{} _dummyhole'.format(self._type_hole))
-		too_few = re.search(r'Probable cause: ‘.*?’ is applied to too few arguments', error_output)
-		if too_few != None:
-			error_output = self._blah(text, start, length, '{} _dummyhole _dummyhole'.format(self._type_hole))
+		error_output = None
+		i = 0
+		while True:
+			error_output = self._blah(text, start, length, self._hole_with_dummies(i))
+			i += 1
+			if not self._too_few(error_output):
+				break
 		return self._extract_hole_type(error_output)
