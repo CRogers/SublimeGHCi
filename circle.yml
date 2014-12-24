@@ -4,4 +4,4 @@ machine:
 
 test:
   override:
-    - docker run -v "$(pwd):/SublimeGHCi" -e "SLEEP_TIME=10" crogers/sublimeghci-docker:latest ./run.sh
+    - docker run -v "$(pwd):/SublimeGHCi" -e "SLEEP_TIME=10" -v "$CIRCLE_ARTIFACTS:/Logs" crogers/sublimeghci-docker:latest ./run.sh
