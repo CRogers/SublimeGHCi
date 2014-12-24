@@ -16,8 +16,14 @@ class TypeHoleInfoExtractor(object):
 		type_without_breaks = strip_whitespace_on_leading_lines(match.group(1))
 		return Fallible.succeed(type_without_breaks)
 
-	def type_at_range(self, text, start, length):
+	def _blah(self, text, start, length, holes):
 		end = start + length
-		new_text = text[:start] + self._type_hole + text[end:]
-		error_output = self._commands.load_from_string(new_text).value()
+		new_text = text[:start] + holes + text[end:]
+		return self._commands.load_from_string(new_text).value()
+
+	def type_at_range(self, text, start, length):
+		error_output = self._blah(text, start, length, self._type_hole)
+		too_few = re.search(r'Probable cause: ‘.*?’ is applied to too few arguments', error_output)
+		if too_few != None:
+			error_output = self._blah(text, start, length, '{} _dummyhole'.format(self._type_hole))
 		return self._extract_hole_type(error_output)

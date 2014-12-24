@@ -59,3 +59,42 @@ Failed, modules loaded: none.''')
 Failed, modules loaded: none.''')
 		type = self.info_extractor.type_at_range('a .  . b', 4, 0)
 		self.assertEqual(type, Fallible.succeed("HList '[Event t Int] -> Moment t (HList '[Event t [Char]])"))
+
+	def test_when_load_is_unsucessful_because_the_hole_was_applied_to_a_function_that_needs_two_arguments_to_typecheck_it_should_add_an_extra_dummy_hole(self):
+		self.commands.load_from_string.side_effect = [Fallible.fail('''
+<interactive>:3:1:
+    Couldn't match expected type ‘Int’ with actual type ‘b0 -> a0’
+    Probable cause: ‘const’ is applied to too few arguments
+    In the expression: const _ :: Int
+    In an equation for ‘it’: it = const _ :: Int'''), Fallible.fail('''Generic fail''')]
+		self.info_extractor.type_at_range('const x :: Int', 6, 1)
+		self.commands.load_from_string.assert_called_with('const _hole _dummyhole :: Int')
+
+	def test_when_load_is_unsucessful_because_the_hole_was_applied_to_a_function_that_needs_two_arguments_to_typecheck_it_should_return_the_type_from_the_attempt_with_the_dummy_hole(self):
+		self.commands.load_from_string.side_effect = [Fallible.fail('''
+<interactive>:3:1:
+    Couldn't match expected type ‘Int’ with actual type ‘b0 -> a0’
+    Probable cause: ‘const’ is applied to too few arguments
+    In the expression: const _ :: Int
+    In an equation for ‘it’: it = const _ :: Int'''),
+		Fallible.fail('''
+<interactive>:5:7:
+    Found hole ‘_hole’ with type: Int
+    Relevant bindings include it :: Int (bound at <interactive>:5:1)
+    In the first argument of ‘const’, namely ‘_hole’
+    In the expression: const _hole _dummyhole :: Int
+    In an equation for ‘it’: it = const _hole _dummyhole :: Int
+
+<interactive>:5:13:
+    Found hole ‘_dummyhole’ with type: b0
+    Where: ‘b0’ is an ambiguous type variable
+    Relevant bindings include it :: Int (bound at <interactive>:5:1)
+    In the second argument of ‘const’, namely ‘_dummyhole’
+    In the expression: const _hole _dummyhole :: Int
+    In an equation for ‘it’: it = const _hole _dummyhole :: Int''')]
+		type = self.info_extractor.type_at_range('const x :: Int', 6, 1)
+		self.assertEqual(type, Fallible.succeed('Int'))
+
+
+
+
