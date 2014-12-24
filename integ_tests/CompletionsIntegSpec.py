@@ -72,4 +72,4 @@ class CompletionsIntegSpec(unittest.TestCase):
 
 	def test_should_put_a_tick_next_to_an_expression_when_it_fits_were_there_to_be_further_arguments_to_the_function(self):
 		result = run_integ_test(top_level_two_hole, 'integ_tests/Completions/TypeHole2.hs')
-		self.assertEqual(eval(result), ['foo\tFoo\t\u2713', 'foo'])
+		self.assertEqual(eval(result), [('foo\tFoo\t\u2713', 'foo')])
