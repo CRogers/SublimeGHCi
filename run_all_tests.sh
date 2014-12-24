@@ -3,7 +3,8 @@
 shopt -s globstar
 
 function kill_dists() {
-        rm -rf **/dist/
+	echo Killing dists: **/dist/
+	rm -rf **/dist/
 }
 
 kill_dists
