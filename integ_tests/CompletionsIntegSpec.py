@@ -30,8 +30,7 @@ def top_level_two_hole():
 		with CompletionIntegTest(view, manager) as test:
 			test.append_text('a :: Foo\n')
 			test.append_text('a = takes ')
-			return test.complete('foo')
-
+			return test.complete('Foo')
 
 def top_level_blah():
 	view = sublime.active_window().active_view()
@@ -70,6 +69,10 @@ class CompletionsIntegSpec(unittest.TestCase):
 		result = run_integ_test(top_level_blah, 'integ_tests/Completions/TypeHole.hs')
 		self.assertEqual(eval(result), [('fooForReal\tFoo\t\u2713', 'fooForReal'), ('fooFake\tFooFake', 'fooFake')])
 
-	def test_should_put_a_tick_next_to_an_expression_when_it_fits_were_there_to_be_further_arguments_to_the_function(self):
+	def test_should_put_a_tick_next_to_an_expression_when_it_fits_were_there_to_be_a_single_further_argument_to_the_function(self):
 		result = run_integ_test(top_level_two_hole, 'integ_tests/Completions/TypeHole2.hs')
-		self.assertEqual(eval(result), [('foo\tFoo\t\u2713', 'foo')])
+		self.assertEqual(eval(result), [('Foo\tFoo\t\u2713', 'Foo')])
+
+	def test_should_put_a_tick_next_to_an_expression_when_it_fits_were_there_to_be_two_further_arguments_to_the_function(self):
+		result = run_integ_test(top_level_two_hole, 'integ_tests/Completions/TypeHole3.hs')
+		self.assertEqual(eval(result), [('Foo\tFoo\t\u2713', 'Foo')])
