@@ -9,7 +9,7 @@ function kill_dists() {
 kill_dists
 
 echo Running unit tests...
-./run_tests.sh
+./run_unit_tests.sh
 EXIT1=$?
 echo Unit tests exited with status $EXIT1
 
