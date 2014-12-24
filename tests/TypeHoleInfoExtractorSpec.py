@@ -77,7 +77,7 @@ Failed, modules loaded: none.''')
     Probable cause: ‘const’ is applied to too few arguments
     In the expression: const _ :: Int
     In an equation for ‘it’: it = const _ :: Int'''),
-		Fallible.fail('''
+			Fallible.fail('''
 <interactive>:5:7:
     Found hole ‘_hole’ with type: Int
     Relevant bindings include it :: Int (bound at <interactive>:5:1)
@@ -92,9 +92,28 @@ Failed, modules loaded: none.''')
     In the second argument of ‘const’, namely ‘_dummyhole’
     In the expression: const _hole _dummyhole :: Int
     In an equation for ‘it’: it = const _hole _dummyhole :: Int''')]
+
 		type = self.info_extractor.type_at_range('const x :: Int', 6, 1)
 		self.assertEqual(type, Fallible.succeed('Int'))
 
+
+	def test_when_load_is_unsucessful_because_the_hole_was_applied_to_a_function_that_needs_three_arguments_to_typecheck_it_should_add_two_extra_dummy_holes(self):
+		self.commands.load_from_string.side_effect = [Fallible.fail('''
+<interactive>:10:1:
+    Couldn't match expected type ‘()’ with actual type ‘t1 -> t2 -> t0’
+    Probable cause: ‘\ x y z -> x’ is applied to too few arguments
+    In the expression: (\ x y z -> x) _ :: ()
+    In an equation for ‘it’: it = (\ x y z -> x) _ :: ()'''),
+			Fallible.fail('''
+<interactive>:11:1:
+    Couldn't match expected type ‘()’ with actual type ‘t2 -> t0’
+    Probable cause: ‘\ x y z -> x’ is applied to too few arguments
+    In the expression: (\ x y z -> x) _ _ :: ()
+    In an equation for ‘it’: it = (\ x y z -> x) _ _ :: ()'''),
+			Fallible.fail('Generic fail')]
+
+		self.info_extractor.type_at_range(r'(\x y z -> x) x :: ()', 14, 1)
+		self.commands.load_from_string.assert_called_with(r'(\x y z -> x) _hole _dummyhole _dummyhole :: ()')
 
 
 

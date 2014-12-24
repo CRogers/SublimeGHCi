@@ -26,4 +26,7 @@ class TypeHoleInfoExtractor(object):
 		too_few = re.search(r'Probable cause: ‘.*?’ is applied to too few arguments', error_output)
 		if too_few != None:
 			error_output = self._blah(text, start, length, '{} _dummyhole'.format(self._type_hole))
+		too_few = re.search(r'Probable cause: ‘.*?’ is applied to too few arguments', error_output)
+		if too_few != None:
+			error_output = self._blah(text, start, length, '{} _dummyhole _dummyhole'.format(self._type_hole))
 		return self._extract_hole_type(error_output)
