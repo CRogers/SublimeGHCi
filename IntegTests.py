@@ -20,7 +20,8 @@ def after_loaded():
 		while sublime.active_window().active_view() == None:
 			time.sleep(0.05)
 
-		result = getattr(module, func)()
+		args = eval(os.environ.get('INTEG_FUNC_ARGS'))
+		result = getattr(module, func)(*args)
 		write_to_output_file('OK\n' + str(result))
 		quit_sublime()
 	except:
