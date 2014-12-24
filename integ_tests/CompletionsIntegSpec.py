@@ -23,6 +23,16 @@ def top_level_F():
 def top_level_b():
 	return top_level_completion_with('b')
 
+def top_level_two_hole():
+	view = sublime.active_window().active_view()
+	manager = SublimeGHCi.SublimeGHCi.manager
+	with GhciIntegTest(view, manager):
+		with CompletionIntegTest(view, manager) as test:
+			test.append_text('a :: Foo\n')
+			test.append_text('a = takes ')
+			return test.complete('foo')
+
+
 def top_level_blah():
 	view = sublime.active_window().active_view()
 	manager = SublimeGHCi.SublimeGHCi.manager
@@ -59,3 +69,7 @@ class CompletionsIntegSpec(unittest.TestCase):
 	def test_should_suggest_an_expression_which_fits_the_type_at_that_position_over_one_that_does_not(self):
 		result = run_integ_test(top_level_blah, 'integ_tests/Completions/TypeHole.hs')
 		self.assertEqual(eval(result), [('fooForReal\tFoo\t\u2713', 'fooForReal'), ('fooFake\tFooFake', 'fooFake')])
+
+	def test_should_put_a_tick_next_to_an_expression_when_it_fits_were_there_to_be_further_arguments_to_the_function(self):
+		result = run_integ_test(top_level_two_hole, 'integ_tests/Completions/TypeHole2.hs')
+		self.assertEqual(eval(result), ['foo\tFoo\t\u2713', 'foo'])
