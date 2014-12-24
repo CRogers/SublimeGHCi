@@ -4,9 +4,10 @@ from SublimeGHCi.common.Fallible import *
 from SublimeGHCi.common.Regexes import *
 
 class TypeHoleInfoExtractor(object):
-	def __init__(self, ghci_commands, type_hole_name = 'sublimeghci'):
+	def __init__(self, ghci_commands, type_hole_name = 'sublimeghci', max_holes_to_add=16):
 		self._commands = ghci_commands
 		self._type_hole = '_' + type_hole_name
+		self._max_holes_to_add = max_holes_to_add
 
 	def _extract_hole_type(self, error_output):
 		regex = r'Found hole ‘{}’\s*?with type: (.*?)\n\s*?(?:Relevant|Where)'.format(self._type_hole)
@@ -33,6 +34,6 @@ class TypeHoleInfoExtractor(object):
 		while True:
 			error_output = self._blah(text, start, length, self._hole_with_dummies(i))
 			i += 1
-			if not self._too_few(error_output):
+			if i == self._max_holes_to_add or not self._too_few(error_output):
 				break
 		return self._extract_hole_type(error_output)

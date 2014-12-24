@@ -116,4 +116,13 @@ Failed, modules loaded: none.''')
 		self.commands.load_from_string.assert_called_with(r'(\x y z -> x) _hole _dummyhole _dummyhole :: ()')
 
 
+	def test_when_load_is_unsucessful_more_than_the_max_times_it_should_fail_and_not_loop_forever(self):
+		self.commands.load_from_string.return_value = Fallible.fail('''
+<interactive>:3:1:
+    Couldn't match expected type ‘Int’ with actual type ‘b0 -> a0’
+    Probable cause: ‘const’ is applied to too few arguments
+    In the expression: const _ :: Int
+    In an equation for ‘it’: it = const _ :: Int''')
+		type = self.info_extractor.type_at_range(r'const x :: Int', 6, 1)
+		self.assertTrue(type.failed())
 
