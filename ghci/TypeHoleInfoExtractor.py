@@ -41,3 +41,6 @@ class TypeHoleInfoExtractor(object):
 	def type_at_range(self, text, start, length):
 		error_output = self._add_holes_until_it_typechecks(text, start, length)
 		return self._extract_hole_type(error_output)
+
+	def loaded(self):
+		return self._commands.loaded()

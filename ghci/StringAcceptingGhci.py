@@ -12,3 +12,6 @@ class StringAcceptingGhci(object):
 
 	def is_supertype_of(self, subtype, supertype):
 		return self._commands.is_supertype_of(subtype, supertype)
+
+	def loaded(self):
+		return self._commands.loaded()
