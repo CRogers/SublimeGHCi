@@ -115,6 +115,49 @@ Failed, modules loaded: none.''')
 		self.info_extractor.type_at_range(r'(\x y z -> x) x :: ()', 14, 1)
 		self.commands.load_from_string.assert_called_with(r'(\x y z -> x) _hole _dummyhole _dummyhole :: ()')
 
+	def test_when_load_is_unsucessful_because_the_hole_was_applied_to_a_function_that_needs_three_arguments_to_typecheck_it_should_return_the_type_from_the_attempt_with_two_extra_dummy_holes(self):
+		self.commands.load_from_string.side_effect = [Fallible.fail('''
+<interactive>:10:1:
+    Couldn't match expected type ‘()’ with actual type ‘t1 -> t2 -> t0’
+    Probable cause: ‘\ x y z -> x’ is applied to too few arguments
+    In the expression: (\ x y z -> x) _ :: ()
+    In an equation for ‘it’: it = (\ x y z -> x) _ :: ()'''),
+			Fallible.fail('''
+<interactive>:11:1:
+    Couldn't match expected type ‘()’ with actual type ‘t2 -> t0’
+    Probable cause: ‘\ x y z -> x’ is applied to too few arguments
+    In the expression: (\ x y z -> x) _ _ :: ()
+    In an equation for ‘it’: it = (\ x y z -> x) _ _ :: ()'''),
+			Fallible.fail('''
+<interactive>:4:15:
+    Found hole ‘_hole’ with type: ()
+    Relevant bindings include it :: () (bound at <interactive>:4:1)
+    In the first argument of ‘\ x y z -> x’, namely ‘_hole’
+    In the expression: (\ x y z -> x) _hole _dummy _dummy :: ()
+    In an equation for ‘it’:
+        it = (\ x y z -> x) _hole _dummy _dummy :: ()
+
+<interactive>:4:21:
+    Found hole ‘_dummy’ with type: t0
+    Where: ‘t0’ is an ambiguous type variable
+    Relevant bindings include it :: () (bound at <interactive>:4:1)
+    In the second argument of ‘\ x y z -> x’, namely ‘_dummy’
+    In the expression: (\ x y z -> x) _hole _dummy _dummy :: ()
+    In an equation for ‘it’:
+        it = (\ x y z -> x) _hole _dummy _dummy :: ()
+
+<interactive>:4:28:
+    Found hole ‘_dummy’ with type: t1
+    Where: ‘t1’ is an ambiguous type variable
+    Relevant bindings include it :: () (bound at <interactive>:4:1)
+    In the third argument of ‘\ x y z -> x’, namely ‘_dummy’
+    In the expression: (\ x y z -> x) _hole _dummy _dummy :: ()
+    In an equation for ‘it’:
+        it = (\ x y z -> x) _hole _dummy _dummy :: ()''')]
+
+		type = self.info_extractor.type_at_range(r'(\x y z -> x) x :: ()', 14, 1)
+		self.assertEqual(type, Fallible.succeed('()'))
+
 
 	def test_when_load_is_unsucessful_more_than_the_max_times_it_should_fail_and_not_loop_forever(self):
 		self.commands.load_from_string.return_value = Fallible.fail('''
