@@ -8,13 +8,10 @@ dependencies:
 
   override:
     - mkdir -p ~/docker
-    - cd ~/docker
-    - echo FROM crogers/sublimeghci-docker:latest >Dockerfile
-    - ls
-    - if [[ -e image.tar ]]; then docker load -i image.tar; fi
+    - echo FROM crogers/sublimeghci-docker:latest >~/docker/Dockerfile
+    - if [[ -e image.tar ]]; then docker load -i ~/docker/image.tar; fi
     - docker build -t crogers/sublimeghci-docker:latest .
-    - docker save crogers/sublimeghci-docker:latest >image.tar
-    - cd -
+    - docker save crogers/sublimeghci-docker:latest >~/docker/image.tar
 
 test:
   override:
