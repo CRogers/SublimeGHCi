@@ -39,6 +39,16 @@ def top_level_completion_with(prefix):
 			test.append_text('a = ')
 			return test.complete(prefix)
 
+def add_3():
+	view = sublime.active_window().active_view()
+	manager = SublimeGHCi.SublimeGHCi.manager
+	with GhciIntegTest(view, manager):
+		with CompletionIntegTest(view, manager) as test:
+			test.append_text('3\n')
+			view.run_command('save')
+			tes.append_text('a = ')
+			return test.complete('Bar')
+
 class CompletionsIntegSpec(unittest.TestCase):
 	def test_no_completions(self):
 		cat = run_integ_test(['integ_tests/Completions/NoCompletions.hs'], top_level_completion_with, 'f')
@@ -67,3 +77,7 @@ class CompletionsIntegSpec(unittest.TestCase):
 	def test_should_put_a_tick_next_to_an_expression_when_it_fits_were_there_to_be_two_further_arguments_to_the_function(self):
 		result = run_integ_test(['integ_tests/Completions/TypeHole3.hs'], top_level_two_hole)
 		self.assertEqual(eval(result), [('Foo\tFoo\t\u2713', 'Foo')])
+
+	def test_when_loading_a_cabal_library_with_compile_errors_completions_work_again_after_the_errors_have_been_fixed(self):
+		result = run_integ_test(['integ_tests/Completions/DoesNotCompile', 'integ_tests/Completions/DoesNotCompile/DoesNotCompile.hs'], add_3)
+		self.assertEqual(eval(result), [('Bar\tBar\t\u2713', 'Bar')])
