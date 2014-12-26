@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import *
 
+from SublimeGHCi.common.EventHook import *
 from SublimeGHCi.common.Fallible import *
 from SublimeGHCi.ghci.LoadedGhciConnection import *
 
@@ -8,6 +9,7 @@ class GhciConnection(object):
 	def __init__(self):
 		self.message = Mock(return_value='answer')
 		self.loaded = Mock(return_value=False)
+		self.on_loaded = EventHook()
 
 class LoadedGhciConnectionSpec(unittest.TestCase):
 	def setUp(self):
@@ -29,3 +31,9 @@ class LoadedGhciConnectionSpec(unittest.TestCase):
 	def test_when_the_connection_is_loaded_it_should_be_loaded_too(self):
 		self.connection.loaded.return_value = True
 		self.assertTrue(self.loaded_connection.loaded())
+
+	def test_when_on_loaded_is_triggered_it_should_trigger_its_own_on_loaded(self):
+		callback = Mock()
+		self.loaded_connection.on_loaded += callback
+		self.connection.on_loaded.fire()
+		callback.assert_called_once_with()

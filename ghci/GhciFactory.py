@@ -1,6 +1,5 @@
 from SublimeGHCi.ghci.ExtraGhciCommands import *
 from SublimeGHCi.ghci.GhciCommands import *
-from SublimeGHCi.ghci.LoadedGhciCommands import *
 from SublimeGHCi.ghci.StringAcceptingGhci import *
 from SublimeGHCi.ghci.TypeHoleInfoExtractor import *
 
@@ -10,7 +9,7 @@ class GhciFactory(object):
 		self._connection_factory = ghci_connection_factory
 
 	def _new_ghci(self, connection):
-		return LoadedGhciCommands(ExtraGhciCommands(GhciCommands(connection)))
+		return ExtraGhciCommands(GhciCommands(connection))
 
 	def _new_string_accepting_ghci(self, connection):
 		return StringAcceptingGhci(self._tempfile, self._new_ghci(connection))
