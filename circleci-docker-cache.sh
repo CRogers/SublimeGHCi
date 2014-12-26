@@ -11,7 +11,7 @@ if [[ -e $IMAGE ]]; then
 else
 	echo FROM $DOCKER_TAG >Dockerfile
 	echo Downloading docker layers...
-	time docker build -t $DOCKER_TAG .
+	time docker build .
 	echo Saving docker image...
 	time docker save $DOCKER_TAG >$IMAGE
 fi
