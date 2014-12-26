@@ -2,6 +2,13 @@ machine:
   services:
     - docker
 
+dependencies:
+  cache_directories:
+    - "~/docker"
+
+  override:
+    - bash circleci-docker-cache.sh
+
 test:
   override:
-    - docker run -v "$(pwd):/SublimeGHCi" -e "SLEEP_TIME=10" -v "$CIRCLE_ARTIFACTS:/Logs" crogers/sublimeghci-docker:latest ./run.sh
+    - docker run -v "$(pwd):/SublimeGHCi" -e "SLEEP_TIME=5" -v "$CIRCLE_ARTIFACTS:/Logs" crogers/sublimeghci-docker:latest ./run.sh
