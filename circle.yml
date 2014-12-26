@@ -2,6 +2,19 @@ machine:
   services:
     - docker
 
+dependencies:
+  cache_directories:
+    - "~/docker"
+
+  override:
+    - mkdir -p ~/docker
+    - cd ~/docker
+    - echo FROM crogers/sublimeghci-docker:latest >Dockerfile
+    - if [[ -e ~/image.tar ]]; then echo Loading docker image...; docker load -i ~/docker/image.tar; fi
+    - echo Building image... docker build -t crogers/sublimeghci-docker:latest .
+    - echo Saving docker image...; docker save crogers/sublimeghci-docker:latest -o ~/docker/image.tar
+    - cd -
+
 test:
   override:
     - docker run -v "$(pwd):/SublimeGHCi" -e "SLEEP_TIME=10" -v "$CIRCLE_ARTIFACTS:/Logs" crogers/sublimeghci-docker:latest ./run.sh
