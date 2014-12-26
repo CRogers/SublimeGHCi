@@ -12,7 +12,7 @@ class GhciCommandsSpec(unittest.TestCase):
 		self.connection = GhciConnection()
 		self.connection.terminate = Mock()
 		self.connection.loaded = Mock(return_value=True)
-		self.connection.message = Mock(return_value='')
+		self.connection.message = Mock(return_value=Fallible.succeed(''))
 		self.commands = GhciCommands(self.connection)
 
 	def test_when_close_is_called_terminate_is_called_on_connection(self):
@@ -31,13 +31,13 @@ class GhciCommandsSpec(unittest.TestCase):
 		self.connection.message.assert_called_once_with(':complete repl 1000000 "a"')
 
 	def test_when_completions_have_no_results_should_return_no_results(self):
-		self.connection.message.return_value = '0 0 ""'
+		self.connection.message.return_value = Fallible.succeed('0 0 ""')
 		completions = self.commands.completions('a')
 		self.assertTrue(completions.successful())
 		self.assertEqual(completions.value(), [])
 
 	def test_when_completions_has_two_results_should_return_a_successful_result_with_right_values(self):
-		self.connection.message.return_value = '2 2 ""\n"abc"\n"abb"'
+		self.connection.message.return_value = Fallible.succeed('2 2 ""\n"abc"\n"abb"')
 		completions = self.commands.completions('a')
 		self.assertTrue(completions.successful())
 		self.assertEqual(set(completions.value()), set(['abc', 'abb']))
