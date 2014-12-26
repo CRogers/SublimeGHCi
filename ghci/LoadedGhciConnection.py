@@ -5,7 +5,11 @@ class LoadedGhciConnection(object):
 		self._connection = connection
 
 	def message(self, msg):
-		return Fallible.fail('GHCi not yet loaded')
+		if self._connection.loaded():
+			return Fallible.succeed(self._connection.message(msg))
+		else:
+			return Fallible.fail('GHCi has not loaded')
+
 
 	def loaded(self):
 		pass
