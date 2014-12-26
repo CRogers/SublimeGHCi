@@ -23,4 +23,9 @@ class LoadedGhciConnectionSpec(unittest.TestCase):
 		result = self.loaded_connection.message('blah')
 		self.assertEqual(result, Fallible.succeed(self.connection.message.return_value))
 
-	
+	def test_when_the_connection_is_not_loaded_it_should_not_be_loaded_either(self):
+		self.assertFalse(self.loaded_connection.loaded())
+
+	def test_when_the_connection_is_loaded_it_should_be_loaded_too(self):
+		self.connection.loaded.return_value = True
+		self.assertTrue(self.loaded_connection.loaded())

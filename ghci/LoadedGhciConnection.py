@@ -12,7 +12,7 @@ class LoadedGhciConnection(object):
 
 
 	def loaded(self):
-		pass
+		return self._connection.loaded()
 
 	def terminate(self):
 		pass
