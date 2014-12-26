@@ -34,6 +34,9 @@ class GhciCommands(object):
 	def loaded(self):
 		return self._ghci.loaded()
 
+	def on_loaded(self):
+		return self._ghci.on_loaded()
+
 	def completions(self, prefix = ''):
 		msg = ':complete repl 1000000 "{}"'.format(prefix)
 		return (self._ghci.message(msg)

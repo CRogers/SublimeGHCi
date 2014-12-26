@@ -10,11 +10,14 @@ class GhciConnection(object):
 		self._subprocess = subprocess
 		self._os = os
 		self.__loaded = False
-		self.on_loaded = EventHook()
+		self._on_loaded = EventHook()
 		self.__sp = self.__open(project)
 		t = threading.Thread(target=self.__consume_beginning)
 		t.daemon = True
 		t.start()
+
+	def on_loaded(self):
+		return self._on_loaded
 
 	def __open(self, project):
 		oldcwd = self._os.getcwd()
@@ -60,7 +63,7 @@ class GhciConnection(object):
 		self.message(':set prompt ' + prompt)
 		print('Loaded ghci')
 		self.__loaded = True
-		self.on_loaded.fire()
+		self.on_loaded().fire()
 
 	def loaded(self):
 		return self.__loaded

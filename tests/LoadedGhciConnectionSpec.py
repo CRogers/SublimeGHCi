@@ -9,7 +9,7 @@ class GhciConnection(object):
 	def __init__(self):
 		self.message = Mock(return_value='answer')
 		self.loaded = Mock(return_value=False)
-		self.on_loaded = EventHook()
+		self.on_loaded = Mock(return_value=EventHook())
 
 class LoadedGhciConnectionSpec(unittest.TestCase):
 	def setUp(self):
@@ -34,6 +34,6 @@ class LoadedGhciConnectionSpec(unittest.TestCase):
 
 	def test_when_on_loaded_is_triggered_it_should_trigger_its_own_on_loaded(self):
 		callback = Mock()
-		self.loaded_connection.on_loaded += callback
-		self.connection.on_loaded.fire()
+		self.loaded_connection.on_loaded().register(callback)
+		self.connection.on_loaded().fire()
 		callback.assert_called_once_with()

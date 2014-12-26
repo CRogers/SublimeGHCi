@@ -5,7 +5,7 @@ class AutoloadingGhciConnection(object):
 		self._connection = connection
 		self._commands = GhciCommands(connection)
 		self._file_name = file_name
-		connection.on_loaded += self._on_loaded
+		connection.on_loaded().register(self._on_loaded)
 
 	def _on_loaded(self):
 		self._commands.load_haskell_file(self._file_name)

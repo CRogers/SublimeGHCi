@@ -6,13 +6,13 @@ from SublimeGHCi.ghci.AutoloadingGhciConnection import *
 
 class GhciConnection(object):
 	def __init__(self):
-		self.on_loaded = EventHook()
+		self.on_loaded = Mock(return_value=EventHook())
 		self.message = Mock(return_value=Fallible.succeed(''))
 		self.loaded = Mock(return_value=True)
 		self.terminate = Mock(return_value=None)
 
 	def fire_loaded(self):
-		self.on_loaded.fire()
+		self.on_loaded().fire()
 
 class AutoloadingGhciConnectionSpec(unittest.TestCase):
 	def setUp(self):
