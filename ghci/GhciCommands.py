@@ -43,27 +43,26 @@ class GhciCommands(object):
 
 	def __expr_command(self, command, expr):
 		msg = ':{} ({})'.format(command, expr)
-		response = self.__ghci.message(msg)
-		return (Fallible
-			.from_bool(no_error_occurred, response)
+		return (self.__ghci.message(msg)
+			.bind(lambda response: Fallible.from_bool(no_error_occurred, response))
 			.map_fail(is_ambiguous)
 			.map(get_info_part))
 
 	def type_of(self, expr):
-		return (self.__expr_command('t', expr))
+		return self.__expr_command('t', expr)
 
 	def kind_of(self, expr):
 		return self.__expr_command('k', expr)
 
 	def load_haskell_file(self, file_name):
 		msg = ':load "{}"'.format(file_name)
-		response = self.__ghci.message(msg)
-		return Fallible.from_bool(load_succeeded, response)
+		return (self.__ghci.message(msg)
+			.bind(lambda response: Fallible.from_bool(load_succeeded, response)))
 
 	def reload(self):
-		response = self.__ghci.message(':r')
-		return Fallible.from_bool(load_succeeded, response)
+		return (self.__ghci.message(':r')
+			.bind(lambda response: Fallible.from_bool(load_succeeded, response)))
 
 	def run_expr(self, expr):
-		response = self.__ghci.message(expr)
-		return Fallible.from_bool(is_defined, response)
+		return (self.__ghci.message(expr)
+			.bind(lambda response: Fallible.from_bool(is_defined, response)))
