@@ -15,4 +15,4 @@ class LoadedGhciConnection(object):
 		return self._connection.loaded()
 
 	def terminate(self):
-		pass
+		self._connection.terminate
