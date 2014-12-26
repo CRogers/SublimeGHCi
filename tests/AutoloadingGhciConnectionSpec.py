@@ -7,7 +7,7 @@ from SublimeGHCi.ghci.AutoloadingGhciConnection import *
 class GhciConnection(object):
 	def __init__(self):
 		self.on_loaded = EventHook()
-		self.message = Mock(return_value='')
+		self.message = Mock(return_value=Fallible.succeed(''))
 		self.loaded = Mock(return_value=True)
 		self.terminate = Mock(return_value=None)
 
@@ -22,7 +22,7 @@ class AutoloadingGhciConnectionSpec(unittest.TestCase):
 
 	def test_when_connection_has_loaded_it_loads_given_file(self):
 		self.connection.fire_loaded()
-		self.connection.message.assert_called_once_with(':l "Woop.hs"')
+		self.connection.message.assert_called_once_with(':load "Woop.hs"')
 
 	def test_when_message_is_called_it_passes_message_to_connection(self):
 		self.autoloading_connection.message('yo')
