@@ -10,9 +10,9 @@ dependencies:
     - mkdir -p ~/docker
     - cd ~/docker
     - echo FROM crogers/sublimeghci-docker:latest >Dockerfile
-    - if [[ -e image.tar ]]; then echo Loading docker image...; docker load -i image.tar; fi
-    - echo Building image...; docker build -t crogers/sublimeghci-docker:latest .
-    - echo Saving docker image...; docker save crogers/sublimeghci-docker:latest >image.tar
+    - if [[ -e image.tar ]]; then docker load -i image.tar; fi
+    - docker build -t crogers/sublimeghci-docker:latest .
+    - docker save crogers/sublimeghci-docker:latest >image.tar
     - cd -
 
 test:
