@@ -62,10 +62,6 @@ class GhciCommands(object):
 		return (self._ghci.message(msg)
 			.bind(lambda response: Fallible.from_bool(load_succeeded, response)))
 
-	def reload(self):
-		return (self._ghci.message(':r')
-			.bind(lambda response: Fallible.from_bool(load_succeeded, response)))
-
 	def run_expr(self, expr):
 		return (self._ghci.message(expr)
 			.bind(lambda response: Fallible.from_bool(is_defined, response)))
