@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import *
 
+from SublimeGHCi.common.EventHook import *
 from SublimeGHCi.common.Fallible import *
 from SublimeGHCi.ghci.ExtraGhciCommands import *
 
@@ -8,6 +9,7 @@ class GhciCommands(object):
 	def __init__(self):
 		self.type_of = Mock(return_value=Fallible.succeed('t'))
 		self.kind_of = Mock(return_value=Fallible.succeed('k'))
+		self.on_loaded = Mock(return_value=EventHook())
 
 class ExtraGhciCommandsSpec(unittest.TestCase):
 	def setUp(self):
@@ -43,3 +45,9 @@ class ExtraGhciCommandsSpec(unittest.TestCase):
 		self.commands.type_of.return_value = Fallible.fail('failed')
 		is_supertype = self.extra_commands.is_supertype_of('sub', 'sup')
 		self.assertFalse(is_supertype)
+
+	def test_when_on_loaded_is_fired_it_also_fires_its_on_loaded(self):
+		callback = Mock()
+		self.extra_commands.on_loaded().register(callback)
+		self.commands.on_loaded().fire()
+		callback.assert_called_once_with()

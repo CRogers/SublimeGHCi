@@ -20,4 +20,4 @@ class HaskellFileAutoloaderSpec(unittest.TestCase):
 
 	def test_when_commands_has_loaded_it_loads_given_file(self):
 		self.commands.fire_loaded()
-		self.commands.message.assert_called_once_with(self.file_name)
+		self.commands.load_haskell_file.assert_called_once_with(self.file_name)
