@@ -10,7 +10,9 @@ class GhciConnection(object):
 		self._subprocess = subprocess
 		self._os = os
 		self.__loaded = False
+		self._failed = False
 		self._on_loaded = EventHook()
+		self._on_failed = EventHook()
 		self.__sp = self.__open(project)
 		t = threading.Thread(target=self.__consume_beginning)
 		t.daemon = True
@@ -18,6 +20,9 @@ class GhciConnection(object):
 
 	def on_loaded(self):
 		return self._on_loaded
+
+	def on_failed(self):
+		return self._on_failed
 
 	def __open(self, project):
 		oldcwd = self._os.getcwd()
@@ -54,7 +59,10 @@ class GhciConnection(object):
 		while last_n_chars != ghci_start:
 			c = self.__sp.stdout.read(1)
 			if len(c) == 0:
-				print('Failed to load ghci: ' + full_message.decode('utf-8'))
+				failure = full_message.decode('utf-8')
+				print('Failed to load ghci: ' + failure)
+				self._failed = True
+				self.on_failed().fire(failure)
 				return
 			full_message += c
 			last_n_chars += c
@@ -67,6 +75,9 @@ class GhciConnection(object):
 
 	def loaded(self):
 		return self.__loaded
+
+	def failed(self):
+		return self._failed
 
 	def terminate(self):
 		self.__sp.terminate()
