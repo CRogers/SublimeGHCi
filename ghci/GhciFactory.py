@@ -20,5 +20,5 @@ class GhciFactory(object):
 		return TypeHoleInfoExtractor(ghci_commands)
 
 	def ghci_for_view(self, view):
-		connection = self._connection_factory.new_connection_for_view(view)
+		connection = self._connection_factory.new_connection(view)
 		return self._new_ghci(connection)
