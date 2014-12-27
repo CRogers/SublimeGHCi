@@ -2,9 +2,7 @@ from SublimeGHCi.common.EventHook import *
 from SublimeGHCi.common.Fallible import *
 from SublimeGHCi.ghci.connection.LoadedGhciConnection import *
 from SublimeGHCi.ghci.connection.FailedGhciConnection import *
-
-prompt_repeating_part = b']]]]]]]]]]]]]]]]'
-prompt = (prompt_repeating_part + prompt_repeating_part[:-1]).decode('utf-8')
+from SublimeGHCi.ghci.connection.PromptIO import *
 
 class LoadingGhciConnection(object):
 	def __init__(self, subprocess, os, threading, project):
@@ -43,8 +41,8 @@ class LoadingGhciConnection(object):
 			last_n_chars += c
 			if len(last_n_chars) > len(ghci_start):
 				last_n_chars = last_n_chars[1:]
-		self.message(':set prompt ' + prompt)
-		print('Loaded ghci')
+		PromptIO(self.__sp).set_prompt()
+		print('Loaded ghci: ', full_message)
 		self.next.fire(LoadedGhciConnection(self.__sp))
 
 	def loaded(self):

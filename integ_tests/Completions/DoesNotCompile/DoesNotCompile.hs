@@ -4,4 +4,4 @@ module DoesNotCompile where
 
 data Bar = Bar
 
-foo = 
+foo = 3

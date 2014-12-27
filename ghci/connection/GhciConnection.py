@@ -18,6 +18,7 @@ class GhciConnection(object):
 
 	def _on_next(self, next_connection):
 		self._unregister()
+		print('change to', next_connection)
 		self._current = next_connection
 		self._register()
 		if self.loaded():
