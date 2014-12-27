@@ -5,7 +5,8 @@ from SublimeGHCi.ghci.connection.FailedGhciConnection import *
 from SublimeGHCi.ghci.connection.PromptIO import *
 
 class LoadingGhciConnection(object):
-	def __init__(self, subprocess, os, threading, project):
+	def __init__(self, internal_ghci_factory, subprocess, os, threading, project):
+		self._internal_ghci_factory = internal_ghci_factory
 		self._subprocess = subprocess
 		self._os = os
 
@@ -35,7 +36,7 @@ class LoadingGhciConnection(object):
 			c = self.__sp.stdout.read(1)
 			if len(c) == 0:
 				failure = full_message.decode('utf-8')
-				self.next.fire(FailedGhciConnection(failure))
+				self.next.fire(self._internal_ghci_factory.new_failed_ghci_connection(failure))
 				return
 			full_message += c
 			last_n_chars += c

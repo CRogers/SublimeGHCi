@@ -1,3 +1,4 @@
+from SublimeGHCi.ghci.connection.InternalGhciConnectionFactory import *
 from SublimeGHCi.ghci.connection.GhciConnection import *
 
 class GhciConnectionFactory(object):
@@ -9,4 +10,5 @@ class GhciConnectionFactory(object):
 
 	def new_connection(self, view):
 		project = self._project_manager.project_for_view(view)
-		return GhciConnection(self._subprocess, self._os, self._threading, project)
+		internal_ghci_factory = InternalGhciConnectionFactory(self._subprocess, self._os, self._threading, project)
+		return GhciConnection(internal_ghci_factory)

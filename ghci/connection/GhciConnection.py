@@ -2,8 +2,8 @@ from SublimeGHCi.common.EventHook import *
 from SublimeGHCi.ghci.connection.LoadingGhciConnection import *
 
 class GhciConnection(object):
-	def __init__(self, subprocess, os, threading, project):
-		self._current = LoadingGhciConnection(subprocess, os, threading, project)
+	def __init__(self, internal_ghci_factory):
+		self._current = internal_ghci_factory.new_loading_ghci_connection()
 		self._register()
 		self._on_loaded = EventHook()
 
