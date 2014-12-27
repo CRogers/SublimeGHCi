@@ -46,7 +46,7 @@ def add_3():
 		with CompletionIntegTest(view, manager) as test:
 			test.append_text('3\n')
 			view.run_command('save')
-			tes.append_text('a = ')
+			test.append_text('a = ')
 			return test.complete('Bar')
 
 class CompletionsIntegSpec(unittest.TestCase):

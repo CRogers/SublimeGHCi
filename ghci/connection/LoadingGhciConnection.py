@@ -1,28 +1,22 @@
-import re
-
 from SublimeGHCi.common.EventHook import *
+from SublimeGHCi.common.Fallible import *
+from SublimeGHCi.ghci.connection.LoadedGhciConnection import *
+from SublimeGHCi.ghci.connection.FailedGhciConnection import *
 
 prompt_repeating_part = b']]]]]]]]]]]]]]]]'
 prompt = (prompt_repeating_part + prompt_repeating_part[:-1]).decode('utf-8')
 
-class GhciConnection(object):
+class LoadingGhciConnection(object):
 	def __init__(self, subprocess, os, threading, project):
 		self._subprocess = subprocess
 		self._os = os
-		self.__loaded = False
-		self._failed = False
-		self._on_loaded = EventHook()
-		self._on_failed = EventHook()
+
+		self.next = EventHook()
+
 		self.__sp = self.__open(project)
 		t = threading.Thread(target=self.__consume_beginning)
 		t.daemon = True
 		t.start()
-
-	def on_loaded(self):
-		return self._on_loaded
-
-	def on_failed(self):
-		return self._on_failed
 
 	def __open(self, project):
 		oldcwd = self._os.getcwd()
@@ -35,23 +29,6 @@ class GhciConnection(object):
 		self._os.chdir(oldcwd)
 		return cat
 
-	def __read_until_prompt(self):
-		data = b''
-		while True:
-			read = self.__sp.stdout.read(len(prompt_repeating_part))
-			if read == prompt_repeating_part:
-				break
-			data += read
-		string = data.decode('utf-8')
-		return re.sub(r'^\]*((.|\n)+)\n\]*$', r'\1', string)
-
-	def message(self, msg):
-		stdin = self.__sp.stdin
-		stdin.write(msg.encode('utf-8') + b'\n')
-		stdin.flush()
-		answer = self.__read_until_prompt()
-		return answer
-
 	def __consume_beginning(self):
 		ghci_start = b'GHCi, version'
 		full_message = b''
@@ -60,9 +37,7 @@ class GhciConnection(object):
 			c = self.__sp.stdout.read(1)
 			if len(c) == 0:
 				failure = full_message.decode('utf-8')
-				print('Failed to load ghci: ' + failure)
-				self._failed = True
-				self.on_failed().fire(failure)
+				self.next.fire(FailedGhciConnection(failure))
 				return
 			full_message += c
 			last_n_chars += c
@@ -70,14 +45,14 @@ class GhciConnection(object):
 				last_n_chars = last_n_chars[1:]
 		self.message(':set prompt ' + prompt)
 		print('Loaded ghci')
-		self.__loaded = True
-		self.on_loaded().fire()
+		self.next.fire(LoadedGhciConnection(self.__sp))
 
 	def loaded(self):
-		return self.__loaded
+		return False
 
-	def failed(self):
-		return self._failed
+	def message(self, msg):
+		return Fallible.fail('GHCi is not yet loaded')
 
 	def terminate(self):
-		self.__sp.terminate()
+		#TODO
+		pass
