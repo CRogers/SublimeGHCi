@@ -21,6 +21,9 @@ class LoadedGhciConnection(object):
 		return (self.message(msg)
 			.bind(lambda response: Fallible.from_bool(load_succeeded, response)))
 
+	def failed(self):
+		return False
+
 	def loaded(self):
 		return True
 
