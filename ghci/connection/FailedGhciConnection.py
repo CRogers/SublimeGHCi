@@ -8,7 +8,7 @@ class FailedGhciConnection(object):
 		self.next = EventHook()
 
 	def message(self, msg):
-		pass
+		return Fallible.fail('GHCi failed to load')
 
 	def load_haskell_file(self, file_name):
 		loading_ghci_connection = self._internal_ghci_factory.new_loading_ghci_connection()
