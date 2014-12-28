@@ -25,3 +25,6 @@ class PromptIO(object):
 		stdin.write(msg.encode('utf-8') + b'\n')
 		stdin.flush()
 		return self._read_until_prompt()
+
+	def terminate(self):
+		self._file.terminate()

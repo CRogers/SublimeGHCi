@@ -58,9 +58,7 @@ class GhciCommands(object):
 		return self._expr_command('k', expr)
 
 	def load_haskell_file(self, file_name):
-		msg = ':load "{}"'.format(file_name)
-		return (self._ghci.message(msg)
-			.bind(lambda response: Fallible.from_bool(load_succeeded, response)))
+		return self._ghci.load_haskell_file(file_name)
 
 	def run_expr(self, expr):
 		return (self._ghci.message(expr)
