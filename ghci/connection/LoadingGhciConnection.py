@@ -44,13 +44,19 @@ class LoadingGhciConnection(object):
 				last_n_chars = last_n_chars[1:]
 		PromptIO(self.__sp).set_prompt()
 		print('Loaded ghci: ', full_message)
-		self.next.fire(LoadedGhciConnection(self.__sp))
+		self.next.fire(LoadedGhciConnection(PromptIO(self.__sp)))
 
 	def loaded(self):
 		return False
 
+	def _not_yet_loaded(self):
+		return Fallible.fail('GHCi is not yet loaded') 
+
+	def load_haskell_file(self, file_name):
+		return self._not_yet_loaded()
+
 	def message(self, msg):
-		return Fallible.fail('GHCi is not yet loaded')
+		return self._not_yet_loaded()
 
 	def terminate(self):
 		#TODO

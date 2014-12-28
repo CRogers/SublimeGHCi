@@ -27,6 +27,9 @@ class GhciConnection(object):
 	def on_loaded(self):
 		return self._on_loaded
 
+	def load_haskell_file(self, file_name):
+		return self._current.load_haskell_file(file_name)
+
 	def message(self, msg):
 		return self._current.message(msg)
 
