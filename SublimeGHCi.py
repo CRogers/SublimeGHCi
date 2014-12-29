@@ -7,12 +7,12 @@ from SublimeGHCi.controllers.defaults import *
 from SublimeGHCi.ghci.defaults import *
 from SublimeGHCi.projects.defaults import *
 
+error_reporter = ErrorReporter()
+
 project_manager = default_project_manager()
-ghci_connection_factory = default_ghci_connection_factory(project_manager)
+ghci_connection_factory = default_ghci_connection_factory(project_manager, error_reporter)
 ghci_factory = default_ghci_factory(ghci_connection_factory)
 completor_factory = default_completor_factory(ghci_factory)
-
-error_reporter = ErrorReporter()
 
 controller_factory = default_controller_factory(project_manager, ghci_factory, completor_factory, error_reporter)
 manager = ControllerManager(controller_factory)
