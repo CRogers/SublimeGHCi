@@ -42,6 +42,7 @@ def top_level_completion_with(prefix):
 def add_3():
 	view = sublime.active_window().active_view()
 	manager = SublimeGHCi.SublimeGHCi.manager
+	result = None
 	with GhciIntegTest(view, manager):
 		with CompletionIntegTest(view, manager) as test:
 			test.append_text('3\n')
@@ -50,8 +51,8 @@ def add_3():
 			while not manager.loaded(view):
 				time.sleep(0.1)
 			result = test.complete('Bar')
-			view.run_command('save')
-			return result
+		view.run_command('save')
+		return result
 
 
 class CompletionsIntegSpec(unittest.TestCase):
