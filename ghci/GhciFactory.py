@@ -1,6 +1,5 @@
 from SublimeGHCi.ghci.ExtraGhciCommands import *
 from SublimeGHCi.ghci.GhciCommands import *
-from SublimeGHCi.ghci.HaskellFileAutoloader import *
 from SublimeGHCi.ghci.StringAcceptingGhci import *
 from SublimeGHCi.ghci.TypeHoleInfoExtractor import *
 
@@ -11,7 +10,6 @@ class GhciFactory(object):
 
 	def _new_ghci(self, connection, file_name):
 		commands = ExtraGhciCommands(GhciCommands(connection))
-		HaskellFileAutoloader(commands, file_name)
 		return commands
 
 	def _new_string_accepting_ghci(self, connection, file_name):

@@ -12,7 +12,7 @@ class GhciConnectionFactory(object):
 
 	def _new(self, view, error_reporter):
 		project = self._project_manager.project_for_view(view)
-		internal_ghci_factory = InternalGhciConnectionFactory(self._subprocess, self._os, self._threading, project, error_reporter)
+		internal_ghci_factory = InternalGhciConnectionFactory(self._subprocess, self._os, self._threading, project, error_reporter, view)
 		return GhciConnection(internal_ghci_factory)
 
 	def new_connection(self, view):

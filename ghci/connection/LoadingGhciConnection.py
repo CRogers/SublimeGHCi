@@ -44,7 +44,7 @@ class LoadingGhciConnection(object):
 				last_n_chars = last_n_chars[1:]
 		PromptIO(self.__sp).set_prompt()
 		print('Loaded ghci: ', full_message)
-		self.next.fire(LoadedGhciConnection(PromptIO(self.__sp)))
+		self.next.fire(self._internal_ghci_factory.new_loaded_ghci_connection(PromptIO(self.__sp)))
 
 	def loaded(self):
 		return False

@@ -12,6 +12,10 @@ class ErrorReporter(object):
 	def __init__(self):
 		self.report_errors = Mock()
 
+class View(object):
+	def __init__(self):
+		self.file_name = Mock(return_value='Foo.hs')
+
 failed = '''
 [1 of 2] Compiling Hstml            ( src/Hstml.hs, interpreted )’
 Failed, modules loaded: Hstml.'''
@@ -24,11 +28,15 @@ class LoadedGhciConnectionSpec(unittest.TestCase):
 	def setUp(self):
 		self.prompt = PromptIO()
 		self.error_reporter = ErrorReporter()
-		self.connection = LoadedGhciConnection(self.prompt)
+		self.view = View()
+		self.connection = LoadedGhciConnection(self.prompt, self.view)
+
+	def test_should_load_haskell_file_for_view_when_created(self):
+		self.prompt.message.assert_called_once_with(':load "Foo.hs"')
 
 	def test_when_calling_load_haskell_file_with_a_filename_should_send_an_appropriate_load_command(self):
 		self.connection.load_haskell_file('a/b.hs')
-		self.prompt.message.assert_called_once_with(':load "a/b.hs"')
+		self.prompt.message.assert_called_with(':load "a/b.hs"')
 
 	def test_when_the_load_command_fails_to_load_modules_load_haskell_file_should_fail(self):
 		self.prompt.message.return_value = failed

@@ -8,9 +8,11 @@ def load_succeeded(response):
 	return re.search(r'Failed, modules loaded:', response) == None
 
 class LoadedGhciConnection(object):
-	def __init__(self, prompt):
+	def __init__(self, prompt, view):
 		self._prompt = prompt
 		self.next = EventHook()
+
+		self.load_haskell_file(view.file_name())
 
 	def message(self, msg):
 		answer = self._prompt.message(msg)
