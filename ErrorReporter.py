@@ -6,8 +6,8 @@ from SublimeGHCi.Highlights import ErrorHighlights
 
 class ErrorPos(object):
 	def __init__(self, view, region):
-		self.__view = view
-		self.__region = region
+		self._view = view
+		self._region = region
 
 	@staticmethod
 	def to_end_of_line(file_name, row, col):
@@ -18,10 +18,10 @@ class ErrorPos(object):
 		return ErrorPos(view, region)
 
 	def view(self):
-		return self.__view
+		return self._view
 
 	def region(self):
-		return self.__region
+		return self._region
 
 def absolute_path(path, root_directory):
 	if path.startswith('/'):
@@ -47,20 +47,20 @@ def parse_errors(error_message, project_directory):
 
 class ErrorReporter(object):
 	def __init__(self):
-		self.__output_panel = OutputPanel(sublime.active_window())
-		self.__error_highlights = ErrorHighlights()
+		self._output_panel = OutputPanel(sublime.active_window())
+		self._error_highlights = ErrorHighlights()
 
 	def report_errors(self, error_message, project_directory):
-		self.__output_panel.display_text(error_message)
+		self._output_panel.display_text(error_message)
 		error_positions = parse_errors(error_message, project_directory)
 		compiled = files_compiled(error_message, project_directory)
 		successful = compiled.difference(map(lambda ep: ep.view().file_name(), error_positions))
 		print(successful)
-		self.__error_highlights.highlight(error_positions)
+		self._error_highlights.highlight(error_positions)
 
 	def clear_errors(self):
-		self.__output_panel.hide()
-		self.__error_highlights.erase()
+		self._output_panel.hide()
+		self._error_highlights.erase()
 		pass
 
 class NullErrorReporter(object):
