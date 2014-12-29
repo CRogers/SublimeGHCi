@@ -8,12 +8,13 @@ class SublimeGhciOutputText(sublime_plugin.TextCommand):
 		self.view.insert(edit, 0, text)
 
 class OutputPanel(object):
-	def __init__(self):
+	def __init__(self, window):
+		self._window = window
 		self.__name = str(uuid.uuid4())
 		self.__output_panel = None
 
 	def __create_output_panel(self):
-		self.__output_panel = sublime.active_window().create_output_panel(self.__name)
+		self.__output_panel = self._window.create_output_panel(self.__name)
 
 	def __get_view(self):
 		if self.__output_panel == None:
