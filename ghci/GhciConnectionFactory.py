@@ -1,6 +1,6 @@
 from SublimeGHCi.ghci.connection.InternalGhciConnectionFactory import *
 from SublimeGHCi.ghci.connection.GhciConnection import *
-from SublimeGHCi.ErrorReporter import NullErrorReporter
+from SublimeGHCi.error_reporters.ErrorReporter import NullErrorReporter
 
 class GhciConnectionFactory(object):
 	def __init__(self, subprocess, os, threading, project_manager, error_reporter):

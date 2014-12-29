@@ -1,6 +1,6 @@
 import sublime_plugin
 
-from SublimeGHCi.ErrorReporter import *
+from SublimeGHCi.error_reporters.ErrorReporter import *
 from SublimeGHCi.completions.defaults import *
 from SublimeGHCi.controllers.ControllerManager import *
 from SublimeGHCi.controllers.defaults import *
