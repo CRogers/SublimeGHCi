@@ -18,7 +18,7 @@ class FailedGhciConnection(object):
 		return Fallible.fail('Reloading ghci')
 
 	def loaded(self):
-		return False
+		return True
 
 	def terminate(self):
 		pass
