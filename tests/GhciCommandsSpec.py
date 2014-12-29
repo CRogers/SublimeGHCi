@@ -9,7 +9,6 @@ class GhciConnection(object):
 	def __init__(self):
 		self.terminate = Mock()
 		self.loaded = Mock(return_value=True)
-		self.on_loaded = Mock(return_value=EventHook())
 		self.message = Mock(return_value=Fallible.succeed(''))
 
 	def message_returns(self, value):
@@ -144,12 +143,6 @@ class GhciCommandsSpec(unittest.TestCase):
 		run = self.commands.run_expr('1 + 1')
 		self.assertTrue(run.successful())
 		self.assertEqual(run.value(), '2')
-
-	def test_when_on_loaded_is_called_it_should_trigger_on_loaded(self):
-		callback = Mock()
-		self.commands.on_loaded().register(callback)
-		self.connection.on_loaded().fire()
-		callback.assert_called_once_with()
 
 
 
