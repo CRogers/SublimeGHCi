@@ -47,7 +47,12 @@ def add_3():
 			test.append_text('3\n')
 			view.run_command('save')
 			test.append_text('a = ')
-			return test.complete('Bar')
+			while not manager.loaded(view):
+				time.sleep(0.1)
+			result = test.complete('Bar')
+			view.run_command('save')
+			return result
+
 
 class CompletionsIntegSpec(unittest.TestCase):
 	def test_no_completions(self):

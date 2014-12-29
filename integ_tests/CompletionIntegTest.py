@@ -1,3 +1,5 @@
+import time
+
 class CompletionIntegTest(object):
 	def __init__(self, view, manager):
 		self._view = view
@@ -18,6 +20,9 @@ class CompletionIntegTest(object):
 	def complete(self, string):
 		self.append_text(string)
 		print(string, self._get_end())
+		self._manager.complete(self._view, string, self._get_end())
+		while not self._manager.loaded(self._view):
+			time.sleep(0.1)
 		return self._manager.complete(self._view, string, self._get_end())
 
 	def __exit__(self, type, value, traceback):
