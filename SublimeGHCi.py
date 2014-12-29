@@ -16,7 +16,7 @@ ghci_connection_factory = default_ghci_connection_factory(project_manager, error
 ghci_factory = default_ghci_factory(ghci_connection_factory)
 completor_factory = default_completor_factory(ghci_factory)
 
-controller_factory = default_controller_factory(project_manager, ghci_factory, completor_factory, error_reporter_factory)
+controller_factory = default_controller_factory(ghci_factory, completor_factory, error_reporter_factory)
 manager = ControllerManager(controller_factory)
 
 def plugin_loaded():

@@ -1,7 +1,6 @@
 class Controller(object):
-	def __init__(self, view, project, ghci, completor, error_reporter):
+	def __init__(self, view, ghci, completor, error_reporter):
 		self._view = view
-		self._project = project
 		self._error_reporter = error_reporter
 		self._ghci = ghci
 		self._completor = completor
@@ -15,7 +14,7 @@ class Controller(object):
 	def saved(self):
 		(self._ghci.load_haskell_file(self._view.file_name())
 			.map(self._successfully_saved)
-			.map_fail(lambda err: self._error_reporter.report_errors(err, self._project.base_path())))
+			.map_fail(lambda err: self._error_reporter.report_errors(err)))
 
 	def complete(self, prefix, location):
 		return self._completor.complete(prefix, location)

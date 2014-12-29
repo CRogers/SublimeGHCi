@@ -7,5 +7,5 @@ class ErrorReporterFactory(object):
 
 	def error_reporter_for_view(self, view):
 		project = self._project_manager.project_for_view(view)
-		output_panel = self._output_panel_factory.output_panel_for_window(view)
+		output_panel = self._output_panel_factory.output_panel_for_window(view.window())
 		return ErrorReporter(output_panel, project)
