@@ -46,11 +46,13 @@ def parse_errors(error_message, project_directory):
 	return list(map(lambda match: match_to_error_pos(match, project_directory), matches))
 
 class ErrorReporter(object):
-	def __init__(self):
-		self._output_panel = OutputPanel(sublime.active_window())
+	def __init__(self, output_panel, project):
+		self._output_panel = output_panel
+		self._project = project
 		self._error_highlights = ErrorHighlights()
 
-	def report_errors(self, error_message, project_directory):
+	def report_errors(self, error_message):
+		project_directory = self._project.base_path()
 		self._output_panel.display_text(error_message)
 		error_positions = parse_errors(error_message, project_directory)
 		compiled = files_compiled(error_message, project_directory)
