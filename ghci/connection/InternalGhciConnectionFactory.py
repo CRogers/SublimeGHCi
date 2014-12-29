@@ -15,7 +15,7 @@ class InternalGhciConnectionFactory(object):
 		return LoadingGhciConnection(self, self._subprocess, self._os, self._threading, self._project)
 
 	def new_failed_ghci_connection(self, failure_reason):
-		return FailedGhciConnection(self, self._error_reporter, failure_reason, self._project)
+		return FailedGhciConnection(self, self._error_reporter, failure_reason)
 
 	def new_loaded_ghci_connection(self, prompt):
 		return LoadedGhciConnection(prompt, self._view)

@@ -78,7 +78,6 @@ class CompletionsIntegSpec(unittest.TestCase):
 		result = run_integ_test(['integ_tests/Completions/TypeHole3.hs'], top_level_two_hole)
 		self.assertEqual(eval(result), [('Foo\tFoo\t\u2713', 'Foo')])
 
-	@unittest.skip('feature not finished')
 	def test_when_loading_a_cabal_library_with_compile_errors_completions_work_again_after_the_errors_have_been_fixed(self):
 		result = run_integ_test(['integ_tests/Completions/DoesNotCompile', 'integ_tests/Completions/DoesNotCompile/DoesNotCompile.hs'], add_3)
 		self.assertEqual(eval(result), [('Bar\tBar\t\u2713', 'Bar')])
