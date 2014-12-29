@@ -7,9 +7,6 @@ class ExtraGhciCommands(object):
 	def __init__(self, commands):
 		self._commands = commands
 
-	def on_loaded(self):
-		return self._commands.on_loaded()
-
 	def type_or_kind_of(self, sig):
 		last_part = get_last_part(sig) 
 		return (self
