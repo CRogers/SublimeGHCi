@@ -62,10 +62,3 @@ class ErrorReporter(object):
 		self._output_panel.hide()
 		self._error_highlights.erase()
 		pass
-
-class NullErrorReporter(object):
-	def report_errors(self, error_message, project_directory):
-		pass
-
-	def clear_errors(self):
-		pass
