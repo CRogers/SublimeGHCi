@@ -14,6 +14,7 @@ class GhciConnection(object):
 class GhciConnectionFactory(object):
 	def __init__(self):
 		self.new_connection = Mock(return_value=GhciConnection())
+		self.new_no_error_reporting_connection = Mock(return_value=GhciConnection())
 
 class View(object):
 	def __init__(self):
