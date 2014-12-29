@@ -1,7 +1,7 @@
 import sublime, re
 
 from SublimeGHCi.Common import find_open_file
-from SublimeGHCi.OutputPanel import OutputPanel
+from SublimeGHCi.output_panels.OutputPanel import OutputPanel
 from SublimeGHCi.Highlights import ErrorHighlights
 
 class ErrorPos(object):
