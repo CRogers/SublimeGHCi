@@ -8,6 +8,7 @@ def wait_until_complete(tfname):
 
 def run_sublime(env, tfname, *paths_to_open):
 	path = os.environ.get('SUBLIME_PATH', default_path)
+	paths_to_open = map(lambda path: 'SublimeGHCi/integ_tests/' + path, paths_to_open)
 	subprocess.call([path] + list(paths_to_open), env=env, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 	wait_until_complete(tfname)
 
