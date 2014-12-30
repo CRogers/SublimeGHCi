@@ -10,25 +10,11 @@ def top_level_two_hole():
 		.append_text('a = takes ')
 		.complete('Foo'))
 
-def top_level_blah():
-	return (IntegTest()
-		.wait()
-		.append_text('a = takesFoo ')
-		.complete('f'))
-
 def top_level_completion_with(prefix):
 	return (IntegTest()
 		.wait()
 		.append_text('a = ')
 		.complete(prefix))
-
-def add_3():
-	return (IntegTest()
-		.wait()
-		.append_text('3\n')
-		.save()
-		.append_text('a = ')
-		.complete('Bar'))
 
 def completion(expr, type):
 	return ('{}\t{}'.format(expr, type), expr)
@@ -55,7 +41,11 @@ class CompletionsIntegSpec(unittest.TestCase):
 		self.assertEqual(result, [completion('bar', 'FirstModule.Bar')])
 
 	def test_should_suggest_an_expression_which_fits_the_type_at_that_position_over_one_that_does_not(self):
-		result = run_integ_test(['SublimeGHCi/integ_tests/Completions/TypeHole.hs'], top_level_blah())
+		test = (IntegTest()
+			 .wait()
+			 .append_text('a = takesFoo ')
+			 .complete('f'))
+		result = run_integ_test(['SublimeGHCi/integ_tests/Completions/TypeHole.hs'], test)
 		self.assertEqual(result, [with_tick('fooForReal', 'Foo'), completion('fooFake','FooFake')])
 
 	def test_should_put_a_tick_next_to_an_expression_when_it_fits_were_there_to_be_a_single_further_argument_to_the_function(self):
@@ -67,5 +57,11 @@ class CompletionsIntegSpec(unittest.TestCase):
 		self.assertEqual(result, [with_tick('Foo', 'Foo')])
 
 	def test_when_loading_a_cabal_library_with_compile_errors_completions_work_again_after_the_errors_have_been_fixed(self):
-		result = run_integ_test(['SublimeGHCi/integ_tests/Completions/DoesNotCompile', 'SublimeGHCi/integ_tests/Completions/DoesNotCompile/DoesNotCompile.hs'], add_3())
+		test = (IntegTest()
+			.wait()
+			.append_text('3\n')
+			.save()
+			.append_text('a = ')
+			.complete('Bar'))
+		result = run_integ_test(['SublimeGHCi/integ_tests/Completions/DoesNotCompile', 'SublimeGHCi/integ_tests/Completions/DoesNotCompile/DoesNotCompile.hs'], test)
 		self.assertEqual(result, [with_tick('Bar', 'Bar')])
