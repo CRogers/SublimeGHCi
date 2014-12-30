@@ -23,12 +23,8 @@ class IntegTest(object):
 			command.undo()
 
 		commands.Save(self._manager, self._view).perform()
-		time.sleep(1)
 		window = self._view.window()
-		window.run_command('close')
-		time.sleep(1)
 		window.run_command('close_window')
-		time.sleep(1)
 		
 		return result
 

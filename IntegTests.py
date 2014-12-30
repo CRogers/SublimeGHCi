@@ -3,7 +3,7 @@ import sublime
 from threading import Thread
 
 def quit_sublime():
-	os.kill(os.getppid(), signal.SIGTERM)
+	sublime.run_command('exit')
 
 def write_to_output_file(data):
 	output_file = os.environ.get('INTEG_OUTPUT')
