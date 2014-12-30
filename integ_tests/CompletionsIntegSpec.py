@@ -65,3 +65,28 @@ class CompletionsIntegSpec(unittest.TestCase):
 			.complete('Bar'))
 		result = run_integ_test(['Completions/DoesNotCompile', 'Completions/DoesNotCompile/DoesNotCompile.hs'], test)
 		self.assertEqual(result, [with_tick('Bar', 'Bar')])
+
+	@unittest.skip('not finished')
+	def test_when_loading_a_cabal_library_with_a_broken_cabal_file_it_should_work_if_the_cabal_file_is_fixed(self):
+		test = (IntegTest()
+			.open('Completions/BrokenCabalFile/BrokenCabalFile.hs')
+				.wait()
+				.append_text('cat')
+				.complete('yay')
+				.add_result()
+				.back()
+			.open('Completions/BrokenCabalFile/broken-cabal-file.cabal')
+				.wait()
+				.insert_text('yay')
+				.save()
+				.close()
+			.open('Completions/BrokenCabalFile/BrokenCabalFile.hs')
+				.wait()
+				.delete_left(3)
+				.complete('yay')
+				.add_result())
+		result = run_integ_test(test)
+		self.assertEqual(result, [
+			[],
+			[with_tick('Foo', 'Foo')]
+		])
