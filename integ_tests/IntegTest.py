@@ -1,4 +1,4 @@
-import inspect
+import inspect, time
 
 import SublimeGHCi.integ_tests.Commands as commands
 
@@ -9,19 +9,27 @@ class IntegTest(object):
 		self._commands = []
 
 	def _add(self, command):
-		print(command)
 		self._commands.append(command)
 
 	def run(self):
+		self._view.settings().set('hot_exit', False)
+		self._view.settings().set('remember_open_files', False)
+
 		result = None
 		for command in self._commands:
-			ret = command.perform()
-			if ret != None:
-				result = ret
+			result = command.perform()
 
 		for command in reversed(self._commands):
 			command.undo()
 
+		commands.Save(self._manager, self._view).perform()
+		time.sleep(1)
+		window = self._view.window()
+		window.run_command('close')
+		time.sleep(1)
+		window.run_command('close_window')
+		time.sleep(1)
+		
 		return result
 
 for name, cls in commands.__dict__.items():
