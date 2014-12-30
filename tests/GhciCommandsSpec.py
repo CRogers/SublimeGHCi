@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import *
 
+from SublimeGHCi.common.EventHook import *
 from SublimeGHCi.common.Fallible import *
 from SublimeGHCi.ghci.GhciCommands import *
 
@@ -132,42 +133,6 @@ class GhciCommandsSpec(unittest.TestCase):
 		self.assertTrue(kind.failed())
 		self.assertEqual(kind.value(), 'Ambiguous: Hstml.Functor or Prelude.Functor')
 
-	def test_when_calling_reload_with_a_filename_should_send_an_appropriate_reload_command(self):
-		self.commands.reload()
-		self.connection.message.assert_called_once_with(':r')
-
-	def test_when_the_reload_command_fails_to_load_modules_reload_should_fail(self):
-		self.connection.message_returns('''
-[1 of 2] Compiling Hstml            ( src/Hstml.hs, interpreted )’
-Failed, modules loaded: Hstml.''')
-		load = self.commands.reload()
-		self.assertTrue(load.failed())
-
-	def test_when_the_reload_command_succeeds_to_load_modules_reload_should_succeed(self):
-		self.connection.message_returns('''
-[1 of 1] Compiling Hstml            ( src/Hstml.hs, interpreted )
-Ok, modules loaded: Hstml.''')
-		load = self.commands.reload()
-		self.assertTrue(load.successful())
-
-	def test_when_calling_load_haskell_file_with_a_filename_should_send_an_appropriate_load_command(self):
-		self.commands.load_haskell_file('a/b.hs')
-		self.connection.message.assert_called_once_with(':load "a/b.hs"')
-
-	def test_when_the_load_command_fails_to_load_modules_load_haskell_file_should_fail(self):
-		self.connection.message_returns('''
-[1 of 2] Compiling Hstml            ( src/Hstml.hs, interpreted )’
-Failed, modules loaded: Hstml.''')
-		load = self.commands.load_haskell_file('a/b.hs')
-		self.assertTrue(load.failed())
-
-	def test_when_the_load_command_succeeds_to_load_modules_load_haskell_file_should_succeed(self):
-		self.connection.message_returns('''
-[1 of 1] Compiling Hstml            ( src/Hstml.hs, interpreted )
-Ok, modules loaded: Hstml.''')
-		load = self.commands.load_haskell_file('a/b.hs')
-		self.assertTrue(load.successful())
-
 	def test_when_an_expression_is_not_defined_run_expr_fails(self):
 		self.connection.message_returns('\n<interactive>:114:1: Not in scope: ‘blah’')
 		run = self.commands.run_expr('blah')
@@ -178,8 +143,6 @@ Ok, modules loaded: Hstml.''')
 		run = self.commands.run_expr('1 + 1')
 		self.assertTrue(run.successful())
 		self.assertEqual(run.value(), '2')
-
-
 
 
 

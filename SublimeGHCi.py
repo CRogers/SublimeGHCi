@@ -1,20 +1,22 @@
 import sublime_plugin
 
-from SublimeGHCi.ErrorReporter import *
+from SublimeGHCi.error_reporters.ErrorReporterFactory import *
 from SublimeGHCi.completions.defaults import *
 from SublimeGHCi.controllers.ControllerManager import *
 from SublimeGHCi.controllers.defaults import *
 from SublimeGHCi.ghci.defaults import *
 from SublimeGHCi.projects.defaults import *
+from SublimeGHCi.output_panels.OutputPanelFactory import *
+
+output_panel_factory = OutputPanelFactory()
 
 project_manager = default_project_manager()
-ghci_connection_factory = default_ghci_connection_factory(project_manager)
+error_reporter_factory = ErrorReporterFactory(project_manager, output_panel_factory)
+ghci_connection_factory = default_ghci_connection_factory(project_manager, error_reporter_factory)
 ghci_factory = default_ghci_factory(ghci_connection_factory)
 completor_factory = default_completor_factory(ghci_factory)
 
-error_reporter = ErrorReporter()
-
-controller_factory = default_controller_factory(project_manager, ghci_factory, completor_factory, error_reporter)
+controller_factory = default_controller_factory(ghci_factory, completor_factory)
 manager = ControllerManager(controller_factory)
 
 def plugin_loaded():

@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import *
 
+from SublimeGHCi.common.EventHook import *
 from SublimeGHCi.common.Fallible import *
 from SublimeGHCi.ghci.ExtraGhciCommands import *
 

@@ -1,21 +1,24 @@
 import unittest
 from unittest.mock import *
 
+from SublimeGHCi.common.EventHook import *
 from SublimeGHCi.ghci.GhciFactory import *
 
 class Tempfile(object):
 	pass
 
 class GhciConnection(object):
-	pass
+	def __init__(self):
+		self.on_loaded = Mock(return_value=EventHook())
 
 class GhciConnectionFactory(object):
 	def __init__(self):
 		self.new_connection = Mock(return_value=GhciConnection())
-		self.new_connection_for_view = Mock(return_value=GhciConnection())
+		self.new_no_error_reporting_connection = Mock(return_value=GhciConnection())
 
 class View(object):
-	pass
+	def __init__(self):
+		self.file_name = Mock(return_value='Lol.hs')
 
 class GhciFactorySpec(unittest.TestCase):
 	def setUp(self):
