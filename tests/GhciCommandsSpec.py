@@ -1,8 +1,6 @@
 import unittest
 from unittest.mock import *
 
-from SublimeGHCi.common.EventHook import *
-from SublimeGHCi.common.Fallible import *
 from SublimeGHCi.ghci.GhciCommands import *
 
 class GhciConnection(object):
@@ -17,7 +15,7 @@ class GhciConnection(object):
 class GhciCommandsSpec(unittest.TestCase):
 	def setUp(self):
 		self.connection = GhciConnection()
-		
+
 		self.commands = GhciCommands(self.connection)
 
 	def test_when_close_is_called_terminate_is_called_on_connection(self):
@@ -101,7 +99,7 @@ class GhciCommandsSpec(unittest.TestCase):
 		self.assertEqual(type.value(), 'Ambiguous: Prelude.foldr or Data.Foldable.foldr')
 	def test_when_calling_kind_of_with_expression_should_send_appropriate_kind_of_command(self):
 		self.commands.kind_of('A')
-		self.connection.message.assert_called_once_with(':k (A)') 
+		self.connection.message.assert_called_once_with(':k (A)')
 
 	def test_when_the_kind_command_returns_a_kind_on_one_line_kind_of_returns_that_kind(self):
 		self.connection.message_returns('Functor :: (* -> *) -> Constraint')

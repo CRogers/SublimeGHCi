@@ -1,4 +1,4 @@
-import os, sys, time, signal, traceback
+import os, sys, time, traceback, codecs
 import sublime
 from threading import Thread
 
@@ -7,7 +7,7 @@ def quit_sublime():
 
 def write_to_output_file(data):
 	output_file = os.environ.get('INTEG_OUTPUT')
-	with open(output_file, 'w+') as f:
+	with codecs.open(output_file, 'w+', 'utf-8') as f:
 		f.write(data)
 
 def write_exception():
@@ -38,7 +38,7 @@ if os.environ.get('INTEG_TESTS') == '1':
 		t = Thread(target=after_loaded)
 		t.daemon = True
 		t.start()
-	except e:
+	except:
 		write_exception()
 		quit_sublime()
 else:

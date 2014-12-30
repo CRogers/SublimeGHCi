@@ -1,4 +1,4 @@
-import os, os.path, time, subprocess, tempfile
+import os, os.path, time, subprocess, tempfile, codecs
 
 default_path = '/Applications/Sublime Text.app/Contents/MacOS/Sublime Text'
 
@@ -22,14 +22,14 @@ def run_integ_test(files, func, *args):
 		tfname = tf.name
 	os.unlink(tfname)
 	env['INTEG_OUTPUT'] = tfname
-	
+
 	run_sublime(env, tfname, *files)
 
 	if not os.path.exists(tfname):
 		raise Exception('Infra error')
 
 	lines = None
-	with open(tfname, 'r') as tf:
+	with codecs.open(tfname, 'r', 'utf-8') as tf:
 		lines = tf.readlines()
 	os.unlink(tfname)
 	bulk = ''.join(lines[1:])
