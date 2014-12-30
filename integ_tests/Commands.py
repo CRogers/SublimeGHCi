@@ -1,9 +1,11 @@
 import time
 
 class AppendText(object):
-	def __init__(self, view, string):
+	name = 'append_text'
+
+	def __init__(self, manager, view, string):
 		self._view = view
-		self._string
+		self._string = string
 
 	def perform(self):
 		end = self._view.size()
@@ -13,13 +15,17 @@ class AppendText(object):
 		self._view.run_command('undo')
 
 class Save(object):
-	def __init__(self, view):
+	name = 'save'
+
+	def __init__(self, manager, view):
 		self._view = view
 
 	def perform(self):
 		self._view.run_command('save')
 
 class Wait(object):
+	name = 'wait'
+
 	def __init__(self, manager, view):
 		self._manager = manager
 		self._view = view
@@ -29,6 +35,8 @@ class Wait(object):
 			time.sleep(0.1)
 
 class Complete(object):
+	name = 'complete'
+
 	def __init__(self, manager, view, string):
 		self._manager = manager
 		self._view = view
