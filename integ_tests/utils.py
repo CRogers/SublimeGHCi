@@ -35,4 +35,4 @@ def run_integ_test(files, func, *args):
 	bulk = ''.join(lines[1:])
 	if lines[0].startswith('EXCEPTION'):
 		raise Exception(bulk)
-	return bulk
+	return eval(bulk)
