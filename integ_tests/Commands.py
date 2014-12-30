@@ -23,6 +23,9 @@ class Save(object):
 	def perform(self):
 		self._view.run_command('save')
 
+	def undo(self):
+		pass
+
 class Wait(object):
 	name = 'wait'
 
@@ -34,6 +37,9 @@ class Wait(object):
 		while not self._manager.loaded(self._view):
 			time.sleep(0.1)
 
+	def undo(self):
+		pass
+
 class Complete(object):
 	name = 'complete'
 
@@ -41,11 +47,11 @@ class Complete(object):
 		self._manager = manager
 		self._view = view
 		self._string = string
-		self._append = AppendText(view, string)
+		self._append = AppendText(manager, view, string)
 
 	def _complete(self):
 		end = self._view.size()
-		return self._manager.complete(self._view, string, end)
+		return self._manager.complete(self._view, self._string, end)
 
 	def perform(self):
 		self._append.perform()

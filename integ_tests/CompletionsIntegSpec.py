@@ -11,17 +11,19 @@ try:
 	import SublimeGHCi.SublimeGHCi
 	from SublimeGHCi.integ_tests.CompletionIntegTest import *
 	from SublimeGHCi.integ_tests.GhciIntegTest import *
+	from SublimeGHCi.integ_tests.IntegTest import *
 except ImportError:
 	pass
 
 def top_level_two_hole():
 	view = sublime.active_window().active_view()
 	manager = SublimeGHCi.SublimeGHCi.manager
-	with GhciIntegTest(view, manager):
-		with CompletionIntegTest(view, manager) as test:
-			test.append_text('a :: Foo\n')
-			test.append_text('a = takes ')
-			return test.complete('Foo')
+	return (IntegTest(manager, view)
+		.wait()
+		.append_text('a :: Foo\n')
+		.append_text('a = takes ')
+		.complete('Foo')
+		.run())
 
 def top_level_blah():
 	view = sublime.active_window().active_view()

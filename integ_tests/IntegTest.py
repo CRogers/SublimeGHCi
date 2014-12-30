@@ -12,6 +12,16 @@ class IntegTest(object):
 		print(command)
 		self._commands.append(command)
 
+	def run(self):
+		result = None
+		for command in self._commands:
+			result = command.perform()
+
+		for command in reversed(self._commands):
+			command.undo()
+
+		return result
+
 for name, cls in commands.__dict__.items():
 	if not inspect.isclass(cls):
 		continue
