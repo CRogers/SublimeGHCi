@@ -1,4 +1,4 @@
-import inspect, time
+import inspect
 
 import SublimeGHCi.integ_tests.Commands as commands
 

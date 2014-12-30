@@ -1,6 +1,9 @@
-import os, sys, time, traceback, codecs
+import os, sys, time, traceback, codecs, pickle
 import sublime
 from threading import Thread
+
+import SublimeGHCi.SublimeGHCi as Top
+from SublimeGHCi.integ_tests.IntegTest import IntegTestContext
 
 def quit_sublime():
 	sublime.run_command('exit')
@@ -18,10 +21,10 @@ def write_exception():
 def after_loaded():
 	try:
 		while sublime.active_window().active_view() == None:
-			time.sleep(0.05)
+			time.sleep(0.1)
 
-		args = eval(os.environ.get('INTEG_FUNC_ARGS'))
-		result = getattr(module, func)(*args)
+		context = IntegTestContext(Top.manager, sublime.active_window().active_view())
+		result = pickle.loads(test).run(context)
 		write_to_output_file('OK\n' + str(result))
 		quit_sublime()
 	except:
@@ -30,10 +33,7 @@ def after_loaded():
 
 if os.environ.get('INTEG_TESTS') == '1':
 	try:
-		name = os.environ.get('INTEG_NAME')
-		func = os.environ.get('INTEG_FUNC')
-		SublimeGHCi = __import__('SublimeGHCi.integ_tests.{}'.format(name))
-		module = getattr(SublimeGHCi.integ_tests, name)
+		test = eval(os.environ.get('INTEG_TEST_SERIALIZED'))
 
 		t = Thread(target=after_loaded)
 		t.daemon = True
