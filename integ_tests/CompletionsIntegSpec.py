@@ -16,41 +16,41 @@ except ImportError:
 def top_level_two_hole():
 	view = sublime.active_window().active_view()
 	manager = SublimeGHCi.SublimeGHCi.manager
-	return (IntegTest(manager, view)
+	return (IntegTest()
 		.wait()
 		.append_text('a :: Foo\n')
 		.append_text('a = takes ')
 		.complete('Foo')
-		.run())
+		.run(IntegTestContext(manager, view)))
 
 def top_level_blah():
 	view = sublime.active_window().active_view()
 	manager = SublimeGHCi.SublimeGHCi.manager
-	return (IntegTest(manager, view)
+	return (IntegTest()
 		.wait()
 		.append_text('a = takesFoo ')
 		.complete('f')
-		.run())
+		.run(IntegTestContext(manager, view)))
 
 def top_level_completion_with(prefix):
 	view = sublime.active_window().active_view()
 	manager = SublimeGHCi.SublimeGHCi.manager
-	return (IntegTest(manager, view)
+	return (IntegTest()
 		.wait()
 		.append_text('a = ')
 		.complete(prefix)
-		.run())
+		.run(IntegTestContext(manager, view)))
 
 def add_3():
 	view = sublime.active_window().active_view()
 	manager = SublimeGHCi.SublimeGHCi.manager
-	return (IntegTest(manager, view)
+	return (IntegTest()
 		.wait()
 		.append_text('3\n')
 		.save()
 		.append_text('a = ')
 		.complete('Bar')
-		.run())
+		.run(IntegTestContext(manager, view)))
 
 def completion(expr, type):
 	return ('{}\t{}'.format(expr, type), expr)

@@ -8,17 +8,13 @@ class IntegTestContext():
 		self.view = view
 
 class IntegTest(object):
-	def __init__(self, manager, view):
-		self._manager = manager
-		self._view = view
+	def __init__(self):
 		self._commands = []
 
 	def _add(self, command):
 		self._commands.append(command)
 
-	def run(self):
-		context = IntegTestContext(self._manager, self._view)
-
+	def run(self, context):
 		result = None
 		for command in self._commands:
 			result = command.perform(context)
@@ -27,7 +23,7 @@ class IntegTest(object):
 			command.undo(context)
 
 		commands.Save().perform(context)
-		window = self._view.window()
+		window = context.view.window()
 		window.run_command('close_window')
 
 		return result
