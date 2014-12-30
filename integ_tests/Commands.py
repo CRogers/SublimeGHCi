@@ -1,5 +1,14 @@
 import time
 
+class AddResult(object):
+	name = 'add_result'
+
+	def perform(self, context):
+		context.add_last_result()
+
+	def undo(self, context):
+		pass
+
 class AppendText(object):
 	name = 'append_text'
 
