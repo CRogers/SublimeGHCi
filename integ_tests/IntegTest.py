@@ -12,9 +12,6 @@ class IntegTest(object):
 		self._commands.append(command)
 
 	def run(self):
-		self._view.settings().set('hot_exit', False)
-		self._view.settings().set('remember_open_files', False)
-
 		result = None
 		for command in self._commands:
 			result = command.perform()
