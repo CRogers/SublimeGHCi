@@ -9,8 +9,6 @@ except ImportError:
 try:
 	import sublime
 	import SublimeGHCi.SublimeGHCi
-	from SublimeGHCi.integ_tests.CompletionIntegTest import *
-	from SublimeGHCi.integ_tests.GhciIntegTest import *
 	from SublimeGHCi.integ_tests.IntegTest import *
 except ImportError:
 	pass
