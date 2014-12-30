@@ -15,7 +15,9 @@ class IntegTest(object):
 	def run(self):
 		result = None
 		for command in self._commands:
-			result = command.perform()
+			ret = command.perform()
+			if ret != None:
+				result = ret
 
 		for command in reversed(self._commands):
 			command.undo()

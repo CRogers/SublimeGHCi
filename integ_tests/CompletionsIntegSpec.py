@@ -28,34 +28,31 @@ def top_level_two_hole():
 def top_level_blah():
 	view = sublime.active_window().active_view()
 	manager = SublimeGHCi.SublimeGHCi.manager
-	with GhciIntegTest(view, manager):
-		with CompletionIntegTest(view, manager) as test:
-			test.append_text('a = takesFoo ')
-			return test.complete('f')
+	return (IntegTest(manager, view)
+		.wait()
+		.append_text('a = takesFoo ')
+		.complete('f')
+		.run())
 
 def top_level_completion_with(prefix):
 	view = sublime.active_window().active_view()
 	manager = SublimeGHCi.SublimeGHCi.manager
-	with GhciIntegTest(view, manager):
-		with CompletionIntegTest(view, manager) as test:
-			test.append_text('a = ')
-			return test.complete(prefix)
+	return (IntegTest(manager, view)
+		.wait()
+		.append_text('a = ')
+		.complete(prefix)
+		.run())
 
 def add_3():
 	view = sublime.active_window().active_view()
 	manager = SublimeGHCi.SublimeGHCi.manager
-	result = None
-	with GhciIntegTest(view, manager):
-		with CompletionIntegTest(view, manager) as test:
-			test.append_text('3\n')
-			view.run_command('save')
-			test.append_text('a = ')
-			while not manager.loaded(view):
-				time.sleep(0.1)
-			result = test.complete('Bar')
-		view.run_command('save')
-		return result
-
+	return (IntegTest(manager, view)
+		.wait()
+		.append_text('3\n')
+		.save()
+		.append_text('a = ')
+		.complete('Bar')
+		.run())
 
 class CompletionsIntegSpec(unittest.TestCase):
 	def test_no_completions(self):
