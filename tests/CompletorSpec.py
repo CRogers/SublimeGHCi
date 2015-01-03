@@ -6,7 +6,7 @@ from SublimeGHCi.completions.Completor import *
 
 class GhciCommands(object):
 	pass
-	
+
 class CompletorSpec(unittest.TestCase):
 	def setUp(self):
 		self.commands = GhciCommands()
