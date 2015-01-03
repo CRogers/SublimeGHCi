@@ -97,3 +97,11 @@ class IntegTestSpec(unittest.TestCase):
         command2 = make_command(2)
         self.integ_test.add_command(command1).add_command(command2).run()
         self.assertEqual(call_order, [2, 1])
+
+    def test_when_a_command_is_added_its_perform_method_is_called_before_its_undo_method(self):
+        call_order = []
+        command = MockCommand()
+        command.perform.side_effect = lambda _: call_order.append('perform')
+        command.undo.side_effect = lambda _: call_order.append('undo')
+        self.integ_test.add_command(command).run()
+        self.assertEqual(call_order, ['perform', 'undo'])
