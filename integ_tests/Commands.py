@@ -1,5 +1,14 @@
 import time
 
+class AddResult(object):
+	name = 'add_result'
+
+	def perform(self, context):
+		context.add_last_result()
+
+	def undo(self, context):
+		pass
+
 class AppendText(object):
 	name = 'append_text'
 
@@ -7,17 +16,17 @@ class AppendText(object):
 		self._string = string
 
 	def perform(self, context):
-		end = context.view().size()
-		context.view().run_command('insert_text', {'point': end, 'string': self._string})
+		end = context.view.size()
+		context.view.run_command('insert_text', {'point': end, 'string': self._string})
 
 	def undo(self, context):
-		context.view().run_command('undo')
+		context.view.run_command('undo')
 
 class Save(object):
 	name = 'save'
 
 	def perform(self, context):
-		context.view().run_command('save')
+		context.view.run_command('save')
 
 	def undo(self, context):
 		pass
@@ -26,7 +35,7 @@ class Wait(object):
 	name = 'wait'
 
 	def perform(self, context):
-		while not context.manager().loaded(context.view()):
+		while not context.manager.loaded(context.view):
 			time.sleep(0.1)
 
 	def undo(self, context):
@@ -40,8 +49,8 @@ class Complete(object):
 		self._append = AppendText(self._string)
 
 	def _complete(self, context):
-		end = context.view().size()
-		return context.manager().complete(context.view(), self._string, end)
+		end = context.view.size()
+		return context.manager.complete(context.view, self._string, end)
 
 	def perform(self, context):
 		self._append.perform(context)

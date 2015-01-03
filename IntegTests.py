@@ -1,14 +1,9 @@
-import os
-import sys
-import time
-import traceback
-import codecs
-import pickle
+import os, sys, time, traceback, codecs, pickle
+import sublime
 from threading import Thread
 
-import sublime
 import SublimeGHCi.SublimeGHCi as Top
-
+from SublimeGHCi.integ_tests.IntegTest import IntegTestContext
 
 def quit_sublime():
 	sublime.run_command('exit')
@@ -28,7 +23,8 @@ def after_loaded():
 		while sublime.active_window().active_view() == None:
 			time.sleep(0.1)
 
-		result = pickle.loads(test).run(Top.manager, sublime.active_window())
+		context = IntegTestContext(Top.manager, sublime.active_window().active_view())
+		result = pickle.loads(test).run(context)
 		write_to_output_file('OK\n' + str(result))
 		quit_sublime()
 	except:

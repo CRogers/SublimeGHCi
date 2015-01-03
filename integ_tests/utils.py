@@ -12,7 +12,7 @@ def run_sublime(env, tfname, *paths_to_open):
 	subprocess.call([path] + list(paths_to_open), env=env, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
 	wait_until_complete(tfname)
 
-def run_integ_test(test):
+def run_integ_test(files, test):
 	env = os.environ.copy()
 	env['INTEG_TESTS'] = '1'
 	env['INTEG_TEST_SERIALIZED'] = str(pickle.dumps(test, 3))
@@ -22,7 +22,7 @@ def run_integ_test(test):
 	os.unlink(tfname)
 	env['INTEG_OUTPUT'] = tfname
 
-	run_sublime(env, tfname)
+	run_sublime(env, tfname, *files)
 
 	if not os.path.exists(tfname):
 		raise Exception('Infra error')
