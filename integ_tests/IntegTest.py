@@ -55,22 +55,29 @@ class ViewIntegTest():
 
 		return results.all_results()
 
+class WithFile():
+	def __init__(self, with_view_test):
+		self._view_test = with_view_test(ViewIntegTest())
+
+	def perform(self, results):
+		self._view_test.run(results)
+
 class IntegTest(object):
 	def __init__(self):
-		self._with_files = []
+		self._commands = []
 
 	def add_command(self, command):
-		command.perform()
+		self._commands.append(command)
 		return self
 
 	def with_file(self, with_view_test):
-		self._with_files.append(with_view_test(ViewIntegTest()))
+		self.add_command(WithFile(with_view_test))
 		return self
 
 	def run(self):
 		results = Results()
-		for wf in self._with_files:
-			wf.run(results)
+		for command in self._commands:
+			command.perform(results)
 
 		return results.all_results()
 

@@ -58,4 +58,9 @@ class IntegTestSpec(unittest.TestCase):
     def test_when_a_single_command_is_added_its_perform_method_is_called(self):
         command = MockCommand()
         self.integ_test.add_command(command).run()
-        command.perform.assert_called_once_with()
+        command.perform.assert_called_once()
+
+    def test_when_a_single_command_is_added_its_perform_method_is_not_called_until_run_is_called(self):
+        command = MockCommand()
+        self.integ_test.add_command(command)
+        self.assertFalse(command.perform.called)
