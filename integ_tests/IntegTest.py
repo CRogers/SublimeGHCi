@@ -71,7 +71,8 @@ class ViewIntegTest():
 		return context.results().all_results()
 
 class WithFile():
-	def __init__(self, with_view_test):
+	def __init__(self, file_name, with_view_test):
+		self._file_name = file_name
 		self._view_test = with_view_test(ViewIntegTest())
 
 	def perform(self, context):
@@ -102,8 +103,8 @@ class IntegTest(object):
 		self._commands.add_command(command)
 		return self
 
-	def with_file(self, with_view_test):
-		self.add_command(WithFile(with_view_test))
+	def with_file(self, file_name, with_view_test):
+		self.add_command(WithFile(file_name, with_view_test))
 		return self
 
 	def run(self, manager, window):

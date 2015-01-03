@@ -36,12 +36,12 @@ class IntegTestSpec(unittest.TestCase):
         self.assertEqual(results, [])
 
     def test_when_a_with_file_command_is_called_and_nothing_is_done_with_it_there_are_no_results(self):
-        results = self.integ_test.with_file(lambda x: x).run(self.manager, self.window)
+        results = self.integ_test.with_file('a', lambda x: x).run(self.manager, self.window)
         self.assertEqual(results, [])
 
     def test_when_a_with_file_command_is_called_and_adds_a_result_the_result_is_returned_when_run(self):
         results = (self.integ_test
-            .with_file(lambda x: x
+            .with_file('a', lambda x: x
                 .add_command(Returns(4))
                 .add_result())
             .run(self.manager, self.window))
@@ -49,7 +49,7 @@ class IntegTestSpec(unittest.TestCase):
 
     def test_when_a_with_file_command_adds_two_results_those_two_results_are_returned(self):
         results = (self.integ_test
-            .with_file(lambda x: x
+            .with_file('a', lambda x: x
                 .add_command(Returns(4))
                 .add_result()
                 .add_command(Returns(5))
@@ -59,10 +59,10 @@ class IntegTestSpec(unittest.TestCase):
 
     def test_when_two_with_files_each_add_one_results_both_results_are_returned(self):
         results = (self.integ_test
-            .with_file(lambda x: x
+            .with_file('a', lambda x: x
                 .add_command(Returns(1))
                 .add_result())
-            .with_file(lambda x: x
+            .with_file('a', lambda x: x
                 .add_command(Returns(2))
                 .add_result())
             .run(self.manager, self.window))
@@ -128,7 +128,7 @@ class IntegTestSpec(unittest.TestCase):
     def test_when_with_file_is_called_the_file_test_performs_get_a_context_with_a_manager_window_and_view_from_window_dot_open_file(self):
         command = MockCommand()
         (self.integ_test
-            .with_file(lambda x: x
+            .with_file('a', lambda x: x
                 .add_command(command))
             .run(self.manager, self.window))
         context = command.perform.call_args[0][0]
