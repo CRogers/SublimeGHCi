@@ -1,9 +1,15 @@
-import os, sys, time, traceback, codecs, pickle
-import sublime
+import os
+import sys
+import time
+import traceback
+import codecs
+import pickle
 from threading import Thread
 
+import sublime
 import SublimeGHCi.SublimeGHCi as Top
-from SublimeGHCi.integ_tests.IntegTest import IntegTestContext
+from SublimeGHCi.integ_tests.infra.IntegTest import IntegTestContext
+
 
 def quit_sublime():
 	sublime.run_command('exit')

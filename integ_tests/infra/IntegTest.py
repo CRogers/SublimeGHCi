@@ -1,6 +1,6 @@
 import inspect
 
-import SublimeGHCi.integ_tests.Commands as commands
+import SublimeGHCi.integ_tests.infra.Commands as commands
 
 class Results():
 	def __init__(self):

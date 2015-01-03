@@ -1,7 +1,7 @@
 import unittest
 
 from SublimeGHCi.integ_tests.utils import run_integ_test
-from SublimeGHCi.integ_tests.IntegTest import *
+from SublimeGHCi.integ_tests.infra.IntegTest import *
 
 def top_level_two_hole():
 	return (IntegTest()
