@@ -36,6 +36,23 @@ class CommandList():
 			if hasattr(command, 'undo'):
 				command.undo(context)
 
+class ViewContext():
+	def __init__(self, window_context, view):
+		self._window_context = window_context
+		self._view = view
+
+	def manager(self):
+		return self._window_context.manager()
+
+	def window(self):
+		return self._window_context.window()
+
+	def results(self):
+		return self._window_context.results()
+
+	def view(self):
+		return self._view
+
 class ViewIntegTest():
 	def __init__(self):
 		self._commands = CommandList()
@@ -58,7 +75,9 @@ class WithFile():
 		self._view_test = with_view_test(ViewIntegTest())
 
 	def perform(self, context):
-		self._view_test.run(context)
+		view = context.window().open_file()
+		view_context = ViewContext(context, view)
+		self._view_test.run(view_context)
 
 class Context():
 	def __init__(self, manager, window, results):

@@ -18,8 +18,12 @@ class MockCommand():
 class Manager():
     pass
 
-class Window():
+class View():
     pass
+
+class Window():
+    def __init__(self):
+        self.open_file = Mock(return_value=View())
 
 class IntegTestSpec(unittest.TestCase):
     def setUp(self):
@@ -120,3 +124,14 @@ class IntegTestSpec(unittest.TestCase):
         context = command.perform.call_args[0][0]
         self.assertEqual(context.manager(), self.manager)
         self.assertEqual(context.window(), self.window)
+
+    def test_when_with_file_is_called_the_file_test_performs_get_a_context_with_a_manager_window_and_view_from_window_dot_open_file(self):
+        command = MockCommand()
+        (self.integ_test
+            .with_file(lambda x: x
+                .add_command(command))
+            .run(self.manager, self.window))
+        context = command.perform.call_args[0][0]
+        self.assertEqual(context.manager(), self.manager)
+        self.assertEqual(context.window(), self.window)
+        self.assertEqual(context.view(), self.window.open_file.return_value)
