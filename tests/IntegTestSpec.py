@@ -64,3 +64,14 @@ class IntegTestSpec(unittest.TestCase):
         command = MockCommand()
         self.integ_test.add_command(command)
         self.assertFalse(command.perform.called)
+
+    def test_when_two_commands_are_added_their_performs_are_called_in_order(self):
+        call_order = []
+        def make_command(num):
+            command = MockCommand()
+            command.perform.side_effect = lambda _: call_order.append(num)
+            return command
+        command1 = make_command(1)
+        command2 = make_command(2)
+        self.integ_test.add_command(command1).add_command(command2).run()
+        self.assertEqual(call_order, [1, 2])
