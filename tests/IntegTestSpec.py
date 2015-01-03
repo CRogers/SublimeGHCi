@@ -75,3 +75,5 @@ class IntegTestSpec(unittest.TestCase):
         command2 = make_command(2)
         self.integ_test.add_command(command1).add_command(command2).run()
         self.assertEqual(call_order, [1, 2])
+
+    #def test_when_

@@ -36,12 +36,24 @@ class AddResult():
 	def perform(self, results):
 		results.add_last_result()
 
-class ViewIntegTest():
+class CommandList():
 	def __init__(self):
 		self._commands = []
 
 	def add_command(self, command):
 		self._commands.append(command)
+
+	def run(self, results):
+		for command in self._commands:
+			result = command.perform(results)
+			results.set_last_result(result)
+
+class ViewIntegTest():
+	def __init__(self):
+		self._commands = CommandList()
+
+	def add_command(self, command):
+		self._commands.add_command(command)
 		return self
 
 	def add_result(self):
@@ -49,9 +61,7 @@ class ViewIntegTest():
 		return self
 
 	def run(self, results):
-		for command in self._commands:
-			result = command.perform(results)
-			results.set_last_result(result)
+		self._commands.run(results)
 
 		return results.all_results()
 
@@ -64,10 +74,10 @@ class WithFile():
 
 class IntegTest(object):
 	def __init__(self):
-		self._commands = []
+		self._commands = CommandList()
 
 	def add_command(self, command):
-		self._commands.append(command)
+		self._commands.add_command(command)
 		return self
 
 	def with_file(self, with_view_test):
@@ -76,8 +86,7 @@ class IntegTest(object):
 
 	def run(self):
 		results = Results()
-		for command in self._commands:
-			command.perform(results)
+		self._commands.run(results)
 
 		return results.all_results()
 
