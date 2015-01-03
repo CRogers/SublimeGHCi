@@ -1,6 +1,7 @@
 import inspect
 
 import SublimeGHCi.integ_tests.infra.Commands as commands
+from SublimeGHCi.integ_tests.infra.CommandList import CommandList
 
 class Results():
 	def __init__(self):
@@ -19,22 +20,6 @@ class Results():
 class AddResult():
 	def perform(self, context):
 		context.results().add_last_result()
-
-class CommandList():
-	def __init__(self):
-		self._commands = []
-
-	def add_command(self, command):
-		self._commands.append(command)
-
-	def run(self, context):
-		for command in self._commands:
-			result = command.perform(context)
-			context.results().set_last_result(result)
-
-		for command in reversed(self._commands):
-			if hasattr(command, 'undo'):
-				command.undo(context)
 
 class ViewContext():
 	def __init__(self, window_context, view):

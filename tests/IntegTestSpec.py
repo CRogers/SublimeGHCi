@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import *
 
-from SublimeGHCi.integ_tests.infra import IntegTest
+from SublimeGHCi.integ_tests.infra.IntegTest import IntegTest
 
 
 class Returns():
