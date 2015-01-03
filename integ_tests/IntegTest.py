@@ -25,6 +25,9 @@ class IntegTest(object):
 	def _add(self, command):
 		self._commands.append(command)
 
+	def with_file(self, with_view_test):
+		return self
+
 	def run(self):
 		return []
 
