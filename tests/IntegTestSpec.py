@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import *
 
 from SublimeGHCi.integ_tests.IntegTest import IntegTest
 
@@ -8,6 +9,10 @@ class Returns():
 
     def perform(self, results):
         return self._result
+
+class MockCommand():
+    def __init__(self):
+        self.perform = Mock()
 
 class IntegTestSpec(unittest.TestCase):
     def setUp(self):
@@ -49,3 +54,8 @@ class IntegTestSpec(unittest.TestCase):
                 .add_result())
             .run())
         self.assertEqual(results, [1, 2])
+
+    def test_when_a_single_command_is_added_its_perform_method_is_called(self):
+        command = MockCommand()
+        self.integ_test.add_command(command).run()
+        command.perform.assert_called_once_with()

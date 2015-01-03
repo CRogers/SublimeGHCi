@@ -59,6 +59,10 @@ class IntegTest(object):
 	def __init__(self):
 		self._with_files = []
 
+	def add_command(self, command):
+		command.perform()
+		return self
+
 	def with_file(self, with_view_test):
 		self._with_files.append(with_view_test(ViewIntegTest()))
 		return self
