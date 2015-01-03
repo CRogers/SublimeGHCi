@@ -32,7 +32,7 @@ class ProjectManager_projects_for_view_Spec(unittest.TestCase):
 	def test_should_return_project_with_raw_ghci_for_file_when_there_are_no_folders(self):
 		view = ViewShim('foo.hs')
 		project = self.project_manager.project_for_view(view)
-		self.assertEqual(project.ghci_command(), ['ghci'])
+		self.assertEqual(project.ghci_command(), 'ghci')
 
 	def test_the_base_path_for_a_lone_haskell_file_should_be_the_directory_of_the_file(self):
 		view = ViewShim('a/b/c.hs')
@@ -68,14 +68,14 @@ class ProjectManager_projects_for_view_Spec(unittest.TestCase):
 		self.simple_folders('a')
 		self.project_file_detector.has_cabal_file.return_value = True
 		project = self.project_manager.project_for_view(view)
-		self.assertEqual(project.ghci_command(), ['cabal', 'repl'])
+		self.assertEqual(project.ghci_command(), 'cabal repl')
 
 	def test_when_there_is_a_default_nix_in_the_files_directory_use_nix_shell_pure(self):
 		view = ViewShim('a/b.hs')
 		self.simple_folders('a')
 		self.project_file_detector.has_default_nix_file.return_value = True
 		project = self.project_manager.project_for_view(view)
-		self.assertEqual(project.ghci_command(), ['nix-shell', '--pure', '--command', "ghci"])
+		self.assertEqual(project.ghci_command(), 'nix-shell --pure --command "ghci"')
 
 	def test_when_there_is_default_nix_in_the_files_directory_base_path_should_be_the_deepest_directory(self):
 		view = ViewShim('a/b/c.hs')
@@ -90,7 +90,7 @@ class ProjectManager_projects_for_view_Spec(unittest.TestCase):
 		self.project_file_detector.has_cabal_file.return_value = True
 		self.project_file_detector.has_default_nix_file.return_value = True
 		project = self.project_manager.project_for_view(view)
-		self.assertEqual(project.ghci_command(), ['nix-shell', '--pure', '--command', "cabal repl"])
+		self.assertEqual(project.ghci_command(), 'nix-shell --pure --command "cabal repl"')
 
 	def test_when_there_is_project_data_for_the_files_directory_just_do_what_that_says(self):
 		view = ViewShim('a/b.hs')
@@ -111,7 +111,7 @@ class ProjectManager_projects_for_view_Spec(unittest.TestCase):
 		project_data = {}
 		self.window_info.folders.return_value = [FolderProjectData('a', project_data)]
 		project = self.project_manager.project_for_view(view)
-		self.assertEqual(project.ghci_command(), ['ghci'])
+		self.assertEqual(project.ghci_command(), 'ghci')
 
 	def test_when_there_is_project_data_for_the_files_directory_which_does_not_have_a_custom_ghci_command_but_a_cabal_file_it_should_be_cabal_repl(self):
 		view = ViewShim('a/b.hs')
@@ -119,7 +119,7 @@ class ProjectManager_projects_for_view_Spec(unittest.TestCase):
 		self.window_info.folders.return_value = [FolderProjectData('a', project_data)]
 		self.project_file_detector.has_cabal_file.return_value = True
 		project = self.project_manager.project_for_view(view)
-		self.assertEqual(project.ghci_command(), ['cabal', 'repl'])
+		self.assertEqual(project.ghci_command(), 'cabal repl')
 
 	def test_when_there_is_project_data_for_the_files_directory_which_does_not_have_a_custom_ghci_command_but_a_default_nix_file_it_should_be_nix_shell_pure_ghci(self):
 		view = ViewShim('a/b.hs')
@@ -127,7 +127,7 @@ class ProjectManager_projects_for_view_Spec(unittest.TestCase):
 		self.window_info.folders.return_value = [FolderProjectData('a', project_data)]
 		self.project_file_detector.has_default_nix_file.return_value = True
 		project = self.project_manager.project_for_view(view)
-		self.assertEqual(project.ghci_command(), ['nix-shell', '--pure', '--command', "ghci"])
+		self.assertEqual(project.ghci_command(), 'nix-shell --pure --command "ghci"')
 
 	def test_correct_folder_is_passed_into_has_cabal_file(self):
 		view = ViewShim('a/b.hs')

@@ -1,6 +1,3 @@
-from SublimeGHCi.common.EventHook import *
-from SublimeGHCi.common.Fallible import *
-from SublimeGHCi.ghci.connection.LoadedGhciConnection import *
 from SublimeGHCi.ghci.connection.FailedGhciConnection import *
 from SublimeGHCi.ghci.connection.PromptIO import *
 
@@ -22,6 +19,7 @@ class LoadingGhciConnection(object):
 		self._os.chdir(project.base_path())
 		print("Creating ghci connection using {}".format(project.ghci_command()))
 		cat = self._subprocess.Popen(project.ghci_command(),
+			shell=True,
 			stdout=self._subprocess.PIPE,
 			stdin=self._subprocess.PIPE,
 			stderr=self._subprocess.STDOUT)
@@ -50,7 +48,7 @@ class LoadingGhciConnection(object):
 		return False
 
 	def _not_yet_loaded(self):
-		return Fallible.fail('GHCi is not yet loaded') 
+		return Fallible.fail('GHCi is not yet loaded')
 
 	def load_haskell_file(self, file_name):
 		return self._not_yet_loaded()
