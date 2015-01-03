@@ -25,19 +25,8 @@ class IntegTest(object):
 	def _add(self, command):
 		self._commands.append(command)
 
-	def run(self, context):
-		for command in self._commands:
-			result = command.perform(context)
-			context.set_last_result(result)
-
-		for command in reversed(self._commands):
-			command.undo(context)
-
-		commands.Save().perform(context)
-		window = context.view.window()
-		window.run_command('close_window')
-
-		return context.all_results()
+	def run(self):
+		return []
 
 for name, cls in commands.__dict__.items():
 	if not inspect.isclass(cls):

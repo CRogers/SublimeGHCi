@@ -61,7 +61,8 @@ class CompletionsIntegSpec(unittest.TestCase):
 
 	def test_when_loading_a_cabal_library_with_compile_errors_completions_work_again_after_the_errors_have_been_fixed(self):
 		test = (IntegTest()
-			.wait()
+			.add_folder('Completions/DoesNotCompile')
+			.with_file('Completions/DoesNotCompile/DoesNotCompile.hs')
 			.append_text('3\n')
 			.save()
 			.append_text('a = ')
@@ -73,22 +74,18 @@ class CompletionsIntegSpec(unittest.TestCase):
 	@unittest.skip('not finished')
 	def test_when_loading_a_cabal_library_with_a_broken_cabal_file_it_should_work_if_the_cabal_file_is_fixed(self):
 		test = (IntegTest()
-			.open('Completions/BrokenCabalFile/BrokenCabalFile.hs')
-				.wait()
+			.with_file('Completions/BrokenCabalFile/BrokenCabalFile.hs', lambda file: file
 				.append_text('cat')
 				.complete('yay')
-				.add_result()
-				.back()
-			.open('Completions/BrokenCabalFile/broken-cabal-file.cabal')
-				.wait()
+				.add_result())
+			.with_file('Completions/BrokenCabalFile/broken-cabal-file.cabal', lambda file: file
 				.insert_text('yay')
 				.save()
-				.close()
-			.open('Completions/BrokenCabalFile/BrokenCabalFile.hs')
-				.wait()
+				.close())
+			.with_file('Completions/BrokenCabalFile/BrokenCabalFile.hs', lambda file: file
 				.delete_left(3)
 				.complete('yay')
-				.add_result())
+				.add_result()))
 		result = run_integ_test(test)
 		self.assertEqual(result, [
 			[],
