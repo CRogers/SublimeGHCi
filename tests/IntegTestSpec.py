@@ -13,6 +13,7 @@ class Returns():
 class MockCommand():
     def __init__(self):
         self.perform = Mock()
+        self.undo = Mock()
 
 class IntegTestSpec(unittest.TestCase):
     def setUp(self):
@@ -58,7 +59,7 @@ class IntegTestSpec(unittest.TestCase):
     def test_when_a_single_command_is_added_its_perform_method_is_called(self):
         command = MockCommand()
         self.integ_test.add_command(command).run()
-        command.perform.assert_called_once()
+        self.assertEqual(command.perform.call_count, 1)
 
     def test_when_a_single_command_is_added_its_perform_method_is_not_called_until_run_is_called(self):
         command = MockCommand()
@@ -76,4 +77,7 @@ class IntegTestSpec(unittest.TestCase):
         self.integ_test.add_command(command1).add_command(command2).run()
         self.assertEqual(call_order, [1, 2])
 
-    #def test_when_
+    def test_when_a_command_is_added_its_undo_method_is_called_when_run(self):
+        command = MockCommand()
+        self.integ_test.add_command(command).run()
+        self.assertEqual(command.undo.call_count, 1)

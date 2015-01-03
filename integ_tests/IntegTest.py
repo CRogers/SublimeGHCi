@@ -48,6 +48,10 @@ class CommandList():
 			result = command.perform(results)
 			results.set_last_result(result)
 
+		for command in reversed(self._commands):
+			if hasattr(command, 'undo'):
+				command.undo(results)
+
 class ViewIntegTest():
 	def __init__(self):
 		self._commands = CommandList()
