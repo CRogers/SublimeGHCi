@@ -38,3 +38,14 @@ class IntegTestSpec(unittest.TestCase):
                 .add_result())
             .run())
         self.assertEqual(results, [4, 5])
+
+    def test_when_two_with_files_each_add_one_results_both_results_are_returned(self):
+        results = (self.integ_test
+            .with_file(lambda x: x
+                .add_command(Returns(1))
+                .add_result())
+            .with_file(lambda x: x
+                .add_command(Returns(2))
+                .add_result())
+            .run())
+        self.assertEqual(results, [1, 2])

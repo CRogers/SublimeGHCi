@@ -57,18 +57,18 @@ class ViewIntegTest():
 
 class IntegTest(object):
 	def __init__(self):
-		self._with_file = None
+		self._with_files = []
 
 	def with_file(self, with_view_test):
-		self._with_file = with_view_test(ViewIntegTest())
+		self._with_files.append(with_view_test(ViewIntegTest()))
 		return self
 
 	def run(self):
-		if self._with_file == None:
-			return []
-
 		results = Results()
-		return self._with_file.run(results)
+		for wf in self._with_files:
+			wf.run(results)
+
+		return results.all_results()
 
 for name, cls in commands.__dict__.items():
 	if not inspect.isclass(cls):
