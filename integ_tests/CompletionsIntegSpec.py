@@ -127,6 +127,7 @@ class CompletionsIntegSpec(unittest.TestCase):
 
 	def test_when_a_cabal_project_depends_on_a_library_it_should_be_able_to_complete_from_that_library(self):
 		test = (completion_test()
+			.add_folder(completion_file('BuildDepends'))
 			.with_file(completion_file('BuildDepends/BuildDepends.hs'), top_level_completion_with('empty')))
 
 		result = run_integ_test(test)
