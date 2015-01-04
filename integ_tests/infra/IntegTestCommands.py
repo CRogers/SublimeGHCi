@@ -1,3 +1,5 @@
+import os.path
+
 from SublimeGHCi.integ_tests.infra.ViewIntegTest import ViewContext, ViewIntegTest
 
 empty_project_data = {'folders': []}
@@ -19,10 +21,11 @@ class WithFile():
     name = 'with_file'
 
     def __init__(self, file_name, with_view_test):
-        self._file_name = file_name
+        self._file_name = os.path.abspath(os.path.join('SublimeGHCi/integ_tests/', file_name))
         self._view_test = with_view_test(ViewIntegTest())
 
     def perform(self, context):
+        print('opening ' + self._file_name)
         view = context.window().open_file(self._file_name)
         view_context = ViewContext(context, view)
         self._view_test.run(view_context)
