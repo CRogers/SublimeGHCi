@@ -28,7 +28,7 @@ def with_tick(expr, type):
 	return (fst + '\t\u2713', snd)
 
 def completion_file(file_name):
-	return os.path.join('Completions', file_name)
+	return os.path.join('Haskell', file_name)
 
 def completion_test():
 	return IntegTest().using_source_folder(completion_file(''))
