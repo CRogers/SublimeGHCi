@@ -31,7 +31,7 @@ def completion_file(file_name):
 	return os.path.join('Haskell', file_name)
 
 def completion_test():
-	return IntegTest().using_source_folder(completion_file(''))
+	return IntegTest()
 
 class CompletionsIntegSpec(unittest.TestCase):
 	def test_no_completions(self):
