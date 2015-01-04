@@ -1,10 +1,6 @@
 import SublimeGHCi.integ_tests.infra.ViewIntegTestCommands as commands
 from SublimeGHCi.integ_tests.infra.CommandList import CommandList, copy_commands
 
-class AddResult():
-    def perform(self, context):
-        context.results().add_last_result()
-
 class ViewContext():
     def __init__(self, window_context, view):
         self._window_context = window_context

@@ -4,4 +4,4 @@ module BrokenCabalFile where
 
 data Bar = Bar
 
-foo =
+foo = 

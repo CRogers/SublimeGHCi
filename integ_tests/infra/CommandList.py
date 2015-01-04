@@ -1,4 +1,4 @@
-import inspect
+import inspect, time
 
 class CommandList():
     def __init__(self):
@@ -10,12 +10,14 @@ class CommandList():
     def perform(self, context):
         for command in self._commands:
             result = command.perform(context)
+            time.sleep(0.5)
             context.results().set_last_result(result)
 
     def undo(self, context):
         for command in reversed(self._commands):
             if hasattr(command, 'undo'):
                 command.undo(context)
+                time.sleep(0.5)
 
     def run(self, context):
         self.perform(context)

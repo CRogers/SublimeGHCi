@@ -23,6 +23,7 @@ class Manager():
 class View():
     def __init__(self):
         self.run_command = Mock()
+        self.is_loading = Mock(return_value=False)
 
 class Window():
     def __init__(self):

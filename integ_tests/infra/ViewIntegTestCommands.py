@@ -6,9 +6,6 @@ class AddResult(object):
 	def perform(self, context):
 		context.results().add_last_result()
 
-	def undo(self, context):
-		pass
-
 class AppendText(object):
 	name = 'append_text'
 
@@ -28,13 +25,26 @@ class DeleteRange():
 	def __init__(self, start, length):
 		self._start = start
 		self._length = length
-		self._deleted = None
 
 	def perform(self, context):
-		context.view().substr(context.sublime().Range(self._start, self._length))
+		print('delete_range')
+		context.view().run_command('sublime_ghci_erase_text', {'start': self._start, 'length': self._length})
 
 	def undo(self, context):
-		pass
+		context.view().run_command('undo')
+
+class DeleteLeft():
+	name = 'delete_left'
+
+	def __init__(self, times = 0):
+		self._times = times
+
+	def perform(self, context):
+		for x in range(0, self._times):
+			context.view().run_command('left_delete')
+
+	def undo(self, context):
+		context.view().run_command('undo')
 
 class Save(object):
 	name = 'save'
@@ -42,18 +52,12 @@ class Save(object):
 	def perform(self, context):
 		context.view().run_command('save')
 
-	def undo(self, context):
-		pass
-
 class Wait(object):
 	name = 'wait'
 
 	def perform(self, context):
-		while not context.manager().loaded(context.view()):
+		while context.view().is_loading() or not context.manager().loaded(context.view()):
 			time.sleep(0.1)
-
-	def undo(self, context):
-		pass
 
 class Complete(object):
 	name = 'complete'
