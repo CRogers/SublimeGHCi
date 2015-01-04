@@ -34,9 +34,3 @@ class WithFile():
     def perform(self, context):
         view_context = self._open_file(context)
         self._view_test.perform(view_context)
-
-    def undo(self, context):
-        view_context = self._open_file(context)
-        self._view_test.undo(view_context)
-        view_context.view().run_command('save')
-        context.window().run_command('close')

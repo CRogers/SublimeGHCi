@@ -16,9 +16,6 @@ class AppendText(object):
 		end = context.view().size()
 		context.view().run_command('insert_text', {'point': end, 'string': self._string})
 
-	def undo(self, context):
-		context.view().run_command('undo')
-
 class DeleteRange():
 	name = 'delete_range'
 
@@ -30,9 +27,6 @@ class DeleteRange():
 		print('delete_range')
 		context.view().run_command('sublime_ghci_erase_text', {'start': self._start, 'length': self._length})
 
-	def undo(self, context):
-		context.view().run_command('undo')
-
 class DeleteLeftFromEnd():
 	name = 'delete_left_from_end'
 
@@ -43,9 +37,6 @@ class DeleteLeftFromEnd():
 		end = context.view().size()
 		DeleteRange(end - self._times, self._times).perform(context)
 
-	def undo(self, context):
-		context.view().run_command('undo')
-
 class MessageDialog():
 	name = 'message_dialog'
 
@@ -54,9 +45,6 @@ class MessageDialog():
 
 	def perform(self, context):
 		context.sublime().message_dialog(self._message)
-
-	def undo(self, context):
-		self.perform(context)
 
 class Save(object):
 	name = 'save'
@@ -76,17 +64,13 @@ class Complete(object):
 
 	def __init__(self, string):
 		self._string = string
-		self._append = AppendText(self._string)
 
 	def _complete(self, context):
 		end = context.view().size()
 		return context.manager().complete(context.view(), self._string, end)
 
 	def perform(self, context):
-		self._append.perform(context)
+		AppendText(self._string).perform(context)
 		self._complete(context)
 		Wait().perform(context)
 		return self._complete(context)
-
-	def undo(self, context):
-		self._append.undo(context)

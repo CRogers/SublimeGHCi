@@ -32,7 +32,4 @@ class ViewIntegTest():
     def perform(self, context):
         self._commands.perform(context)
 
-    def undo(self, context):
-        self._commands.undo(context)
-
 copy_commands(ViewIntegTest, commands)
