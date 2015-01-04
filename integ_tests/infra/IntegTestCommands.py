@@ -6,7 +6,7 @@ from SublimeGHCi.integ_tests.infra.ViewIntegTest import ViewContext, ViewIntegTe
 empty_project_data = {'folders': []}
 
 def absolute_path(path):
-    return os.path.abspath(os.path.join('SublimeGHCi/integ_tests/', path))
+    return os.path.abspath(os.path.join('SublimeGHCi/integ_tests/Haskell/', path))
 
 class AddFolder():
     name = 'add_folder'
