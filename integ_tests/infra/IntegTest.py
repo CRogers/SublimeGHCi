@@ -24,12 +24,17 @@ class Context():
 class IntegTest(object):
 	def __init__(self):
 		self._commands = CommandList()
+		self._source_folders = []
 
 	def add_command(self, command):
 		self._commands.add_command(command)
 		return self
 
-	def run(self, sublime, manager, window):
+	def using_source_folder(self, source_folder):
+		self._source_folders.append(source_folder)
+		return self
+
+	def run(self, git_resetter, sublime, manager, window):
 		# View to keep window open in case we close all other windows
 		window.new_file()
 
@@ -40,6 +45,8 @@ class IntegTest(object):
 		window.run_command('save_all')
 		window.run_command('close_all')
 		window.run_command('close_window')
+
+		git_resetter.reset_folders_to_head(self._source_folders)
 
 		return results.all_results()
 

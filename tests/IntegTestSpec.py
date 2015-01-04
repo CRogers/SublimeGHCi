@@ -34,12 +34,17 @@ class Window():
 class Sublime():
     pass
 
+class GitResetter():
+    def __init__(self):
+        self.reset_folders_to_head = Mock()
+
 class IntegTestSpec(unittest.TestCase):
     def setUp(self):
+        self.git_resetter = GitResetter()
         self.sublime = Sublime()
         self.manager = Manager()
         self.window = Window()
-        self.runargs = (self.sublime, self.manager, self.window)
+        self.runargs = (self.git_resetter, self.sublime, self.manager, self.window)
         self.integ_test = IntegTest()
 
     def test_when_no_commands_are_run_it_returns_an_empty_list(self):
@@ -119,3 +124,16 @@ class IntegTestSpec(unittest.TestCase):
         self.assertEqual(context.window(), self.window)
         self.assertEqual(context.sublime(), self.sublime)
         self.assertEqual(context.view(), self.window.open_file.return_value)
+
+    def test_when_a_source_folder_is_added_we_will_reset_it_after_running(self):
+        folder = '/tmp/foo/'
+        self.integ_test.using_source_folder(folder).run(*self.runargs)
+        self.git_resetter.reset_folders_to_head.assert_called_once_with([folder])
+
+    def test_when_two_source_folders_are_added_we_will_reset_themm_after_running(self):
+        folders = ['/a', '/b']
+        (self.integ_test
+            .using_source_folder(folders[0])
+            .using_source_folder(folders[1])
+            .run(*self.runargs))
+        self.git_resetter.reset_folders_to_head.assert_called_once_with(folders)
