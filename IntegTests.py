@@ -19,8 +19,6 @@ def after_loaded():
 	while sublime.active_window().active_view() == None:
 		time.sleep(0.1)
 
-	sublime.log_commands(True)
-
 	result = pickle.loads(test).run(sublime, Top, sublime.active_window())
 	reset_folders_to_head(top_dir)
 
