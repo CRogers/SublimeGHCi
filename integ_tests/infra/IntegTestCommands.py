@@ -38,6 +38,17 @@ class WithFile():
         view_context = self._open_file(context)
         self._view_test.perform(view_context)
 
+class WithFolderFile():
+    name = 'with_folder_file'
+
+    def __init__(self, folder_path, file_name, with_view_test = lambda x: x):
+        self._add_folder = AddFolder(folder_path)
+        self._with_file = WithFile(os.path.join(folder_path, file_name), with_view_test)
+
+    def perform(self, context):
+        self._add_folder.perform(context)
+        self._with_file.perform(context)
+
 class WithOutputPanel():
     name = 'with_output_panel'
 

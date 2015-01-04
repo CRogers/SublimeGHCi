@@ -47,16 +47,14 @@ class CompletionsIntegSpec(unittest.TestCase):
 
 	def test_should_suggest_only_module_prefixed_completions_after_dot(self):
 		test = (completion_test()
-			.add_folder('MultipleModules')
-			.with_file('MultipleModules/SecondModule.hs', top_level_completion_with('F')))
+			.with_folder_file('MultipleModules', 'SecondModule.hs', top_level_completion_with('F')))
 
 		result = run_integ_test(test)
 		self.assertEqual(result, [[completion('FirstModule.bar','FirstModule.Bar')]])
 
 	def test_mutliple_modules(self):
 		test = (completion_test()
-			.add_folder('MultipleModules')
-			.with_file('MultipleModules/SecondModule.hs', top_level_completion_with('b')))
+			.with_folder_file('MultipleModules', 'SecondModule.hs', top_level_completion_with('b')))
 
 		result = run_integ_test(test)
 		self.assertEqual(result, [[completion('bar', 'FirstModule.Bar')]])
@@ -87,8 +85,7 @@ class CompletionsIntegSpec(unittest.TestCase):
 
 	def test_when_loading_a_cabal_library_with_compile_errors_completions_work_again_after_the_errors_have_been_fixed(self):
 		test = (completion_test()
-			.add_folder('DoesNotCompile')
-			.with_file('DoesNotCompile/DoesNotCompile.hs', lambda file: file
+			.with_folder_file('DoesNotCompile', 'DoesNotCompile.hs', lambda file: file
 				.append_text('3\n')
 				.save()
 				.append_text('a = ')
@@ -103,6 +100,7 @@ class CompletionsIntegSpec(unittest.TestCase):
 		cabal_file = 'BrokenCabalFile/BrokenCabalFile.cabal'
 
 		test = (completion_test()
+			.add_folder('BrokenCabalFile')
 			.with_file(haskell_file, lambda file: file
 				.complete('Bar')
 				.add_result())
@@ -125,16 +123,14 @@ class CompletionsIntegSpec(unittest.TestCase):
 
 	def test_when_a_cabal_project_depends_on_a_library_it_should_be_able_to_complete_from_that_library(self):
 		test = (completion_test()
-			.add_folder('BuildDepends')
-			.with_file('BuildDepends/BuildDepends.hs', top_level_completion_with('empty')))
+			.with_folder_file('BuildDepends', 'BuildDepends.hs', top_level_completion_with('empty')))
 
 		result = run_integ_test(test)
 		self.assertEqual(result, [[with_tick('empty', 'Map k a')]])
 
 	def test_when_a_cabal_project_has_multiple_source_dirs_we_can_load_code_across_them(self):
 		test = (completion_test()
-			.add_folder('MultipleSourceDirs')
-			.with_file('MultipleSourceDirs/src2/Two.hs', top_level_completion_with('Foo')))
+			.with_folder_file('MultipleSourceDirs', 'src2/Two.hs', top_level_completion_with('Foo')))
 
 		result = run_integ_test(test)
 		self.assertEqual(result, [[with_tick('Foo', 'Foo')]])
