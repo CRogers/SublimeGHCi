@@ -1,20 +1,7 @@
 import SublimeGHCi.integ_tests.infra.Commands as commands
+from SublimeGHCi.integ_tests.infra.Results import Results
 from SublimeGHCi.integ_tests.infra.CommandList import CommandList, copy_commands
 from SublimeGHCi.integ_tests.infra.ViewIntegTest import ViewContext, ViewIntegTest
-
-class Results():
-	def __init__(self):
-		self._results = []
-		self._last_result = None
-
-	def set_last_result(self, result):
-		self._last_result = result
-
-	def add_last_result(self):
-		self._results.append(self._last_result)
-
-	def all_results(self):
-		return self._results
 
 class WithFile():
 	def __init__(self, file_name, with_view_test):
