@@ -30,6 +30,7 @@ class Window():
         self.open_file = Mock(return_value=View())
         self.run_command = Mock()
         self.new_file = Mock()
+        self.create_output_panel = Mock()
 
 class Sublime():
     pass
@@ -137,3 +138,12 @@ class IntegTestSpec(unittest.TestCase):
             .using_source_folder(folders[1])
             .run(*self.runargs))
         self.git_resetter.reset_folders_to_head.assert_called_once_with(folders)
+
+    def test_when_with_output_panel_is_called_and_a_result_added_it_returns_that_results(self):
+        results = (self.integ_test
+            .with_output_panel(lambda panel: panel
+                .add_command(Returns(5))
+                .add_result())
+            .run(*self.runargs))
+
+        self.assertEqual(results, [5])

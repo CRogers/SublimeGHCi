@@ -24,7 +24,7 @@ class AddFolder():
 class WithFile():
     name = 'with_file'
 
-    def __init__(self, file_name, with_view_test):
+    def __init__(self, file_name, with_view_test = lambda x: x):
         self._file_name = absolute_path(file_name)
         self._view_test = with_view_test(ViewIntegTest())
 
@@ -37,3 +37,14 @@ class WithFile():
     def perform(self, context):
         view_context = self._open_file(context)
         self._view_test.perform(view_context)
+
+class WithOutputPanel():
+    name = 'with_output_panel'
+
+    def __init__(self, with_output_panel_test):
+        self._output_panel_test = with_output_panel_test(ViewIntegTest())
+
+    def perform(self, context):
+        view = context.window().create_output_panel('sublimeghci')
+        view_context = ViewContext(context, view)
+        self._output_panel_test.perform(view_context)
