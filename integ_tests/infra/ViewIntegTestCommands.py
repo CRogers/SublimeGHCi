@@ -15,6 +15,20 @@ class Sleep(object):
 	def perform(self, context):
 		time.sleep(self._seconds)
 
+class IsVisible():
+	name = 'is_visible'
+
+	def perform(self, context):
+		return context.view().visible_region() != (0, 0)
+
+class Text():
+	name = 'text'
+
+	def perform(self, context):
+		end = context.view().size()
+		region = context.sublime().Region(0, end)
+		return context.view().substr(region)
+
 class AppendText(object):
 	name = 'append_text'
 
