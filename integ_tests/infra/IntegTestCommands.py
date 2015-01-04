@@ -24,8 +24,15 @@ class WithFile():
         self._file_name = os.path.abspath(os.path.join('SublimeGHCi/integ_tests/', file_name))
         self._view_test = with_view_test(ViewIntegTest())
 
-    def perform(self, context):
-        print('opening ' + self._file_name)
+    def _open_file(self, context):
         view = context.window().open_file(self._file_name)
-        view_context = ViewContext(context, view)
-        self._view_test.run(view_context)
+        return ViewContext(context, view)
+
+    def perform(self, context):
+        view_context = self._open_file(context)
+        self._view_test.perform(view_context)
+
+    def undo(self, context):
+        view_context = self._open_file(context)
+        self._view_test.undo(view_context)
+        context.window().run_command('close')

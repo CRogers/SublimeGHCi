@@ -7,14 +7,20 @@ class CommandList():
     def add_command(self, command):
         self._commands.append(command)
 
-    def run(self, context):
+    def perform(self, context):
         for command in self._commands:
             result = command.perform(context)
             context.results().set_last_result(result)
 
+    def undo(self, context):
         for command in reversed(self._commands):
             if hasattr(command, 'undo'):
                 command.undo(context)
+
+    def run(self, context):
+        self.perform(context)
+        self.undo(context)
+
 
 def copy_commands(dest, module):
     for name, cls in module.__dict__.items():

@@ -5,6 +5,7 @@ from SublimeGHCi.integ_tests.infra.IntegTest import *
 
 def top_level_two_hole(file_test):
 	return (file_test
+		.wait()
 		.append_text('a :: Foo\n')
 		.append_text('a = takes ')
 		.complete('Foo')
@@ -89,7 +90,7 @@ class CompletionsIntegSpec(unittest.TestCase):
 				.complete('Bar')
 				.add_result()))
 
-		result = run_integ_test(['Completions/DoesNotCompile', 'Completions/DoesNotCompile/DoesNotCompile.hs'], test)
+		result = run_integ_test(test)
 		self.assertEqual(result, [[with_tick('Bar', 'Bar')]])
 
 	@unittest.skip('not finished')

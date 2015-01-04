@@ -34,9 +34,10 @@ class ViewIntegTest():
         self.add_command(AddResult())
         return self
 
-    def run(self, context):
-        self._commands.run(context)
+    def perform(self, context):
+        self._commands.perform(context)
 
-        return context.results().all_results()
+    def undo(self, context):
+        self._commands.undo(context)
 
 copy_commands(ViewIntegTest, commands)

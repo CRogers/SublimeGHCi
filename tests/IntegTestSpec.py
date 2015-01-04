@@ -25,6 +25,7 @@ class View():
 class Window():
     def __init__(self):
         self.open_file = Mock(return_value=View())
+        self.run_command = Mock()
 
 class IntegTestSpec(unittest.TestCase):
     def setUp(self):
