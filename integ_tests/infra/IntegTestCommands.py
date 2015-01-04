@@ -1,5 +1,8 @@
 from SublimeGHCi.integ_tests.infra.ViewIntegTest import ViewContext, ViewIntegTest
 
+class AddFolder():
+    pass
+
 class WithFile():
     name = 'with_file'
 
