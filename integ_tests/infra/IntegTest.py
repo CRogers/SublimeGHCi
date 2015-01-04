@@ -30,6 +30,8 @@ class IntegTest(object):
 		context = Context(manager, window, results)
 		self._commands.run(context)
 
+		window.run_command('close_window')
+
 		return results.all_results()
 
 copy_commands(IntegTest, commands)

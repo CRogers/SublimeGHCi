@@ -1,5 +1,6 @@
 import os.path
 
+from SublimeGHCi.integ_tests.infra.ViewIntegTestCommands import Wait
 from SublimeGHCi.integ_tests.infra.ViewIntegTest import ViewContext, ViewIntegTest
 
 empty_project_data = {'folders': []}
@@ -30,6 +31,7 @@ class WithFile():
 
     def perform(self, context):
         view_context = self._open_file(context)
+        Wait().perform(view_context)
         self._view_test.perform(view_context)
 
     def undo(self, context):
