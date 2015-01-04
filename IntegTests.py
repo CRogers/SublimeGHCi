@@ -17,7 +17,7 @@ class GitResetter():
 
 	def reset_folders_to_head(self, folders):
 		cwd = os.path.join(self._top_dir, 'SublimeGHCi/integ_tests/')
-		subprocess.call(['git', 'checkout', 'HEAD'] + folders, cwd=cwd)
+		subprocess.check_call(['git', 'checkout', 'HEAD'] + folders, cwd=cwd)
 
 def quit_sublime():
 	sublime.run_command('exit')
