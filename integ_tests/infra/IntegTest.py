@@ -3,17 +3,17 @@ from SublimeGHCi.integ_tests.infra.Results import Results
 from SublimeGHCi.integ_tests.infra.CommandList import CommandList, copy_commands
 
 class Context():
-	def __init__(self, sublime, manager, window, results):
+	def __init__(self, sublime, top, window, results):
 		self._sublime = sublime
-		self._manager = manager
+		self._top = top
 		self._window = window
 		self._results = results
 
 	def sublime(self):
 		return self._sublime
 
-	def manager(self):
-		return self._manager
+	def top(self):
+		return self._top
 
 	def window(self):
 		return self._window
@@ -34,12 +34,12 @@ class IntegTest(object):
 		self._source_folders.append(source_folder)
 		return self
 
-	def run(self, git_resetter, sublime, manager, window):
+	def run(self, git_resetter, sublime, top, window):
 		# View to keep window open in case we close all other windows
 		window.new_file()
 
 		results = Results()
-		context = Context(sublime, manager, window, results)
+		context = Context(sublime, top, window, results)
 		self._commands.run(context)
 
 		window.run_command('save_all')

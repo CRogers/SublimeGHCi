@@ -9,8 +9,8 @@ class ViewContext():
     def sublime(self):
         return self._window_context.sublime()
 
-    def manager(self):
-        return self._window_context.manager()
+    def top(self):
+        return self._window_context.top()
 
     def window(self):
         return self._window_context.window()

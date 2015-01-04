@@ -16,9 +16,22 @@ class MockCommand():
         self.perform = Mock()
         self.undo = Mock()
 
+class Top():
+    def __init__(self):
+        self.manager = Manager()
+        self.output_panel_factory = OutputPanelFactory()
+
 class Manager():
     def loaded(self, view):
         return True
+
+class OutputPanelFactory():
+    def __init__(self):
+        self.output_panel_for_window = Mock(return_value=OutputPanel())
+
+class OutputPanel():
+    def __init__(self):
+        self.get_view = Mock(return_value=View())
 
 class View():
     def __init__(self):
@@ -43,9 +56,9 @@ class IntegTestSpec(unittest.TestCase):
     def setUp(self):
         self.git_resetter = GitResetter()
         self.sublime = Sublime()
-        self.manager = Manager()
+        self.top = Top()
         self.window = Window()
-        self.runargs = (self.git_resetter, self.sublime, self.manager, self.window)
+        self.runargs = (self.git_resetter, self.sublime, self.top, self.window)
         self.integ_test = IntegTest()
 
     def test_when_no_commands_are_run_it_returns_an_empty_list(self):
@@ -110,7 +123,7 @@ class IntegTestSpec(unittest.TestCase):
         command = MockCommand()
         self.integ_test.add_command(command).run(*self.runargs)
         context = command.perform.call_args[0][0]
-        self.assertEqual(context.manager(), self.manager)
+        self.assertEqual(context.top(), self.top)
         self.assertEqual(context.window(), self.window)
         self.assertEqual(context.sublime(), self.sublime)
 
@@ -121,7 +134,7 @@ class IntegTestSpec(unittest.TestCase):
                 .add_command(command))
             .run(*self.runargs))
         context = command.perform.call_args[0][0]
-        self.assertEqual(context.manager(), self.manager)
+        self.assertEqual(context.top(), self.top)
         self.assertEqual(context.window(), self.window)
         self.assertEqual(context.sublime(), self.sublime)
         self.assertEqual(context.view(), self.window.open_file.return_value)

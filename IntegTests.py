@@ -25,7 +25,7 @@ def after_loaded():
 
 	sublime.log_commands(True)
 
-	result = pickle.loads(test).run(GitResetter(top_dir), sublime, Top.manager, sublime.active_window())
+	result = pickle.loads(test).run(GitResetter(top_dir), sublime, Top, sublime.active_window())
 	write_to_output_file('OK\n' + str(result))
 	quit_sublime()
 

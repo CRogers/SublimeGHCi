@@ -79,7 +79,7 @@ class Wait(object):
 	name = 'wait'
 
 	def perform(self, context):
-		while context.view().is_loading() or not context.manager().loaded(context.view()):
+		while context.view().is_loading() or not context.top().manager.loaded(context.view()):
 			time.sleep(0.1)
 
 class Complete(object):
@@ -90,7 +90,7 @@ class Complete(object):
 
 	def _complete(self, context):
 		end = context.view().size()
-		return context.manager().complete(context.view(), self._string, end)
+		return context.top().manager.complete(context.view(), self._string, end)
 
 	def perform(self, context):
 		AppendText(self._string).perform(context)
