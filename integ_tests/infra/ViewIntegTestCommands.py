@@ -6,6 +6,15 @@ class AddResult(object):
 	def perform(self, context):
 		context.results().add_last_result()
 
+class Sleep(object):
+	name = 'sleep'
+
+	def __init__(self, seconds):
+		self._seconds = seconds
+
+	def perform(self, context):
+		time.sleep(self._seconds)
+
 class AppendText(object):
 	name = 'append_text'
 

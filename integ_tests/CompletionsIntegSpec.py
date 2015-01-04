@@ -124,3 +124,19 @@ class CompletionsIntegSpec(unittest.TestCase):
 			[],
 			[with_tick('Bar', 'Bar')]
 		])
+
+	def test_when_a_cabal_project_depends_on_a_library_it_should_be_able_to_complete_from_that_library(self):
+		test = (completion_test()
+			.add_folder(completion_file('BuildDepends'))
+			.with_file(completion_file('BuildDepends/BuildDepends.hs'), top_level_completion_with('empty')))
+
+		result = run_integ_test(test)
+		self.assertEqual(result, [[with_tick('empty', 'Map k a')]])
+
+	def test_when_a_cabal_project_has_multiple_source_dirs_we_can_load_code_across_them(self):
+		test = (completion_test()
+			.add_folder(completion_file('MultipleSourceDirs'))
+			.with_file(completion_file('MultipleSourceDirs/src2/Two.hs'), top_level_completion_with('Foo')))
+
+		result = run_integ_test(test)
+		self.assertEqual(result, [[with_tick('Foo', 'Foo')]])
