@@ -32,29 +32,36 @@ def write_exception():
 	result = ''.join(['EXCEPTION'] + exc_strs)
 	write_to_output_file(result)
 
-def after_loaded():
-	try:
-		while sublime.active_window().active_view() == None:
-			time.sleep(0.1)
+def save_integ_exceptions(func):
+	def ret(*args):
+		try:
+			func(*args)
+		except:
+			write_exception()
+			quit_sublime()
+	return ret
 
-		result = pickle.loads(test).run(GitResetter(top_dir), sublime, Top.manager, sublime.active_window())
-		write_to_output_file('OK\n' + str(result))
-		quit_sublime()
-	except:
-		write_exception()
-		quit_sublime()
+@save_integ_exceptions
+def after_loaded():
+	test = eval(os.environ.get('INTEG_TEST_SERIALIZED'))
+	top_dir = os.environ.get('INTEG_TEST_DIR')
+
+	while sublime.active_window().active_view() == None:
+		time.sleep(0.1)
+
+	sublime.log_commands(True)
+
+	result = pickle.loads(test).run(GitResetter(top_dir), sublime, Top.manager, sublime.active_window())
+	write_to_output_file('OK\n' + str(result))
+	quit_sublime()
+
+@save_integ_exceptions
+def run_integ_tests():
+	t = Thread(target=after_loaded)
+	t.daemon = True
+	t.start()
 
 if os.environ.get('INTEG_TESTS') == '1':
-	try:
-		sublime.log_commands(True)
-		test = eval(os.environ.get('INTEG_TEST_SERIALIZED'))
-		top_dir = os.environ.get('INTEG_TEST_DIR')
-
-		t = Thread(target=after_loaded)
-		t.daemon = True
-		t.start()
-	except:
-		write_exception()
-		quit_sublime()
+	run_integ_tests()
 else:
-	print('nope')
+	print('Not running SublimeGHCi integ tests')
