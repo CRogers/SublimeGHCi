@@ -15,4 +15,19 @@ class OutputPanelsIntegSpec(unittest.TestCase):
 
         result = run_integ_test(test)
         self.assertTrue(result[0])
-        self.assertTrue('Plain fields are not allowed in between' in result[1])
+        self.assertIn('Plain fields are not allowed in between', result[1])
+
+    def test_when_saving_a_file_with_compile_errors_it_should_display_the_error_in_the_error_panel(self):
+        test = (IntegTest()
+            .with_file('Blank.hs', lambda file: file
+                .append_text('cat')
+                .save())
+            .with_output_panel(lambda panel: panel
+                .is_visible()
+                .add_result()
+                .text()
+                .add_result()))
+
+        result = run_integ_test(test)
+        self.assertTrue(result[0])
+        self.assertIn('Parse error: naked expression at top level', result[1])
