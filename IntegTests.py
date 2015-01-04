@@ -8,7 +8,6 @@ from threading import Thread
 
 import sublime
 import SublimeGHCi.SublimeGHCi as Top
-from SublimeGHCi.integ_tests.infra.IntegTest import IntegTestContext
 
 
 def quit_sublime():
@@ -29,8 +28,7 @@ def after_loaded():
 		while sublime.active_window().active_view() == None:
 			time.sleep(0.1)
 
-		context = IntegTestContext(Top.manager, sublime.active_window().active_view())
-		result = pickle.loads(test).run(context)
+		result = pickle.loads(test).run(Top.manager, sublime.active_window())
 		write_to_output_file('OK\n' + str(result))
 		quit_sublime()
 	except:
