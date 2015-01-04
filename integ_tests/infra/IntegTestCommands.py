@@ -27,11 +27,12 @@ class WithFile():
 
     def _open_file(self, context):
         view = context.window().open_file(self._file_name)
-        return ViewContext(context, view)
+        view_context = ViewContext(context, view)
+        Wait().perform(view_context)
+        return view_context
 
     def perform(self, context):
         view_context = self._open_file(context)
-        Wait().perform(view_context)
         self._view_test.perform(view_context)
 
     def undo(self, context):

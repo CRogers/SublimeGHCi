@@ -29,6 +29,7 @@ class Window():
     def __init__(self):
         self.open_file = Mock(return_value=View())
         self.run_command = Mock()
+        self.new_file = Mock()
 
 class Sublime():
     pass
@@ -98,35 +99,6 @@ class IntegTestSpec(unittest.TestCase):
         command2 = make_command(2)
         self.integ_test.add_command(command1).add_command(command2).run(*self.runargs)
         self.assertEqual(call_order, [1, 2])
-
-    def test_when_a_single_command_is_added_its_undo_method_is_called_when_run(self):
-        command = MockCommand()
-        self.integ_test.add_command(command).run(*self.runargs)
-        self.assertEqual(command.undo.call_count, 1)
-
-    def test_when_a_single_command_is_add_its_undo_method_is_not_called_if_run_isnt_called(self):
-        command = MockCommand()
-        self.integ_test.add_command(command)
-        self.assertFalse(command.undo.called)
-
-    def test_when_two_commands_are_added_their_undo_methods_are_called_in_reversed_order(self):
-        call_order = []
-        def make_command(num):
-            command = MockCommand()
-            command.undo.side_effect = lambda _: call_order.append(num)
-            return command
-        command1 = make_command(1)
-        command2 = make_command(2)
-        self.integ_test.add_command(command1).add_command(command2).run(*self.runargs)
-        self.assertEqual(call_order, [2, 1])
-
-    def test_when_a_command_is_added_its_perform_method_is_called_before_its_undo_method(self):
-        call_order = []
-        command = MockCommand()
-        command.perform.side_effect = lambda _: call_order.append('perform')
-        command.undo.side_effect = lambda _: call_order.append('undo')
-        self.integ_test.add_command(command).run(*self.runargs)
-        self.assertEqual(call_order, ['perform', 'undo'])
 
     def test_when_a_command_is_added_its_perform_method_should_be_given_a_context_object_with_a_manager_a_window_and_sublime(self):
         command = MockCommand()

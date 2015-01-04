@@ -33,18 +33,30 @@ class DeleteRange():
 	def undo(self, context):
 		context.view().run_command('undo')
 
-class DeleteLeft():
-	name = 'delete_left'
+class DeleteLeftFromEnd():
+	name = 'delete_left_from_end'
 
 	def __init__(self, times = 0):
 		self._times = times
 
 	def perform(self, context):
-		for x in range(0, self._times):
-			context.view().run_command('left_delete')
+		end = context.view().size()
+		DeleteRange(end - self._times, self._times).perform(context)
 
 	def undo(self, context):
 		context.view().run_command('undo')
+
+class MessageDialog():
+	name = 'message_dialog'
+
+	def __init__(self, message):
+		self._message = message
+
+	def perform(self, context):
+		context.sublime().message_dialog(self._message)
+
+	def undo(self, context):
+		self.perform(context)
 
 class Save(object):
 	name = 'save'

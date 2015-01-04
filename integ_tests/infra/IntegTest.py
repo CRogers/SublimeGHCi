@@ -30,10 +30,15 @@ class IntegTest(object):
 		return self
 
 	def run(self, sublime, manager, window):
+		# View to keep window open in case we close all other windows
+		window.new_file()
+
 		results = Results()
 		context = Context(sublime, manager, window, results)
 		self._commands.run(context)
 
+		window.run_command('save_all')
+		window.run_command('close_all')
 		window.run_command('close_window')
 
 		return results.all_results()

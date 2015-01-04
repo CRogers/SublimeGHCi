@@ -37,6 +37,7 @@ def after_loaded():
 
 if os.environ.get('INTEG_TESTS') == '1':
 	try:
+		sublime.log_commands(True)
 		test = eval(os.environ.get('INTEG_TEST_SERIALIZED'))
 
 		t = Thread(target=after_loaded)

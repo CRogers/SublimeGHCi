@@ -16,7 +16,8 @@ def top_level_completion_with(prefix):
 		.wait()
 		.append_text('a = ')
 		.complete(prefix)
-		.add_result())
+		.add_result()
+		.message_dialog('lel'))
 
 def completion(expr, type):
 	return ('{}\t{}'.format(expr, type), expr)
@@ -105,7 +106,7 @@ class CompletionsIntegSpec(unittest.TestCase):
 				.delete_range(0, 6)
 				.save())
 			.with_file(haskell_file, lambda file: file
-				.delete_left(3)
+				.delete_left_from_end(3)
 				.complete('Bar')
 				.add_result()))
 
