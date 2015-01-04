@@ -2,4 +2,4 @@
 
 module One where
 
-data One = One
+data Foo = Foo
