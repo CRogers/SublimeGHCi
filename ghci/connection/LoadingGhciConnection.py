@@ -1,6 +1,6 @@
 from SublimeGHCi.ghci.connection.FailedGhciConnection import *
 from SublimeGHCi.ghci.connection.PromptIO import *
-
+import sublime
 class LoadingGhciConnection(object):
 	def __init__(self, internal_ghci_factory, subprocess, os, threading, project):
 		self._internal_ghci_factory = internal_ghci_factory

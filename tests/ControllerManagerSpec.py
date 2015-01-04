@@ -39,3 +39,7 @@ class ControllerManagerSpec(unittest.TestCase):
 	def test_when_the_file_name_is_none_it_doesnt_call_the_factory(self):
 		self.controller_manager.add(View(None))
 		self.assertEqual(self.factory.controller_for_view.call_count, 0)
+
+	def test_when_the_file_is_not_a_haskell_file_loaded_should_return_true(self):
+		result = self.controller_manager.loaded(View('foo.cabal'))
+		self.assertTrue(result)
