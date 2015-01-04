@@ -44,7 +44,6 @@ class IntegTest(object):
 
 		window.run_command('save_all')
 		window.run_command('close_all')
-		window.run_command('close_window')
 
 		git_resetter.reset_folders_to_head(self._source_folders)
 
