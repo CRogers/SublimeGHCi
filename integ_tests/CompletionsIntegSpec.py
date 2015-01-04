@@ -107,6 +107,7 @@ class CompletionsIntegSpec(unittest.TestCase):
 				.delete_left(3)
 				.complete('yay')
 				.add_result()))
+
 		result = run_integ_test(test)
 		self.assertEqual(result, [
 			[],

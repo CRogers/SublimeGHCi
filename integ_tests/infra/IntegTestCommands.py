@@ -1,7 +1,15 @@
 from SublimeGHCi.integ_tests.infra.ViewIntegTest import ViewContext, ViewIntegTest
 
 class AddFolder():
-    pass
+    name = 'add_folder'
+
+    def __init__(self, folder_path):
+        self._folder_path = folder_path
+
+    def perform(self, context):
+        project_data = context.window().project_data()
+        project_data['folders'].append({'path': self._folder_path})
+        context.window().set_project_data(project_data)
 
 class WithFile():
     name = 'with_file'
