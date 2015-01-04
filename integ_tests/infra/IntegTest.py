@@ -1,17 +1,6 @@
-import SublimeGHCi.integ_tests.infra.Commands as commands
+import SublimeGHCi.integ_tests.infra.IntegTestCommands as commands
 from SublimeGHCi.integ_tests.infra.Results import Results
 from SublimeGHCi.integ_tests.infra.CommandList import CommandList, copy_commands
-from SublimeGHCi.integ_tests.infra.ViewIntegTest import ViewContext, ViewIntegTest
-
-class WithFile():
-	def __init__(self, file_name, with_view_test):
-		self._file_name = file_name
-		self._view_test = with_view_test(ViewIntegTest())
-
-	def perform(self, context):
-		view = context.window().open_file()
-		view_context = ViewContext(context, view)
-		self._view_test.run(view_context)
 
 class Context():
 	def __init__(self, manager, window, results):
@@ -34,10 +23,6 @@ class IntegTest(object):
 
 	def add_command(self, command):
 		self._commands.add_command(command)
-		return self
-
-	def with_file(self, file_name, with_view_test):
-		self.add_command(WithFile(file_name, with_view_test))
 		return self
 
 	def run(self, manager, window):
