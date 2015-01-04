@@ -1,14 +1,12 @@
 import os
 import os.path
-import sys
 import time
-import traceback
-import codecs
 import pickle
 import subprocess
 from threading import Thread
 
 import sublime
+from SublimeGHCi.integ_tests.infra.Common import *
 import SublimeGHCi.SublimeGHCi as Top
 
 class GitResetter():
@@ -18,28 +16,6 @@ class GitResetter():
 	def reset_folders_to_head(self, folders):
 		cwd = os.path.join(self._top_dir, 'SublimeGHCi/integ_tests/')
 		subprocess.check_call(['git', 'checkout', 'HEAD'] + folders, cwd=cwd)
-
-def quit_sublime():
-	sublime.run_command('exit')
-
-def write_to_output_file(data):
-	output_file = os.environ.get('INTEG_OUTPUT')
-	with codecs.open(output_file, 'w+', 'utf-8') as f:
-		f.write(data)
-
-def write_exception():
-	exc_strs = traceback.format_exception(*sys.exc_info())
-	result = ''.join(['EXCEPTION'] + exc_strs)
-	write_to_output_file(result)
-
-def save_integ_exceptions(func):
-	def ret(*args):
-		try:
-			func(*args)
-		except:
-			write_exception()
-			quit_sublime()
-	return ret
 
 @save_integ_exceptions
 def after_loaded():
