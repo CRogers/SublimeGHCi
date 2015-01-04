@@ -1,4 +1,5 @@
-from SublimeGHCi.integ_tests.infra.CommandList import CommandList
+import SublimeGHCi.integ_tests.infra.ViewIntegTestCommands as commands
+from SublimeGHCi.integ_tests.infra.CommandList import CommandList, copy_commands
 
 class AddResult():
     def perform(self, context):
@@ -37,3 +38,5 @@ class ViewIntegTest():
         self._commands.run(context)
 
         return context.results().all_results()
+
+copy_commands(ViewIntegTest, commands)
