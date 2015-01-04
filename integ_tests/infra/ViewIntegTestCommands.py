@@ -15,6 +15,20 @@ class Sleep(object):
 	def perform(self, context):
 		time.sleep(self._seconds)
 
+class IsVisible():
+	name = 'is_visible'
+
+	def perform(self, context):
+		return context.view().visible_region() != (0, 0)
+
+class Text():
+	name = 'text'
+
+	def perform(self, context):
+		end = context.view().size()
+		region = context.sublime().Region(0, end)
+		return context.view().substr(region)
+
 class AppendText(object):
 	name = 'append_text'
 
@@ -65,7 +79,7 @@ class Wait(object):
 	name = 'wait'
 
 	def perform(self, context):
-		while context.view().is_loading() or not context.manager().loaded(context.view()):
+		while context.view().is_loading() or not context.top().manager.loaded(context.view()):
 			time.sleep(0.1)
 
 class Complete(object):
@@ -76,7 +90,7 @@ class Complete(object):
 
 	def _complete(self, context):
 		end = context.view().size()
-		return context.manager().complete(context.view(), self._string, end)
+		return context.top().manager.complete(context.view(), self._string, end)
 
 	def perform(self, context):
 		AppendText(self._string).perform(context)

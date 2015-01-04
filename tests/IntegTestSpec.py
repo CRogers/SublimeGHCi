@@ -16,9 +16,22 @@ class MockCommand():
         self.perform = Mock()
         self.undo = Mock()
 
+class Top():
+    def __init__(self):
+        self.manager = Manager()
+        self.output_panel_factory = OutputPanelFactory()
+
 class Manager():
     def loaded(self, view):
         return True
+
+class OutputPanelFactory():
+    def __init__(self):
+        self.output_panel_for_window = Mock(return_value=OutputPanel())
+
+class OutputPanel():
+    def __init__(self):
+        self.get_view = Mock(return_value=View())
 
 class View():
     def __init__(self):
@@ -30,21 +43,17 @@ class Window():
         self.open_file = Mock(return_value=View())
         self.run_command = Mock()
         self.new_file = Mock()
+        self.create_output_panel = Mock()
 
 class Sublime():
     pass
 
-class GitResetter():
-    def __init__(self):
-        self.reset_folders_to_head = Mock()
-
 class IntegTestSpec(unittest.TestCase):
     def setUp(self):
-        self.git_resetter = GitResetter()
         self.sublime = Sublime()
-        self.manager = Manager()
+        self.top = Top()
         self.window = Window()
-        self.runargs = (self.git_resetter, self.sublime, self.manager, self.window)
+        self.runargs = (self.sublime, self.top, self.window)
         self.integ_test = IntegTest()
 
     def test_when_no_commands_are_run_it_returns_an_empty_list(self):
@@ -109,7 +118,7 @@ class IntegTestSpec(unittest.TestCase):
         command = MockCommand()
         self.integ_test.add_command(command).run(*self.runargs)
         context = command.perform.call_args[0][0]
-        self.assertEqual(context.manager(), self.manager)
+        self.assertEqual(context.top(), self.top)
         self.assertEqual(context.window(), self.window)
         self.assertEqual(context.sublime(), self.sublime)
 
@@ -120,20 +129,16 @@ class IntegTestSpec(unittest.TestCase):
                 .add_command(command))
             .run(*self.runargs))
         context = command.perform.call_args[0][0]
-        self.assertEqual(context.manager(), self.manager)
+        self.assertEqual(context.top(), self.top)
         self.assertEqual(context.window(), self.window)
         self.assertEqual(context.sublime(), self.sublime)
         self.assertEqual(context.view(), self.window.open_file.return_value)
 
-    def test_when_a_source_folder_is_added_we_will_reset_it_after_running(self):
-        folder = '/tmp/foo/'
-        self.integ_test.using_source_folder(folder).run(*self.runargs)
-        self.git_resetter.reset_folders_to_head.assert_called_once_with([folder])
-
-    def test_when_two_source_folders_are_added_we_will_reset_themm_after_running(self):
-        folders = ['/a', '/b']
-        (self.integ_test
-            .using_source_folder(folders[0])
-            .using_source_folder(folders[1])
+    def test_when_with_output_panel_is_called_and_a_result_added_it_returns_that_results(self):
+        results = (self.integ_test
+            .with_output_panel(lambda panel: panel
+                .add_command(Returns(5))
+                .add_result())
             .run(*self.runargs))
-        self.git_resetter.reset_folders_to_head.assert_called_once_with(folders)
+
+        self.assertEqual(results, [5])

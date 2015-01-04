@@ -11,10 +11,12 @@ from SublimeGHCi.projects.defaults import *
 from SublimeGHCi.output_panels.OutputPanelFactory import *
 
 manager = None
+output_panel_factory = None
 
 @save_integ_exceptions
 def wire_everything_together():
 	global manager
+	global output_panel_factory
 
 	output_panel_factory = OutputPanelFactory()
 

@@ -1,5 +1,3 @@
-import os
-import os.path
 import time
 import pickle
 import subprocess
@@ -9,13 +7,9 @@ import sublime
 from SublimeGHCi.integ_tests.infra.Common import *
 import SublimeGHCi.SublimeGHCi as Top
 
-class GitResetter():
-	def __init__(self, top_dir):
-		self._top_dir = top_dir
-
-	def reset_folders_to_head(self, folders):
-		cwd = os.path.join(self._top_dir, 'SublimeGHCi/integ_tests/')
-		subprocess.check_call(['git', 'checkout', 'HEAD'] + folders, cwd=cwd)
+def reset_folders_to_head(top_dir):
+	haskell = os.path.join(top_dir, 'SublimeGHCi/integ_tests/Haskell')
+	subprocess.check_call(['git', 'checkout', 'HEAD', haskell], cwd=haskell)
 
 @save_integ_exceptions
 def after_loaded():
@@ -25,9 +19,9 @@ def after_loaded():
 	while sublime.active_window().active_view() == None:
 		time.sleep(0.1)
 
-	sublime.log_commands(True)
+	result = pickle.loads(test).run(sublime, Top, sublime.active_window())
+	reset_folders_to_head(top_dir)
 
-	result = pickle.loads(test).run(GitResetter(top_dir), sublime, Top.manager, sublime.active_window())
 	write_to_output_file('OK\n' + str(result))
 	quit_sublime()
 
