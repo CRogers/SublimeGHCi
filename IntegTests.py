@@ -28,7 +28,7 @@ def after_loaded():
 		while sublime.active_window().active_view() == None:
 			time.sleep(0.1)
 
-		result = pickle.loads(test).run(Top.manager, sublime.active_window())
+		result = pickle.loads(test).run(sublime, Top.manager, sublime.active_window())
 		write_to_output_file('OK\n' + str(result))
 		quit_sublime()
 	except:

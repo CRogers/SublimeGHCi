@@ -22,6 +22,20 @@ class AppendText(object):
 	def undo(self, context):
 		context.view().run_command('undo')
 
+class DeleteRange():
+	name = 'delete_range'
+
+	def __init__(self, start, length):
+		self._start = start
+		self._length = length
+		self._deleted = None
+
+	def perform(self, context):
+		context.view().substr(context.sublime().Range(self._start, self._length))
+
+	def undo(self, context):
+		pass
+
 class Save(object):
 	name = 'save'
 

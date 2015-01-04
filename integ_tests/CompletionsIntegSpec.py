@@ -93,18 +93,19 @@ class CompletionsIntegSpec(unittest.TestCase):
 		result = run_integ_test(test)
 		self.assertEqual(result, [[with_tick('Bar', 'Bar')]])
 
-	@unittest.skip('not finished')
 	def test_when_loading_a_cabal_library_with_a_broken_cabal_file_it_should_work_if_the_cabal_file_is_fixed(self):
+		haskell_file = 'Completions/BrokenCabalFile/BrokenCabalFile.hs'
+		cabal_file = 'Completions/BrokenCabalFile/broken-cabal-file.cabal'
+
 		test = (IntegTest()
-			.with_file('Completions/BrokenCabalFile/BrokenCabalFile.hs', lambda file: file
-				.append_text('cat')
-				.complete('yay')
+			.with_file(haskell_file, lambda file: file
+				.complete('Bar')
 				.add_result())
-			.with_file('Completions/BrokenCabalFile/broken-cabal-file.cabal', lambda file: file
-				.insert_text('yay')
+			.with_file(cabal_file, lambda file: file
+				.delete_range(0, 6)
 				.save()
 				.close())
-			.with_file('Completions/BrokenCabalFile/BrokenCabalFile.hs', lambda file: file
+			.with_file(haskell_file, lambda file: file
 				.delete_left(3)
 				.complete('yay')
 				.add_result()))

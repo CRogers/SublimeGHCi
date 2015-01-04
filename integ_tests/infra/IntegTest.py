@@ -3,10 +3,14 @@ from SublimeGHCi.integ_tests.infra.Results import Results
 from SublimeGHCi.integ_tests.infra.CommandList import CommandList, copy_commands
 
 class Context():
-	def __init__(self, manager, window, results):
+	def __init__(self, sublime, manager, window, results):
+		self._sublime = sublime
 		self._manager = manager
 		self._window = window
 		self._results = results
+
+	def sublime(self):
+		return self._sublime
 
 	def manager(self):
 		return self._manager
@@ -25,9 +29,9 @@ class IntegTest(object):
 		self._commands.add_command(command)
 		return self
 
-	def run(self, manager, window):
+	def run(self, sublime, manager, window):
 		results = Results()
-		context = Context(manager, window, results)
+		context = Context(sublime, manager, window, results)
 		self._commands.run(context)
 
 		window.run_command('close_window')
