@@ -113,6 +113,9 @@ class CompletionsIntegSpec(unittest.TestCase):
 				.save())
 			.with_file(haskell_file, lambda file: file
 				.delete_left_from_end(3)
+				.append_text('3')
+				.save()
+				.delete_left_from_end(1)
 				.complete('Bar')
 				.add_result()))
 
