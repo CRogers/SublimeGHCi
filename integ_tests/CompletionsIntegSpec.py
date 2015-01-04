@@ -132,3 +132,11 @@ class CompletionsIntegSpec(unittest.TestCase):
 
 		result = run_integ_test(test)
 		self.assertEqual(result, [[with_tick('empty', 'Map k a')]])
+
+	def test_when_a_cabal_project_has_multiple_source_dirs_we_can_load_code_across_them(self):
+		test = (completion_test()
+			.add_folder(completion_file('MultipleSourceDirs'))
+			.with_file(completion_file('MultipleSourceDirs/src2/Two.hs'), top_level_completion_with('One')))
+
+		result = run_integ_test(test)
+		self.assertEqual(result, [[with_tick('One', 'One')]])
