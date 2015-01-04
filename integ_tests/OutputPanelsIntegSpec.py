@@ -13,8 +13,8 @@ class OutputPanelsIntegSpec(unittest.TestCase):
                 .is_visible()
                 .add_result()
                 .text()
-                .add_result().sleep(99999)))
+                .add_result()))
 
         result = run_integ_test(test)
         self.assertTrue(result[0])
-        self.assertTrue('Plain fields are not allowed in between' in result[1], result[1])
+        self.assertTrue('Plain fields are not allowed in between' in result[1])
