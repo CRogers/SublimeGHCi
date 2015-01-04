@@ -1,7 +1,5 @@
-import inspect
-
 import SublimeGHCi.integ_tests.infra.Commands as commands
-from SublimeGHCi.integ_tests.infra.CommandList import CommandList
+from SublimeGHCi.integ_tests.infra.CommandList import CommandList, copy_commands
 from SublimeGHCi.integ_tests.infra.ViewIntegTest import ViewContext, ViewIntegTest
 
 class Results():
@@ -62,12 +60,4 @@ class IntegTest(object):
 
 		return results.all_results()
 
-for name, cls in commands.__dict__.items():
-	if not inspect.isclass(cls):
-		continue
-	def mkfunc(closure_class):
-		def func(self, *args):
-			self._add(closure_class(*args))
-			return self
-		return func
-	setattr(IntegTest, cls.name, mkfunc(cls))
+copy_commands(IntegTest, commands)
