@@ -17,10 +17,12 @@ class MockCommand():
         self.undo = Mock()
 
 class Manager():
-    pass
+    def loaded(self, view):
+        return True
 
 class View():
-    pass
+    def __init__(self):
+        self.run_command = Mock()
 
 class Window():
     def __init__(self):
