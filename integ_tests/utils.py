@@ -16,6 +16,7 @@ def run_integ_test(test):
 	env = os.environ.copy()
 	env['INTEG_TESTS'] = '1'
 	env['INTEG_TEST_SERIALIZED'] = str(pickle.dumps(test, 3))
+	env['INTEG_TEST_DIR'] = os.getcwd()
 	tfname = None
 	with tempfile.NamedTemporaryFile(delete=False) as tf:
 		tfname = tf.name

@@ -1,14 +1,23 @@
 import os
+import os.path
 import sys
 import time
 import traceback
 import codecs
 import pickle
+import subprocess
 from threading import Thread
 
 import sublime
 import SublimeGHCi.SublimeGHCi as Top
 
+class GitResetter():
+	def __init__(self, top_dir):
+		self._top_dir = top_dir
+
+	def reset_folders_to_head(self, folders):
+		cwd = os.path.join(self._top_dir, 'SublimeGHCi/integ_tests/')
+		subprocess.call(['git', 'checkout', 'HEAD'] + folders, cwd=cwd)
 
 def quit_sublime():
 	sublime.run_command('exit')
@@ -28,7 +37,7 @@ def after_loaded():
 		while sublime.active_window().active_view() == None:
 			time.sleep(0.1)
 
-		result = pickle.loads(test).run(sublime, Top.manager, sublime.active_window())
+		result = pickle.loads(test).run(GitResetter(top_dir), sublime, Top.manager, sublime.active_window())
 		write_to_output_file('OK\n' + str(result))
 		quit_sublime()
 	except:
@@ -39,6 +48,7 @@ if os.environ.get('INTEG_TESTS') == '1':
 	try:
 		sublime.log_commands(True)
 		test = eval(os.environ.get('INTEG_TEST_SERIALIZED'))
+		top_dir = os.environ.get('INTEG_TEST_DIR')
 
 		t = Thread(target=after_loaded)
 		t.daemon = True

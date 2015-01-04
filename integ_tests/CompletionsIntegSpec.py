@@ -1,4 +1,5 @@
 import unittest
+import os.path
 
 from SublimeGHCi.integ_tests.utils import run_integ_test
 from SublimeGHCi.integ_tests.infra.IntegTest import *
@@ -16,8 +17,7 @@ def top_level_completion_with(prefix):
 		.wait()
 		.append_text('a = ')
 		.complete(prefix)
-		.add_result()
-		.message_dialog('lel'))
+		.add_result())
 
 def completion(expr, type):
 	return ('{}\t{}'.format(expr, type), expr)
@@ -26,40 +26,46 @@ def with_tick(expr, type):
 	fst, snd = completion(expr, type)
 	return (fst + '\t\u2713', snd)
 
+def completion_file(file_name):
+	return os.path.join('Completions', file_name)
+
+def completion_test():
+	return IntegTest().using_source_folder(completion_file(''))
+
 class CompletionsIntegSpec(unittest.TestCase):
 	def test_no_completions(self):
-		test = (IntegTest()
-			.with_file('Completions/NoCompletions.hs', top_level_completion_with('f')))
+		test = (completion_test()
+			.with_file(completion_file('NoCompletions.hs'), top_level_completion_with('f')))
 
 		result = run_integ_test(test)
 		self.assertEqual(result, [[]])
 
 	def test_one_completion(self):
-		test = (IntegTest()
-			.with_file('Completions/OneCompletion.hs', top_level_completion_with('f')))
+		test = (completion_test()
+			.with_file(completion_file('OneCompletion.hs'), top_level_completion_with('f')))
 
 		result = run_integ_test(test)
 		self.assertEqual(result, [[with_tick('foo', 'Foo')]])
 
 	def test_should_suggest_only_module_prefixed_completions_after_dot(self):
-		test = (IntegTest()
-			.add_folder('Completions/MultipleModules')
-			.with_file('Completions/MultipleModules/SecondModule.hs', top_level_completion_with('F')))
+		test = (completion_test()
+			.add_folder(completion_file('MultipleModules'))
+			.with_file(completion_file('MultipleModules/SecondModule.hs'), top_level_completion_with('F')))
 
 		result = run_integ_test(test)
 		self.assertEqual(result, [[completion('FirstModule.bar','FirstModule.Bar')]])
 
 	def test_mutliple_modules(self):
-		test = (IntegTest()
-			.add_folder('Completions/MultipleModules')
-			.with_file('Completions/MultipleModules/SecondModule.hs', top_level_completion_with('b')))
+		test = (completion_test()
+			.add_folder(completion_file('MultipleModules'))
+			.with_file(completion_file('MultipleModules/SecondModule.hs'), top_level_completion_with('b')))
 
 		result = run_integ_test(test)
 		self.assertEqual(result, [[completion('bar', 'FirstModule.Bar')]])
 
 	def test_should_suggest_an_expression_which_fits_the_type_at_that_position_over_one_that_does_not(self):
-		test = (IntegTest()
-			.with_file('Completions/TypeHole.hs', lambda file: file
+		test = (completion_test()
+			.with_file(completion_file('TypeHole.hs'), lambda file: file
 				.append_text('a = takesFoo ')
 				.complete('f')
 				.add_result()))
@@ -68,23 +74,23 @@ class CompletionsIntegSpec(unittest.TestCase):
 		self.assertEqual(result, [[with_tick('fooForReal', 'Foo'), completion('fooFake','FooFake')]])
 
 	def test_should_put_a_tick_next_to_an_expression_when_it_fits_were_there_to_be_a_single_further_argument_to_the_function(self):
-		test = (IntegTest()
-			.with_file('Completions/TypeHole2.hs', top_level_two_hole))
+		test = (completion_test()
+			.with_file(completion_file('TypeHole2.hs'), top_level_two_hole))
 
 		result = run_integ_test(test)
 		self.assertEqual(result, [[with_tick('Foo', 'Foo')]])
 
 	def test_should_put_a_tick_next_to_an_expression_when_it_fits_were_there_to_be_two_further_arguments_to_the_function(self):
-		test = (IntegTest()
-			.with_file('Completions/TypeHole3.hs', top_level_two_hole))
+		test = (completion_test()
+			.with_file(completion_file('TypeHole3.hs'), top_level_two_hole))
 
 		result = run_integ_test(test)
 		self.assertEqual(result, [[with_tick('Foo', 'Foo')]])
 
 	def test_when_loading_a_cabal_library_with_compile_errors_completions_work_again_after_the_errors_have_been_fixed(self):
-		test = (IntegTest()
-			.add_folder('Completions/DoesNotCompile')
-			.with_file('Completions/DoesNotCompile/DoesNotCompile.hs', lambda file: file
+		test = (completion_test()
+			.add_folder(completion_file('DoesNotCompile'))
+			.with_file(completion_file('DoesNotCompile/DoesNotCompile.hs'), lambda file: file
 				.append_text('3\n')
 				.save()
 				.append_text('a = ')
@@ -95,10 +101,10 @@ class CompletionsIntegSpec(unittest.TestCase):
 		self.assertEqual(result, [[with_tick('Bar', 'Bar')]])
 
 	def test_when_loading_a_cabal_library_with_a_broken_cabal_file_it_should_work_if_the_cabal_file_is_fixed(self):
-		haskell_file = 'Completions/BrokenCabalFile/BrokenCabalFile.hs'
-		cabal_file = 'Completions/BrokenCabalFile/BrokenCabalFile.cabal'
+		haskell_file = completion_file('BrokenCabalFile/BrokenCabalFile.hs')
+		cabal_file = completion_file('BrokenCabalFile/BrokenCabalFile.cabal')
 
-		test = (IntegTest()
+		test = (completion_test()
 			.with_file(haskell_file, lambda file: file
 				.complete('Bar')
 				.add_result())
