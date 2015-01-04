@@ -30,10 +30,6 @@ class ViewIntegTest():
         self._commands.add_command(command)
         return self
 
-    def add_result(self):
-        self.add_command(AddResult())
-        return self
-
     def perform(self, context):
         self._commands.perform(context)
 
