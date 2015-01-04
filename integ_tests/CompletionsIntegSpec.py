@@ -1,8 +1,9 @@
 import unittest
 import os.path
 
-from SublimeGHCi.integ_tests.utils import run_integ_test
+from SublimeGHCi.integ_tests.infra.utils import run_integ_test
 from SublimeGHCi.integ_tests.infra.IntegTest import *
+
 
 def top_level_two_hole(file_test):
 	return (file_test
