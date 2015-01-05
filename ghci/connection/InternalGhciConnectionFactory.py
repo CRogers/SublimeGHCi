@@ -18,4 +18,4 @@ class InternalGhciConnectionFactory(object):
 		return FailedGhciConnection(self, self._error_reporter, failure_reason)
 
 	def new_loaded_ghci_connection(self, prompt):
-		return LoadedGhciConnection(prompt, self._view)
+		return LoadedGhciConnection(prompt, self._view, self._error_reporter)
