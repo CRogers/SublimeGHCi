@@ -31,7 +31,7 @@ class OutputPanelFactory():
 
 class OutputPanel():
     def __init__(self):
-        self.get_view = Mock(return_value=View())
+        self._get_view = Mock(return_value=View())
 
 class View():
     def __init__(self):

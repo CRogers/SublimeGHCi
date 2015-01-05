@@ -19,7 +19,8 @@ class IsVisible():
 	name = 'is_visible'
 
 	def perform(self, context):
-		return context.view().visible_region() != (0, 0)
+		output_panel = context.top().output_panel_factory.output_panel_for_window(context.window())
+		return output_panel._testing_is_shown()
 
 class Text():
 	name = 'text'

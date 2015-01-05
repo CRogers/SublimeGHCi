@@ -56,6 +56,6 @@ class WithOutputPanel():
         self._output_panel_test = with_output_panel_test(ViewIntegTest())
 
     def perform(self, context):
-        view = context.top().output_panel_factory.output_panel_for_window(context.window()).get_view()
+        view = context.top().output_panel_factory.output_panel_for_window(context.window())._get_view()
         view_context = ViewContext(context, view)
         self._output_panel_test.perform(view_context)

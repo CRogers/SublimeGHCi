@@ -23,11 +23,16 @@ class LoadedGhciConnection(object):
 		self._error_reporter.report_errors(error)
 		return error
 
+	def _load_succeeded(self, result):
+		self._error_reporter.clear_errors()
+		return result
+
 	def load_haskell_file(self, file_name):
 		msg = ':load "{}"'.format(file_name)
 		return (self.message(msg)
 			.bind(lambda response: Fallible.from_bool(load_succeeded, response))
-			.map_fail(self._failed_to_load))
+			.map_fail(self._failed_to_load)
+			.map(self._load_succeeded))
 
 	def loaded(self):
 		return True
