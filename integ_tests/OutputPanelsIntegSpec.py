@@ -21,7 +21,7 @@ class OutputPanelsIntegSpec(unittest.TestCase):
         test = (IntegTest()
             .with_file('Blank.hs', lambda file: file
                 .append_text('cat')
-                .save())
+                .save().wait())
             .with_output_panel(lambda panel: panel
                 .is_visible()
                 .add_result()
