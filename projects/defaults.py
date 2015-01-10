@@ -6,4 +6,4 @@ from SublimeGHCi.projects.WindowInfo import *
 from SublimeGHCi.projects.ProjectFileDetector import *
 
 def default_project_manager():
-	return ProjectManager(WindowInfo(sublime), ProjectFileDetector(glob))
+    return ProjectManager(WindowInfo(sublime), ProjectFileDetector(glob))
