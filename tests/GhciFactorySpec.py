@@ -2,7 +2,8 @@ import unittest
 from unittest.mock import *
 
 from SublimeGHCi.common.EventHook import *
-from SublimeGHCi.ghci.GhciFactory import *
+from SublimeGHCi.ghci.commands.GhciFactory import *
+
 
 class Tempfile(object):
 	pass

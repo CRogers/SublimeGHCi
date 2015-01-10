@@ -1,14 +1,17 @@
-import sublime_plugin
+from SublimeGHCi.integ_tests.infra.Common import save_integ_exceptions, record_integ_exception
 
-from SublimeGHCi.integ_tests.infra.Common import save_integ_exceptions
+try:
+	import sublime_plugin
 
-from SublimeGHCi.error_reporters.ErrorReporterFactory import *
-from SublimeGHCi.completions.defaults import *
-from SublimeGHCi.controllers.ControllerManager import *
-from SublimeGHCi.controllers.defaults import *
-from SublimeGHCi.ghci.defaults import *
-from SublimeGHCi.projects.defaults import *
-from SublimeGHCi.output_panels.OutputPanelFactory import *
+	from SublimeGHCi.error_reporters.ErrorReporterFactory import *
+	from SublimeGHCi.completions.defaults import *
+	from SublimeGHCi.controllers.ControllerManager import *
+	from SublimeGHCi.controllers.defaults import *
+	from SublimeGHCi.ghci.defaults import *
+	from SublimeGHCi.projects.defaults import *
+	from SublimeGHCi.output_panels.OutputPanelFactory import *
+except:
+	record_integ_exception()
 
 manager = None
 output_panel_factory = None

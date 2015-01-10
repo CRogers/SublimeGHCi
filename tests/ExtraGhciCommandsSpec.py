@@ -1,9 +1,9 @@
 import unittest
 from unittest.mock import *
 
-from SublimeGHCi.common.EventHook import *
 from SublimeGHCi.common.Fallible import *
-from SublimeGHCi.ghci.ExtraGhciCommands import *
+from SublimeGHCi.ghci.commands.ExtraGhciCommands import *
+
 
 class GhciCommands(object):
 	def __init__(self):

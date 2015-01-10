@@ -31,7 +31,7 @@ def run_integ_tests():
 	t.daemon = True
 	t.start()
 
-if os.environ.get('INTEG_TESTS') == '1':
+if integ_tests_are_running():
 	run_integ_tests()
 else:
 	print('Not running SublimeGHCi integ tests')

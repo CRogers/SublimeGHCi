@@ -1,7 +1,6 @@
 import unittest
-from unittest.mock import *
 
-from SublimeGHCi.ghci.CachingGhciFactory import *
+from SublimeGHCi.ghci.commands.CachingGhciFactory import *
 
 class GhciCommands(object):
 	pass
