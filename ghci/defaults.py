@@ -1,8 +1,12 @@
-import tempfile, subprocess, os, threading
+import tempfile
+import subprocess
+import os
+import threading
 
-from SublimeGHCi.ghci.CachingGhciFactory import *
-from SublimeGHCi.ghci.GhciConnectionFactory import *
-from SublimeGHCi.ghci.GhciFactory import *
+from SublimeGHCi.ghci.commands.CachingGhciFactory import *
+from SublimeGHCi.ghci.connection.GhciConnectionFactory import *
+from SublimeGHCi.ghci.commands.GhciFactory import *
+
 
 def default_ghci_factory(ghci_connection_factory):
 	return CachingGhciFactory(GhciFactory(tempfile, ghci_connection_factory))

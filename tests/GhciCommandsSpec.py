@@ -1,7 +1,8 @@
 import unittest
 from unittest.mock import *
 
-from SublimeGHCi.ghci.GhciCommands import *
+from SublimeGHCi.ghci.commands.GhciCommands import *
+
 
 class GhciConnection(object):
 	def __init__(self):

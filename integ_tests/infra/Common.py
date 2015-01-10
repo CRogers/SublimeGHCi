@@ -4,6 +4,9 @@ import os
 import traceback
 import sys
 
+def integ_tests_are_running():
+    return os.environ.get('INTEG_TESTS') == '1'
+
 def quit_sublime():
     sublime.run_command('exit')
 
@@ -17,11 +20,18 @@ def write_exception():
     result = ''.join(['EXCEPTION'] + exc_strs)
     write_to_output_file(result)
 
+def record_integ_exception():
+    if integ_tests_are_running():
+        write_exception()
+        quit_sublime()
+    else:
+        exc_info = sys.exc_info()
+        raise exc_info[0](exc_info[1]).with_traceback(exc_info[2])
+
 def save_integ_exceptions(func):
     def ret(*args):
         try:
             return func(*args)
         except:
-            write_exception()
-            quit_sublime()
+            record_integ_exception()
     return ret

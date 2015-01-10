@@ -1,7 +1,7 @@
-from SublimeGHCi.ghci.ExtraGhciCommands import *
-from SublimeGHCi.ghci.GhciCommands import *
-from SublimeGHCi.ghci.StringAcceptingGhci import *
-from SublimeGHCi.ghci.TypeHoleInfoExtractor import *
+from SublimeGHCi.ghci.commands.ExtraGhciCommands import *
+from SublimeGHCi.ghci.commands.GhciCommands import *
+from SublimeGHCi.ghci.commands.StringAcceptingGhci import *
+from SublimeGHCi.ghci.commands.TypeHoleInfoExtractor import *
 
 class GhciFactory(object):
 	def __init__(self, tempfile, ghci_connection_factory):

@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import *
 
-from SublimeGHCi.common.Fallible import *
-from SublimeGHCi.ghci.TypeHoleInfoExtractor import *
+from SublimeGHCi.ghci.commands.TypeHoleInfoExtractor import *
+
 
 class GhciCommands(object):
 	def __init__(self):
