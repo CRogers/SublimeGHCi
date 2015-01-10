@@ -20,7 +20,7 @@ def write_exception():
 def save_integ_exceptions(func):
     def ret(*args):
         try:
-            func(*args)
+            return func(*args)
         except:
             write_exception()
             quit_sublime()
