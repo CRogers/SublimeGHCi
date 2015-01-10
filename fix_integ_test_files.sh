@@ -1,3 +1,3 @@
 #!/bin/bash
 
-git checkout HEAD integ_tests/Completions/
+git checkout HEAD integ_tests/Haskell/
